@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
 const route = express.Router();
 
-const homeController = require('./src/controllers/homeController');
+import { paginaInicial } from './src/controllers/homeController.js'; 
 
-route.get('/', homeController.paginaInicial)
-module.exports = route;
+route.get('/', paginaInicial);
+
+export default route;

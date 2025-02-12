@@ -1,27 +1,33 @@
-require('dotenv').config(); // Load environment variables
+import 'dotenv/config'; // Load environment variables
+import dotenvExpand from 'dotenv-expand'; // Para expandir variáveis dinamicamente (opcional)
+dotenvExpand.expand(process.env); // Expande variáveis de ambiente dinâmicas
 
 // Core modules (built into Node.js)
-const path = require('path');
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Web framework
-const express = require('express');
+import express from 'express';
 
 // Database
-const mongoose = require('mongoose');
-const connectMongo = require('connect-mongo');
+import mongoose from 'mongoose';
+import connectMongo from 'connect-mongo';
 
 // Session & Flash messages
-const session = require('express-session');
-const flash = require('connect-flash');
+import session from 'express-session';
+import flash from 'connect-flash';
 
 // Security
-const helmet = require('helmet');
-const { doubleCsrf } = require('csrf-csrf');
+import helmet from 'helmet';
+import { doubleCsrf } from 'csrf-csrf';
 
 // Application setup
-const app = express();
-const routes = require('./routes');
-const { middleWareGlobal, checkCSRFError, CSRFMiddleware } = require('./src/middlewares/middleware');
+import routes from './routes.js';
+import { middleWareGlobal, checkCSRFError, CSRFMiddleware } from './src/middlewares/middleware.js';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 
@@ -29,16 +35,21 @@ const { middleWareGlobal, checkCSRFError, CSRFMiddleware } = require('./src/midd
 //console.log('DB Connection String:', process.env.DBCONNECTIONSTRING);
 //console.log('Session Secret:', process.env.SESSIONSECRET);
 
+
 // Set MongoDB connection string with a default fallback
 const mongoConnectionString = process.env.DBCONNECTIONSTRING || 'mongodb://localhost:27017/test';
 
 // Connect to MongoDB
-mongoose.connect(mongoConnectionString, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
+async function connectToDatabase() {
+  try {
+    console.log("Trying to connect to Database..."); // Log para garantir que a função está sendo chamada
+    await mongoose.connect(mongoConnectionString);
     console.log('Database connected successfully');
-    app.emit('ready');
-  })
-  .catch((err) => console.log('Failed to connect to the database:', err));
+    app.emit('ready'); // Emite o evento 'ready' para iniciar o servidor
+  } catch (err) {
+    console.log('Error trying to connect to Database:', err); // Log detalhado de erro
+  }
+}
 
 // CSRF Protection Configuration
 const {
@@ -52,14 +63,16 @@ const {
     sameSite: "strict",
     secure: process.env.NODE_ENV === "production", // Use secure flag in production
   },
-  size: 64, // Token lenght generated in Bytes
+  size: 64, // Token length generated in Bytes
   ignoredMethods: ["GET", "HEAD", "OPTIONS"], // Methods that do not require CSRF protection
 });
 
-// Apply security middleware
-app.use(helmet()); // Secure againts XSS and Clickjacking
-app.use(express.urlencoded({ extended: true })); // Allow form data submission exemple url/name=John&hobbies=reading&hobbies=gaming
+// Application setup
+const app = express();
 
+// Apply security middleware
+app.use(helmet()); // Secure against XSS and Clickjacking
+app.use(express.urlencoded({ extended: true })); // Allow form data submission exemple url/name=John&hobbies=reading&hobbies=gaming
 app.use(express.json());
 app.use(express.static('./public')); // Serve static files like CSS and images
 
@@ -93,7 +106,13 @@ app.use(checkCSRFError);
 app.use(CSRFMiddleware);
 app.use(routes);
 
-// Start the server once the database is connected
+// Start the server only after the database connection is successful
 app.on('ready', () => {
-  app.listen(8765, () => console.log("Server is running at: http://localhost:8765"));
+  console.log('Event ready triggered');
+  app.listen(8765, () => {
+    console.log("Server running in: http://localhost:8765");
+  });
 });
+
+// Tente conectar ao banco de dados diretamente
+connectToDatabase();

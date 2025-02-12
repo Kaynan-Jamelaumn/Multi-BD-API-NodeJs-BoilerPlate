@@ -1,5 +1,5 @@
-const path = require('path');
-const HomeModel = require(path.resolve(__dirname, '..', 'models', 'HomeModel'));
+import path from 'path';
+import HomeModel from '../models/HomeModel.js';
 
 // HomeModel.create(
 //   {
@@ -12,8 +12,7 @@ const HomeModel = require(path.resolve(__dirname, '..', 'models', 'HomeModel'));
 //   .catch(err => {
 //     console.log('erro ao inserir', err);
 //   });
-
-exports.paginaInicial = (req, res) => {
+export const paginaInicial = (req, res) => {
   res.render('index', { coisa: 'coixxzadsdssa', numeros: [0, 1, 2, 3, 4, 5] });
   return;
 };
