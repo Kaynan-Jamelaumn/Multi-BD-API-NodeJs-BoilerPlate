@@ -1,4 +1,4 @@
-import { logger } from '../../main.js'
+import { logger } from '../../app.js';
 
 export const middleWareGlobal = (req, res, next) => {
   logger.info("Global middleware");
@@ -7,6 +7,7 @@ export const middleWareGlobal = (req, res, next) => {
 
 export const checkCSRFError = (err, req, res, next) => {
   if (err && err.code === 'EBADCSRFTOKEN') {
+    logger.error("Invalid CSRF", err, err.code)
     return res.status(403).send('Invalid CSRF token');
   }
   next();
