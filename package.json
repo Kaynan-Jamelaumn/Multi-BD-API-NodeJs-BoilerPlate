@@ -28,7 +28,8 @@
     "mongodb": "^6.13.0",
     "mongoose": "^8.10.0",
     "regenerator-runtime": "^0.14.1",
-    "style-loader": "^4.0.0"
+    "style-loader": "^4.0.0",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",

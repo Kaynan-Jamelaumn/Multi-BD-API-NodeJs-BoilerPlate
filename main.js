@@ -29,6 +29,9 @@ import cors from 'cors';  // Cross-origin resource sharing middleware
 // Cryptographic Functionality
 import crypto from 'crypto';  // Built-in module for cryptographic functionalities
 
+// Logging 
+import winston from 'winston';
+
 // Import custom routes and middleware functions
 import routes from './routes.js';  
 import { middleWareGlobal, checkCSRFError } from './src/middlewares/middleware.js';
@@ -42,6 +45,17 @@ const mongoConnectionString = process.env.DBCONNECTIONSTRING || 'mongodb://local
 
 // Create an Express application instance
 const app = express();
+
+// Winston logger setup
+export const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
+});
 
 // Middleware setup that doesn't depend on the database
 app.use(helmet());  // Set various HTTP headers to improve security
@@ -73,13 +87,13 @@ async function connectToDatabase() {
 
   while (retries < maxRetries) {
     try {
-      console.log("Connecting to database...");
+      logger.info("Connecting to database...");
       await mongoose.connect(mongoConnectionString);   // Attempt to connect to the database
-      console.log("Database connected!");
+      logger.info("Database connected!");
       return;
     } catch (error) {
       retries++;
-      console.error(`Connection attempt ${retries} failed:`, error);
+      logger.error(`Connection attempt ${retries} failed:`, error);
       await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
     }
   }
@@ -155,9 +169,9 @@ function setupGlobalMiddlewaresAndRoutes() {
 async function startServer() {
   try {
     await app.listen(8765);
-    console.log("Server running on http://localhost:8765");
+    logger.info("Server running on http://localhost:8765");
   } catch (error) {
-    console.error("Failed to start server:", error);
+    logger.error("Failed to start server:", error);
   }
 }
 // Main function to connect to the database, setup app, and start the server
@@ -169,7 +183,7 @@ async function connectAndSetup() {
     setupGlobalMiddlewaresAndRoutes();  // Setup global middlewares and routes
     await startServer();  // Start the server
   } catch (error) {
-    console.error("Failed to initialize:", error);  // Log error if initialization fails
+    logger.error("Failed to initialize:", error);  // Log error if initialization fails
   }
 }
 

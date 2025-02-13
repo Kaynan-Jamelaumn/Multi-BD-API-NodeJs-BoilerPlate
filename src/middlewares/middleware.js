@@ -1,5 +1,7 @@
+import { logger } from '../../main.js'
+
 export const middleWareGlobal = (req, res, next) => {
-  console.log("Global middleware");
+  logger.info("Global middleware");
   next();
 };
 
@@ -10,10 +12,8 @@ export const checkCSRFError = (err, req, res, next) => {
   next();
 };
 
-// Remove CSRFMiddleware since token is already set in res.locals
-
 export const testMiddleware = (req, res, next) => {
-  console.log("Middleware Test Initialized");
+  logger.info("Middleware Test Initialized");
 
   // Ensure session is initialized before modifying it
   if (!req.session) {
