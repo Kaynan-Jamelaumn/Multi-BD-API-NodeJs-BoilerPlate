@@ -12,7 +12,9 @@ import { fileURLToPath } from 'url';  // To work with URLs in ES modules
 // Database
 import express from 'express';  // Web framework for routing and handling HTTP requests
 import mongoose from 'mongoose';  // MongoDB object modeling tool
-import connectMongo from 'connect-mongo';  // Session store for MongoDB
+import MongoStore from 'connect-mongo';  // Session store for MongoDB
+import { Sequelize } from 'sequelize';
+import connectSessionSequelize from 'connect-session-sequelize';
 
 // Flash
 import session from 'express-session';  // Middleware for session management
@@ -40,6 +42,9 @@ import { middleWareGlobal, checkCSRFError } from './src/middlewares/middleware.j
 const __filename = fileURLToPath(import.meta.url);  // Get the full path of the current module
 const __dirname = path.dirname(__filename);  // Get the directory name of the current module
 
+// Database configuration
+const DB_TYPE = process.env.DB_TYPE || 'mongo';
+let sequelize;
 // MongoDB connection string, pulled from environment variable or defaults to local
 const mongoConnectionString = process.env.DBCONNECTIONSTRING || 'mongodb://localhost:27017/test';
 
@@ -80,36 +85,77 @@ app.use(cors({
 app.set('views', path.resolve(__dirname, 'src', 'views'));  // Set the views directory
 app.set('view engine', 'ejs');  // Set the template engine to EJS
 
-// Function to connect to MongoDB database
+// Function to connect to MongoDB database or Mysql
 async function connectToDatabase() {
-  const maxRetries = 5;
-  let retries = 0;
+  if (DB_TYPE === 'mongo') {
+    const maxRetries = 5;
+    let retries = 0;
 
-  while (retries < maxRetries) {
-    try {
-      logger.info("Connecting to database...");
-      await mongoose.connect(mongoConnectionString);   // Attempt to connect to the database
-      logger.info("Database connected!");
-      return;
-    } catch (error) {
-      retries++;
-      logger.error(`Connection attempt ${retries} failed:`, error);
-      await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
+    while (retries < maxRetries) {
+      try {
+        logger.info("Connecting to MongoDB...");
+        await mongoose.connect(mongoConnectionString);  // Attempt to connect to the database
+        logger.info("MongoDB connected!");
+        return;
+      } catch (error) {
+        retries++;
+        logger.error(`MongoDB connection attempt ${retries} failed:`, error);
+        await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
+      }
     }
+    throw new Error("Failed to connect to MongoDB after multiple attempts");
+  } else if (DB_TYPE === 'mysql') {
+    sequelize = new Sequelize(
+      process.env.DB_NAME || 'database',
+      process.env.DB_USER || 'root',
+      process.env.DB_PASSWORD || '',
+      {
+        host: process.env.DB_HOST || 'localhost',
+        dialect: 'mysql',
+        logging: process.env.NODE_ENV === 'development' ? console.log : false,
+        retry: {
+          max: 5,
+          timeout: 60000,
+        }
+      }
+    );
+
+    try {
+      logger.info("Connecting to MySQL...");
+      await sequelize.authenticate();
+      logger.info("MySQL connected!");
+    } catch (error) {
+      logger.error("MySQL connection failed:", error);
+      throw error;
+    }
+  } else {
+    throw new Error(`Unsupported database type: ${DB_TYPE}`);
   }
-  throw new Error("Failed to connect to the database after multiple attempts");
 }
+
 // Function to setup session management and flash messaging
 function setupSessionAndFlash() {
-  // Create a session store using MongoDB
-  const mongoStore = connectMongo.create({
-    client: mongoose.connection.getClient(),  // Use the MongoDB client from mongoose
-  });
+  let store;
+
+  // Create a session store using MongoDB or MySQL
+  if (DB_TYPE === 'mongo') {
+    store = MongoStore.create({
+      client: mongoose.connection.getClient(),  // Use the MongoDB client from mongoose
+      dbName: mongoose.connection.name,  // Optional: specify the database name
+      collectionName: 'sessions',  // Optional: specify the collection name
+    });
+  } else if (DB_TYPE === 'mysql') {
+    const SequelizeStore = connectSessionSequelize(session.Store);
+    store = new SequelizeStore({
+      db: sequelize,
+      tableName: 'sessions',
+    });
+  }
 
   // Configure session options
   const sessionOptions = session({
     secret: process.env.SESSIONSECRET || 'defaultsecret',  // Secret key for signing session ID
-    store: mongoStore,  // Use MongoDB to store session data
+    store: store,  // Use the correct store (MongoDB or MySQL)
     resave: false,  // Don't resave session if not modified
     saveUninitialized: false,  // Don't save empty sessions
     cookie: {
@@ -174,6 +220,7 @@ async function startServer() {
     logger.error("Failed to start server:", error);
   }
 }
+
 // Main function to connect to the database, setup app, and start the server
 async function connectAndSetup() {
   try {
