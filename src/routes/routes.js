@@ -1,6 +1,6 @@
 // mainRouter.js
 import express from 'express';
-// import userRouter from './routes/userRouter.js'; // Example user router
+ import userRouter from './routes/userRouter.js'; // Example user router
 // import authRouter from './routes/authRouter.js'; // Example auth router
 
 import { paginaInicial } from '../controllers/homeController.js'; 
@@ -18,7 +18,7 @@ mainRouter.get('/health', (req, res) => {
 
 
 // Use the individual routers
-// mainRouter.use('/users', userRouter);
+ mainRouter.use('/user', userRouter);
 // mainRouter.use('/auth', authRouter);
 
 // Export the main router
