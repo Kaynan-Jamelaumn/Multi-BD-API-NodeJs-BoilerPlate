@@ -68,11 +68,23 @@ app.set('view engine', 'ejs');  // Set the template engine to EJS
 
 // Function to connect to MongoDB database
 async function connectToDatabase() {
-  console.log("Connecting to database...");  // Log message for connection attempt
-  await mongoose.connect(mongoConnectionString);  // Attempt to connect to the database
-  console.log("Database connected!");  // Log message after successful connection
-}
+  const maxRetries = 5;
+  let retries = 0;
 
+  while (retries < maxRetries) {
+    try {
+      console.log("Connecting to database...");
+      await mongoose.connect(mongoConnectionString);   // Attempt to connect to the database
+      console.log("Database connected!");
+      return;
+    } catch (error) {
+      retries++;
+      console.error(`Connection attempt ${retries} failed:`, error);
+      await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
+    }
+  }
+  throw new Error("Failed to connect to the database after multiple attempts");
+}
 // Function to setup session management and flash messaging
 function setupSessionAndFlash() {
   // Create a session store using MongoDB
@@ -140,12 +152,14 @@ function setupGlobalMiddlewaresAndRoutes() {
 }
 
 // Function to start the server and listen for incoming requests
-function startServer() {
-  app.listen(8765, () => {  // Start server on port 8765
+async function startServer() {
+  try {
+    await app.listen(8765);
     console.log("Server running on http://localhost:8765");
-  });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+  }
 }
-
 // Main function to connect to the database, setup app, and start the server
 async function connectAndSetup() {
   try {
@@ -153,7 +167,7 @@ async function connectAndSetup() {
     setupSessionAndFlash();  // Setup session and flash messages
     setupCSRFProtection();  // Setup CSRF protection
     setupGlobalMiddlewaresAndRoutes();  // Setup global middlewares and routes
-    startServer();  // Start the server
+    await startServer();  // Start the server
   } catch (error) {
     console.error("Failed to initialize:", error);  // Log error if initialization fails
   }
