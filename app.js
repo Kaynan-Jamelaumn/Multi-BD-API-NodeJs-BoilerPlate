@@ -35,7 +35,7 @@ import crypto from "crypto"; // Built-in module for cryptographic functionalitie
 import winston from "winston";
 
 // Import custom routes and middleware functions
-import routes from "./routes.js";
+import mainRouter from "./src/routes/routes.js";
 import {
     middleWareGlobal,
     checkCSRFError,
@@ -44,6 +44,12 @@ import {
 // Resolve the current file and directory paths (for setting views and static files)
 const __filename = fileURLToPath(import.meta.url); // Get the full path of the current module
 const __dirname = path.dirname(__filename); // Get the directory name of the current module
+
+// import { loadEnv } from "./config/env.js";
+// import { connectToDatabase } from "./config/database.js";
+// import { setupSessionAndFlash } from "./config/session.js";
+// import { setupCSRFProtection } from "./config/csrf.js";
+// import { setupGlobalMiddlewaresAndRoutes } from "./config/middlewares.js";
 
 class App {
     constructor() {
@@ -227,7 +233,7 @@ class App {
         // Function to setup global middlewares and routes
         this.app.use(middleWareGlobal); // Use global middleware (e.g., logging, error handling)
         this.app.use(checkCSRFError); // Check for CSRF errors
-        this.app.use(routes); // Apply custom application routes
+        this.app.use(mainRouter); // Apply custom application routes
     }
     // Main function to connect to the database, setup app, and start the server
     async start(port) {
