@@ -105,6 +105,9 @@ async function connectToDatabase() {
     }
     throw new Error("Failed to connect to MongoDB after multiple attempts");
   } else if (DB_TYPE === 'mysql') {
+    const maxRetries = 5;
+    let retries = 0;
+
     sequelize = new Sequelize(
       process.env.DB_NAME || 'database',
       process.env.DB_USER || 'root',
@@ -120,14 +123,19 @@ async function connectToDatabase() {
       }
     );
 
-    try {
-      logger.info("Connecting to MySQL...");
-      await sequelize.authenticate();
-      logger.info("MySQL connected!");
-    } catch (error) {
-      logger.error("MySQL connection failed:", error);
-      throw error;
+    while (retries < maxRetries) {
+      try {
+        logger.info("Connecting to MySQL...");
+        await sequelize.authenticate();
+        logger.info("MySQL connected!");
+        return;
+      } catch (error) {
+        retries++;
+        logger.error(`MySQL connection attempt ${retries} failed:`, error);
+        await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
+      }
     }
+    throw new Error("Failed to connect to MySQL after multiple attempts");
   } else {
     throw new Error(`Unsupported database type: ${DB_TYPE}`);
   }
