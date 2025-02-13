@@ -13,6 +13,7 @@ import HomeModel from '../models/HomeModel.js';
 //     console.log('erro ao inserir', err);
 //   });
 export const paginaInicial = (req, res) => {
-  res.render('index', { coisa: 'coixxzadsdssa', numeros: [0, 1, 2, 3, 4, 5] });
+  console.log("Global Route Called")
+  res.render('index', { coisa: 'teste', numeros: [0, 1, 2, 3, 4, 5] });
   return;
 };
