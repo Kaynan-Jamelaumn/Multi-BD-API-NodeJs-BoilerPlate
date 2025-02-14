@@ -3,7 +3,7 @@ import UserController from '../controllers/UserController.js';
 const router = new Router();
 //import loginrequired from '../middlewares/loginrequired';
 
-// router.post('/create/', UserController.create);
+router.post('/create/', UserController.create);
 router.post('/login/', UserController.login);
 // router.get('/', authMiddleware, userController.index);
 // router.get('/:id', UserController.filterById);

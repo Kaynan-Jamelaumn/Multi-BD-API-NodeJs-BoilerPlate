@@ -1,451 +1,88 @@
-{"level":"info","message":"Connecting to database..."}
-{"level":"info","message":"Database connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to database..."}
-{"level":"info","message":"Database connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to database..."}
-{"level":"info","message":"Database connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Connecting to database..."}
-{"level":"info","message":"Database connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to database..."}
-{"level":"info","message":"Database connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to database..."}
-{"level":"info","message":"Database connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to database..."}
-{"level":"info","message":"Database connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to database..."}
-{"level":"info","message":"Database connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to database..."}
-{"level":"info","message":"Database connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to database..."}
-{"level":"info","message":"Database connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"error","message":"Failed to initialize: MongoStore is not a constructor","stack":"TypeError: MongoStore is not a constructor\n    at setupSessionAndFlash (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/main.js:141:13)\n    at connectAndSetup (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/main.js:222:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"error","message":"Failed to initialize: MongoStore is not a constructor","stack":"TypeError: MongoStore is not a constructor\n    at setupSessionAndFlash (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/main.js:141:13)\n    at connectAndSetup (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/main.js:224:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"error","message":"Failed to initialize: MongoStore is not a constructor","stack":"TypeError: MongoStore is not a constructor\n    at setupSessionAndFlash (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/main.js:143:13)\n    at connectAndSetup (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/main.js:226:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"error","message":"Failed to initialize: MongoStore is not a constructor","stack":"TypeError: MongoStore is not a constructor\n    at setupSessionAndFlash (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/main.js:144:13)\n    at connectAndSetup (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/main.js:224:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"error","message":"Failed to initialize: MongoStore is not a constructor","stack":"TypeError: MongoStore is not a constructor\n    at setupSessionAndFlash (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/main.js:144:13)\n    at connectAndSetup (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/main.js:224:5)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:7654"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Middleware Test Initialized"}
-{"level":"info","message":"Connecting to MongoDB..."}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
 {"level":"info","message":"MongoDB"}
 {"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 1 failed: sequelize.authenticate is not a function","stack":"TypeError: sequelize.authenticate is not a function\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:113:33\n    at connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:27)\n    at App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:19)\n    at App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:24)\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/server.js:4:5"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 2 failed: sequelize.authenticate is not a function","stack":"TypeError: sequelize.authenticate is not a function\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:113:33\n    at connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:27)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 3 failed: sequelize.authenticate is not a function","stack":"TypeError: sequelize.authenticate is not a function\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:113:33\n    at connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:27)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 4 failed: sequelize.authenticate is not a function","stack":"TypeError: sequelize.authenticate is not a function\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:113:33\n    at connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:27)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 1 failed: sequelize.authenticate is not a function","stack":"TypeError: sequelize.authenticate is not a function\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:113:33\n    at connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:27)\n    at App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:19)\n    at App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:24)\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/server.js:4:5"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 2 failed: sequelize.authenticate is not a function","stack":"TypeError: sequelize.authenticate is not a function\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:113:33\n    at connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:27)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 3 failed: sequelize.authenticate is not a function","stack":"TypeError: sequelize.authenticate is not a function\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:113:33\n    at connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:27)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 4 failed: sequelize.authenticate is not a function","stack":"TypeError: sequelize.authenticate is not a function\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:113:33\n    at connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:27)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 5 failed: sequelize.authenticate is not a function","stack":"TypeError: sequelize.authenticate is not a function\n    at file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:113:33\n    at connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:27)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"error","message":"Failed to initialize: Failed to connect to MySQL after multiple attempts","stack":"Error: Failed to connect to MySQL after multiple attempts\n    at connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:98:19)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 1 failed: connect ECONNREFUSED ::1:3306","name":"SequelizeConnectionRefusedError","original":{"address":"::1","code":"ECONNREFUSED","errno":-4078,"fatal":true,"port":3306,"syscall":"connect"},"parent":{"address":"::1","code":"ECONNREFUSED","errno":-4078,"fatal":true,"port":3306,"syscall":"connect"},"stack":"SequelizeConnectionRefusedError: connect ECONNREFUSED ::1:3306\n    at ConnectionManager.connect (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\mysql\\connection-manager.js:92:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ConnectionManager._connect (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:222:24)\n    at async C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:174:32\n    at async ConnectionManager.getConnection (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:197:7)\n    at async C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\sequelize.js:305:26\n    at async Sequelize.authenticate (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\sequelize.js:457:5)\n    at async connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:21)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 2 failed: connect ECONNREFUSED ::1:3306","name":"SequelizeConnectionRefusedError","original":{"address":"::1","code":"ECONNREFUSED","errno":-4078,"fatal":true,"port":3306,"syscall":"connect"},"parent":{"address":"::1","code":"ECONNREFUSED","errno":-4078,"fatal":true,"port":3306,"syscall":"connect"},"stack":"SequelizeConnectionRefusedError: connect ECONNREFUSED ::1:3306\n    at ConnectionManager.connect (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\mysql\\connection-manager.js:92:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ConnectionManager._connect (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:222:24)\n    at async C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:174:32\n    at async ConnectionManager.getConnection (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:197:7)\n    at async C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\sequelize.js:305:26\n    at async Sequelize.authenticate (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\sequelize.js:457:5)\n    at async connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:21)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 3 failed: connect ECONNREFUSED ::1:3306","name":"SequelizeConnectionRefusedError","original":{"address":"::1","code":"ECONNREFUSED","errno":-4078,"fatal":true,"port":3306,"syscall":"connect"},"parent":{"address":"::1","code":"ECONNREFUSED","errno":-4078,"fatal":true,"port":3306,"syscall":"connect"},"stack":"SequelizeConnectionRefusedError: connect ECONNREFUSED ::1:3306\n    at ConnectionManager.connect (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\mysql\\connection-manager.js:92:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ConnectionManager._connect (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:222:24)\n    at async C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:174:32\n    at async ConnectionManager.getConnection (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:197:7)\n    at async C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\sequelize.js:305:26\n    at async Sequelize.authenticate (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\sequelize.js:457:5)\n    at async connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:21)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"error","message":"MySQL connection attempt 4 failed: connect ECONNREFUSED ::1:3306","name":"SequelizeConnectionRefusedError","original":{"address":"::1","code":"ECONNREFUSED","errno":-4078,"fatal":true,"port":3306,"syscall":"connect"},"parent":{"address":"::1","code":"ECONNREFUSED","errno":-4078,"fatal":true,"port":3306,"syscall":"connect"},"stack":"SequelizeConnectionRefusedError: connect ECONNREFUSED ::1:3306\n    at ConnectionManager.connect (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\mysql\\connection-manager.js:92:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ConnectionManager._connect (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:222:24)\n    at async C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:174:32\n    at async ConnectionManager.getConnection (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\dialects\\abstract\\connection-manager.js:197:7)\n    at async C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\sequelize.js:305:26\n    at async Sequelize.authenticate (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\sequelize\\lib\\sequelize.js:457:5)\n    at async connectWithRetry (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:88:21)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:112:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:230:13)"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"error","message":"Failed to initialize: Database connection is required","name":"SequelizeStoreException","stack":"SequelizeStoreException: Database connection is required\n    at new SequelizeStore (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\connect-session-sequelize\\lib\\connect-session-sequelize.js:50:15)\n    at App.setupSessionAndFlash (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:138:21)\n    at App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:231:18)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"error","message":"Failed to initialize: Database connection is required","name":"SequelizeStoreException","stack":"SequelizeStoreException: Database connection is required\n    at new SequelizeStore (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\connect-session-sequelize\\lib\\connect-session-sequelize.js:50:15)\n    at App.setupSessionAndFlash (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:138:21)\n    at App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:231:18)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"error","message":"Failed to initialize: Database connection is required","name":"SequelizeStoreException","stack":"SequelizeStoreException: Database connection is required\n    at new SequelizeStore (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\connect-session-sequelize\\lib\\connect-session-sequelize.js:50:15)\n    at App.setupSessionAndFlash (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:138:21)\n    at App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:231:49)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"error","message":"Failed to initialize: Database connection is required","name":"SequelizeStoreException","stack":"SequelizeStoreException: Database connection is required\n    at new SequelizeStore (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\connect-session-sequelize\\lib\\connect-session-sequelize.js:50:15)\n    at App.setupSessionAndFlash (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:138:21)\n    at App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:231:18)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"error","message":"Failed to initialize: Database connection is required","name":"SequelizeStoreException","stack":"SequelizeStoreException: Database connection is required\n    at new SequelizeStore (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\connect-session-sequelize\\lib\\connect-session-sequelize.js:50:15)\n    at App.setupSessionAndFlash (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:138:21)\n    at App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:231:18)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"code":"ERR_UNSUPPORTED_ESM_URL_SCHEME","level":"error","message":"Error synchronizing models: Only URLs with a scheme in: file and data are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'","stack":"Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file and data are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at new NodeError (node:internal/errors:399:5)\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/resolve:1059:11)\n    at defaultResolve (node:internal/modules/esm/resolve:1135:3)\n    at nextResolve (node:internal/modules/esm/loader:163:28)\n    at ESMLoader.resolve (node:internal/modules/esm/loader:838:30)\n    at ESMLoader.getModuleJob (node:internal/modules/esm/loader:424:18)\n    at ESMLoader.import (node:internal/modules/esm/loader:525:22)\n    at importModuleDynamically (node:internal/modules/esm/translators:110:35)\n    at importModuleDynamicallyCallback (node:internal/process/esm_loader:35:14)\n    at loadModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:69:29)"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"error","message":"Error synchronizing models: loadModels is not defined","stack":"ReferenceError: loadModels is not defined\n    at App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:134:13)\n    at App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:123:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:275:13)"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"error","message":"Error synchronizing models: loadModels is not defined","stack":"ReferenceError: loadModels is not defined\n    at App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:134:13)\n    at App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:123:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:275:13)"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"error","message":"Error synchronizing models: loadModels is not defined","stack":"ReferenceError: loadModels is not defined\n    at App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:134:13)\n    at App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:123:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:275:13)"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"error","message":"Error synchronizing models: loadModels is not defined","stack":"ReferenceError: loadModels is not defined\n    at App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:134:13)\n    at App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:123:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:275:13)"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7937a88ba63238b605c7"}}
-{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\HomeModel.js"}
-{"level":"info","message":{"_id":"67af7937a88ba63238b605c8","createdAt":"2025-02-14T17:11:19.356Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:11:19.357Z"}}
-{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\UserMongo.js"}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af794113efba8ebd969c0f"}}
-{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\HomeModel.js"}
-{"level":"info","message":{"_id":"67af794113efba8ebd969c10","createdAt":"2025-02-14T17:11:29.705Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:11:29.705Z"}}
-{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\UserMongo.js"}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af795bce15c1345a901414"}}
-{"level":"info","message":{"_id":"67af795bce15c1345a901415","createdAt":"2025-02-14T17:11:55.064Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:11:55.064Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7968cd229a4f51b47ff0"}}
-{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\HomeModel.js"}
-{"level":"info","message":{"_id":"67af7968cd229a4f51b47ff1","createdAt":"2025-02-14T17:12:08.957Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:12:08.957Z"}}
-{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\UserMongo.js"}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af79715037c4322955c8fe"}}
-{"level":"info","message":{"_id":"67af79715037c4322955c8ff","createdAt":"2025-02-14T17:12:17.594Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:12:17.594Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7979a93599306828de38"}}
-{"level":"info","message":{"_id":"67af7979a93599306828de39","createdAt":"2025-02-14T17:12:25.063Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:12:25.063Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7981d96106a8488ef8d5"}}
-{"level":"info","message":{"_id":"67af7981d96106a8488ef8d6","createdAt":"2025-02-14T17:12:33.252Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:12:33.252Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af79a7c0390e5f6dedc58d"}}
-{"level":"info","message":{"_id":"67af79a7c0390e5f6dedc58e","createdAt":"2025-02-14T17:13:11.578Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:13:11.579Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af79bda252dfd098e89ec7"}}
-{"level":"info","message":{"_id":"67af79bda252dfd098e89ec8","createdAt":"2025-02-14T17:13:33.197Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:13:33.197Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"error","message":"Error synchronizing models: logger is not defined","stack":"ReferenceError: logger is not defined\n    at loadModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/loadmodels.js:34:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:132:13)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:121:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:246:13)"}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7a13389e959037640539"}}
-{"level":"info","message":{"_id":"67af7a13389e95903764053a","createdAt":"2025-02-14T17:14:59.896Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:14:59.896Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7a2528d2c0ea9774e028"}}
-{"level":"info","message":{"_id":"67af7a2528d2c0ea9774e029","createdAt":"2025-02-14T17:15:17.734Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:15:17.734Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7a70ffb68cea5d0638a7"}}
-{"level":"info","message":{"_id":"67af7a70ffb68cea5d0638a8","createdAt":"2025-02-14T17:16:32.191Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:16:32.192Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7a88d8b8f40e457e8e9f"}}
-{"level":"info","message":{"_id":"67af7a88d8b8f40e457e8ea0","createdAt":"2025-02-14T17:16:56.208Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:16:56.208Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7a961158f3f810ad6875"}}
-{"level":"info","message":{"_id":"67af7a961158f3f810ad6876","createdAt":"2025-02-14T17:17:10.172Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:17:10.172Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7aa51498ec6b72518f75"}}
-{"level":"info","message":{"_id":"67af7aa51498ec6b72518f76","createdAt":"2025-02-14T17:17:25.431Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:17:25.431Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7aaea1bec994d76315ef"}}
-{"level":"info","message":{"_id":"67af7aaea1bec994d76315f0","createdAt":"2025-02-14T17:17:34.596Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:17:34.596Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":{"_id":"67af7ac45e3ceb2267415ecc"}}
-{"level":"info","message":{"_id":"67af7ac45e3ceb2267415ecd","createdAt":"2025-02-14T17:17:56.644Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:17:56.644Z"}}
-{"level":"info"}
-{"level":"info","message":"All models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MySQL"}
-{"level":"info","message":"MySQL connected!"}
-{"level":"info","message":"All Sequelize models were synchronized successfully."}
-{"level":"info","message":"Server running on http://localhost:8765"}
-{"level":"info","message":"MongoDB"}
-{"level":"info","message":"MongoDB connected!"}
-{"level":"error","message":"Error loading model from file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\UserMysql.js: sequelize.define is not a function","stack":"TypeError: sequelize.define is not a function\n    at Module.UserMysql (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/src/models/UserMysql.js:5:26)\n    at loadModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/loadmodels.js:31:54)\n    at async App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:131:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:249:13)"}
 {"level":"info","message":"All Mongoose models were loaded successfully."}
 {"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"Middleware Test Initialized"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
+{"level":"info","message":"Content-Type:"}
+{"level":"info","message":"Raw Body:"}
+{"level":"info","message":"Received user data:"}
 {"level":"info","message":"MongoDB"}
 {"level":"info","message":"MongoDB connected!"}
 {"level":"info","message":"All Mongoose models were loaded successfully."}

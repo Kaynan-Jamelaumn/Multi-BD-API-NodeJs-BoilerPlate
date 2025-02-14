@@ -11,7 +11,7 @@ export class App {
     constructor() {
         this.app = express();
         this.DB_TYPE = process.env.DB_TYPE || "mongo";
-        this.mongoConnectionString = process.env.DBCONNECTIONSTRING || "mongodb://localhost:27017/test";
+        this.mongoConnectionString = process.env.MONGO_DB_CONNECTION_STRING || "mongodb://localhost:27017/test";
         this.sequelize = null;
         this.logger = winston.createLogger({
             level: "info",

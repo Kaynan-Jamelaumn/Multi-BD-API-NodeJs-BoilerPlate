@@ -217,17 +217,17 @@ class App {
         this.app.use(express.static("./public")); // Apply custom application routes
 
         // Setup rate limiter to prevent abuse (limit to 100 requests per 15 minutes)
-        const limiter = rateLimit({
-            windowMs: 15 * 60 * 1000, // 15 minutes window
-            max: 100, // Max 100 requests per window
-        });
-        this.app.use(limiter); // Apply rate limiter globally
+        // const limiter = rateLimit({
+        //     windowMs: 15 * 60 * 1000, // 15 minutes window
+        //     max: 100, // Max 100 requests per window
+        // });
+        // this.app.use(limiter); // Apply rate limiter globally
 
         // Setup CORS to allow cross-origin requests (mainly for the frontend)
         this.app.use(
             cors({
                 origin:
-                    process.env.FRONTEND_URL || `http://localhost:${this.port}`, // Allow frontend from specified URL or localhost
+                process.env.FRONTEND_URL || `http://localhost:${this.port}`, // Allow frontend from specified URL or localhost
                 credentials: true, // Allow credentials (cookies) to be included
             })
         );
@@ -236,6 +236,8 @@ class App {
         this.app.set("views", path.resolve(__dirname, "src", "views")); // Set the views directory
         this.app.set("view engine", "ejs"); // Set the template engine to EJS
 
+
+        
         // Function to setup global middlewares and routes
         this.app.use(middleWareGlobal); // Use global middleware (e.g., logging, error handling)
         this.app.use(checkCSRFError); // Check for CSRF errors

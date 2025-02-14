@@ -20,6 +20,65 @@ try {
 }
 
 class UserController {
+
+  async create(req, res) {
+    try {
+      logger.info("Content-Type:", req.headers['content-type']);
+      logger.info("Raw Body:", req.body); // Log the raw body
+      const userData = req.body;
+      logger.info("Received user data:", userData);
+      // Check if req.body exists
+      if (!req.body) {
+
+        return res.status(400).json({ error: 'Request body is missing.' });
+      }
+  
+      const { name, surname, email, password, bio, profilePicture, birthDate, role } = req.body;
+  
+      // Validate user data
+      await validateUserData({ name, surname, email, password });
+  
+      // Check if user already exists
+      let existingUser;
+      if (process.env.DB_TYPE === 'mongo') {
+        existingUser = await UserModel.findOne({ email });
+      } else if (process.env.DB_TYPE === 'mysql') {
+        existingUser = await UserModel.findOne({ where: { email } });
+      }
+  
+      if (existingUser) {
+        return res.status(400).json({ error: 'User with this email already exists.' });
+      }
+  
+      // Create new user
+      const newUser = {
+        name,
+        surname,
+        email,
+        password,
+        bio,
+        profilePicture,
+        birthDate,
+        role: role || 'User', // Default role is 'User'
+      };
+  
+      let createdUser;
+      if (process.env.DB_TYPE === 'mongo') {
+        createdUser = await UserModel.create(newUser);
+      } else if (process.env.DB_TYPE === 'mysql') {
+        createdUser = await UserModel.create(newUser);
+      }
+  
+      // Return the created user (excluding the password)
+      const userResponse = { ...createdUser.toJSON() };
+      delete userResponse.password;
+  
+      return res.status(201).json(userResponse);
+    } catch (error) {
+      logger.error('Error creating user:', error);
+      return res.status(400).json({ error: error.message });
+    }
+  }
   async login(req, res) {
     const { email, password } = req.body;
 
@@ -73,6 +132,28 @@ class UserController {
       logger.error('Error validating user:', error);
       throw error;
     }
+  }
+
+  async validateUserData(userData) {
+    const { name, surname, email, password } = userData;
+  
+    // Validate required fields
+    if (!name || !surname || !email || !password) {
+      throw new Error('All fields (name, surname, email, password) are required.');
+    }
+  
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new Error('Invalid email format.');
+    }
+  
+    // Validate password length
+    if (password.length < 8) {
+      throw new Error('Password must be at least 8 characters long.');
+    }
+  
+    // Additional validations can be added here (e.g., birthDate, role, etc.)
   }
 }
 
