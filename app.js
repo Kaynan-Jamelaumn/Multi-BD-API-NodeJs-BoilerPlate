@@ -13,7 +13,7 @@ import { fileURLToPath } from "url"; // To work with URLs in ES modules
 import express from "express"; // Web framework for routing and handling HTTP requests
 import mongoose from "mongoose"; // MongoDB object modeling tool
 import MongoStore from "connect-mongo"; // Session store for MongoDB
-import { Sequelize } from "sequelize";
+//import { Sequelize } from "sequelize";
 import connectSessionSequelize from "connect-session-sequelize";
 
 // Flash
@@ -51,13 +51,16 @@ const __dirname = path.dirname(__filename); // Get the directory name of the cur
 // import { setupCSRFProtection } from "./config/csrf.js";
 // import { setupGlobalMiddlewaresAndRoutes } from "./config/middlewares.js";
 
+import sequelizeConfiguration from "./dbconfig/databaseSequelize.js";
+
+
 class App {
     constructor() {
         this.app = express();
         this.DB_TYPE = process.env.DB_TYPE || "mongo";
         this.mongoConnectionString =
             process.env.DBCONNECTIONSTRING || "mongodb://localhost:27017/test"; // Attempt to connect to the database
-        this.sequelize = null;
+        this.sequelize = sequelizeConfiguration;
         this.logger = winston.createLogger({
             level: "info",
             format: winston.format.json(),
@@ -105,21 +108,6 @@ class App {
                 "Failed to connect to MongoDB after multiple attempts" // Error message when connection fails.
             );
         } else if (this.DB_TYPE === "mysql") {
-            // Configure MySQL connection parameters using Sequelize.
-            this.sequelize = new Sequelize(
-                process.env.DB_NAME || "database", // Database name, with fallback to "database".
-                process.env.DB_USER || "root", // Database user, with fallback to "root".
-                process.env.DB_PASSWORD || "", // Database password, with fallback to empty string.
-                {
-                    host: process.env.DB_HOST || "localhost", // Database host, with fallback to "localhost".
-                    dialect: "mysql", // Set the dialect to MySQL.
-                    logging: process.env.NODE_ENV === "development" ? console.log : false, // Enable logging in development.
-                    retry: {
-                        max: 5, // Set the maximum retries for Sequelize connection.
-                        timeout: 60000, // Set the timeout for each retry attempt.
-                    },
-                }
-            );
             // Attempt to connect to MySQL using Sequelize's authenticate method.
             await connectWithRetry(
                 () => this.sequelize.authenticate(), // MySQL connection function (authenticate).

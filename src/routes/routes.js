@@ -1,6 +1,6 @@
 // mainRouter.js
 import express from 'express';
- import userRouter from './routes/userRouter.js'; // Example user router
+import userRouter from './userRouter.js';// Example user router
 // import authRouter from './routes/authRouter.js'; // Example auth router
 
 import { paginaInicial } from '../controllers/homeController.js'; 
