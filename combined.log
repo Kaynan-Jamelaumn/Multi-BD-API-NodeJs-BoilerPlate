@@ -437,3 +437,16 @@
 {"level":"info"}
 {"level":"info","message":"All models were synchronized successfully."}
 {"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All Sequelize models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"error","message":"Error loading model from file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\UserMysql.js: sequelize.define is not a function","stack":"TypeError: sequelize.define is not a function\n    at Module.UserMysql (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/src/models/UserMysql.js:5:26)\n    at loadModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/loadmodels.js:31:54)\n    at async App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:131:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:249:13)"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}

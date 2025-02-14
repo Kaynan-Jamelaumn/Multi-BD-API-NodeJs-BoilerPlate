@@ -64,6 +64,7 @@ class App {
         this.mongoConnectionString =
             process.env.DBCONNECTIONSTRING || "mongodb://localhost:27017/test"; // Attempt to connect to the database
         this.sequelize = sequelizeConfiguration;
+        this.mongoose = mongoose;
         this.logger = winston.createLogger({
             level: "info",
             format: winston.format.json(),
@@ -119,7 +120,6 @@ class App {
                 "MySQL connection", // Error message for MySQL connection.
                 "Failed to connect to MySQL after multiple attempts" // Error message when connection fails.
             );
-            await this.syncModels();
         } else {
             // Throw an error if the DB_TYPE is not recognized.
             throw new Error(`Unsupported database type: ${this.DB_TYPE}`);
@@ -128,11 +128,14 @@ class App {
     
     async syncModels() {
         try {
-            // Load all models from the specified directory
-            await loadModels(this.sequelize, this.modelsPath);
-            // Synchronize all models to sequelize
-            await this.sequelize.sync({ force: false }); // Set `force: true` to drop and recreate tables
-            this.logger.info('All models were synchronized successfully.');
+            await loadModels(this.DB_TYPE, this.sequelize, this.mongoose, this.modelsPath);
+            if (this.DB_TYPE === "mysql") {
+                await this.sequelize.sync({ force: false }); // Synchronize Sequelize models
+                this.logger.info('All Sequelize models were synchronized successfully.');
+            } else if (this.DB_TYPE === "mongo") {
+                // Mongoose models are automatically synchronized, so no need to call sync()
+                this.logger.info('All Mongoose models were loaded successfully.');
+            }
         } catch (error) {
             this.logger.error('Error synchronizing models:', error);
         }
@@ -243,6 +246,7 @@ class App {
         this.port = port;
         try {
             await this.connectToDatabase(); // Connect to MongoDB
+            await this.syncModels(); // SIncronize models between mongo db and mysql
             this.setupSessionAndFlash(); // Setup session and flash messages
             this.setupCSRFProtection(); // Setup CSRF protection
             this.setupGlobalMiddlewaresAndRoutes(); // Setup global middlewares and routes
