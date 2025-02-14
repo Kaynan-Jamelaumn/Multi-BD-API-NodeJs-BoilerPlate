@@ -62,7 +62,7 @@ class App {
         this.app = express();
         this.DB_TYPE = process.env.DB_TYPE || "mongo";
         this.mongoConnectionString =
-            process.env.DBCONNECTIONSTRING || "mongodb://localhost:27017/test"; // Attempt to connect to the database
+            process.env.MONGO_DB_CONNECTION_STRING || "mongodb://localhost:27017/test"; // Attempt to connect to the database
         this.sequelize = sequelizeConfiguration;
         this.mongoose = mongoose;
         this.logger = winston.createLogger({
@@ -160,7 +160,7 @@ class App {
         }
         // Configure session options
         const sessionOptions = session({
-            secret: process.env.SESSIONSECRET || "defaultsecret", // Secret key for signing session ID
+            secret: process.env.SESSION_SECRET || "defaultsecret", // Secret key for signing session ID
             store: store, // Use the correct store (MongoDB or MySQL)
             resave: false, // Don't resave session if not modified
             saveUninitialized: false, // Don't save empty sessions
