@@ -51,6 +51,9 @@ const __dirname = path.dirname(__filename); // Get the directory name of the cur
 // import { setupCSRFProtection } from "./config/csrf.js";
 // import { setupGlobalMiddlewaresAndRoutes } from "./config/middlewares.js";
 
+
+import  loadModels  from './loadmodels.js' // models loader from sequelize
+
 import sequelizeConfiguration from "./dbconfig/databaseSequelize.js";
 
 
@@ -74,6 +77,7 @@ class App {
             ],
         });
         this.port = null;
+        this.modelsPath = path.resolve('./src/models');
     }
 
     async connectToDatabase() {
@@ -115,13 +119,24 @@ class App {
                 "MySQL connection", // Error message for MySQL connection.
                 "Failed to connect to MySQL after multiple attempts" // Error message when connection fails.
             );
+            await this.syncModels();
         } else {
             // Throw an error if the DB_TYPE is not recognized.
             throw new Error(`Unsupported database type: ${this.DB_TYPE}`);
         }
     }
     
-    
+    async syncModels() {
+        try {
+            // Load all models from the specified directory
+            await loadModels(this.sequelize, this.modelsPath);
+            // Synchronize all models to sequelize
+            await this.sequelize.sync({ force: false }); // Set `force: true` to drop and recreate tables
+            this.logger.info('All models were synchronized successfully.');
+        } catch (error) {
+            this.logger.error('Error synchronizing models:', error);
+        }
+    }
     // Function to setup session management and flash messaging
     setupSessionAndFlash() {
         let store;

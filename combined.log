@@ -244,3 +244,196 @@
 {"level":"info","message":"MySQL"}
 {"level":"info","message":"MySQL connected!"}
 {"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"code":"ERR_UNSUPPORTED_ESM_URL_SCHEME","level":"error","message":"Error synchronizing models: Only URLs with a scheme in: file and data are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'","stack":"Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file and data are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at new NodeError (node:internal/errors:399:5)\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/resolve:1059:11)\n    at defaultResolve (node:internal/modules/esm/resolve:1135:3)\n    at nextResolve (node:internal/modules/esm/loader:163:28)\n    at ESMLoader.resolve (node:internal/modules/esm/loader:838:30)\n    at ESMLoader.getModuleJob (node:internal/modules/esm/loader:424:18)\n    at ESMLoader.import (node:internal/modules/esm/loader:525:22)\n    at importModuleDynamically (node:internal/modules/esm/translators:110:35)\n    at importModuleDynamicallyCallback (node:internal/process/esm_loader:35:14)\n    at loadModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:69:29)"}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"error","message":"Error synchronizing models: loadModels is not defined","stack":"ReferenceError: loadModels is not defined\n    at App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:134:13)\n    at App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:123:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:275:13)"}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"error","message":"Error synchronizing models: loadModels is not defined","stack":"ReferenceError: loadModels is not defined\n    at App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:134:13)\n    at App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:123:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:275:13)"}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"error","message":"Error synchronizing models: loadModels is not defined","stack":"ReferenceError: loadModels is not defined\n    at App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:134:13)\n    at App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:123:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:275:13)"}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"error","message":"Error synchronizing models: loadModels is not defined","stack":"ReferenceError: loadModels is not defined\n    at App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:134:13)\n    at App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:123:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:275:13)"}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7937a88ba63238b605c7"}}
+{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\HomeModel.js"}
+{"level":"info","message":{"_id":"67af7937a88ba63238b605c8","createdAt":"2025-02-14T17:11:19.356Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:11:19.357Z"}}
+{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\UserMongo.js"}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af794113efba8ebd969c0f"}}
+{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\HomeModel.js"}
+{"level":"info","message":{"_id":"67af794113efba8ebd969c10","createdAt":"2025-02-14T17:11:29.705Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:11:29.705Z"}}
+{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\UserMongo.js"}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af795bce15c1345a901414"}}
+{"level":"info","message":{"_id":"67af795bce15c1345a901415","createdAt":"2025-02-14T17:11:55.064Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:11:55.064Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7968cd229a4f51b47ff0"}}
+{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\HomeModel.js"}
+{"level":"info","message":{"_id":"67af7968cd229a4f51b47ff1","createdAt":"2025-02-14T17:12:08.957Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:12:08.957Z"}}
+{"level":"warn","message":"Skipping invalid model in file C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\src\\models\\UserMongo.js"}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af79715037c4322955c8fe"}}
+{"level":"info","message":{"_id":"67af79715037c4322955c8ff","createdAt":"2025-02-14T17:12:17.594Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:12:17.594Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7979a93599306828de38"}}
+{"level":"info","message":{"_id":"67af7979a93599306828de39","createdAt":"2025-02-14T17:12:25.063Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:12:25.063Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7981d96106a8488ef8d5"}}
+{"level":"info","message":{"_id":"67af7981d96106a8488ef8d6","createdAt":"2025-02-14T17:12:33.252Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:12:33.252Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af79a7c0390e5f6dedc58d"}}
+{"level":"info","message":{"_id":"67af79a7c0390e5f6dedc58e","createdAt":"2025-02-14T17:13:11.578Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:13:11.579Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af79bda252dfd098e89ec7"}}
+{"level":"info","message":{"_id":"67af79bda252dfd098e89ec8","createdAt":"2025-02-14T17:13:33.197Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:13:33.197Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"error","message":"Error synchronizing models: logger is not defined","stack":"ReferenceError: logger is not defined\n    at loadModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/loadmodels.js:34:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async App.syncModels (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:132:13)\n    at async App.connectToDatabase (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:121:13)\n    at async App.start (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/app.js:246:13)"}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7a13389e959037640539"}}
+{"level":"info","message":{"_id":"67af7a13389e95903764053a","createdAt":"2025-02-14T17:14:59.896Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:14:59.896Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7a2528d2c0ea9774e028"}}
+{"level":"info","message":{"_id":"67af7a2528d2c0ea9774e029","createdAt":"2025-02-14T17:15:17.734Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:15:17.734Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7a70ffb68cea5d0638a7"}}
+{"level":"info","message":{"_id":"67af7a70ffb68cea5d0638a8","createdAt":"2025-02-14T17:16:32.191Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:16:32.192Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7a88d8b8f40e457e8e9f"}}
+{"level":"info","message":{"_id":"67af7a88d8b8f40e457e8ea0","createdAt":"2025-02-14T17:16:56.208Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:16:56.208Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7a961158f3f810ad6875"}}
+{"level":"info","message":{"_id":"67af7a961158f3f810ad6876","createdAt":"2025-02-14T17:17:10.172Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:17:10.172Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7aa51498ec6b72518f75"}}
+{"level":"info","message":{"_id":"67af7aa51498ec6b72518f76","createdAt":"2025-02-14T17:17:25.431Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:17:25.431Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7aaea1bec994d76315ef"}}
+{"level":"info","message":{"_id":"67af7aaea1bec994d76315f0","createdAt":"2025-02-14T17:17:34.596Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:17:34.596Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MySQL"}
+{"level":"info","message":"MySQL connected!"}
+{"level":"info","message":{"_id":"67af7ac45e3ceb2267415ecc"}}
+{"level":"info","message":{"_id":"67af7ac45e3ceb2267415ecd","createdAt":"2025-02-14T17:17:56.644Z","isActive":true,"profilePicture":"default-profile.jpg","role":"User","updatedAt":"2025-02-14T17:17:56.644Z"}}
+{"level":"info"}
+{"level":"info","message":"All models were synchronized successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
