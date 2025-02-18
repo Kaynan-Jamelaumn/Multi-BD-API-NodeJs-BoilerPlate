@@ -23,6 +23,7 @@ class UserController {
   constructor() {
     this.validateUserData = this.validateUserData.bind(this);
     this.create = this.create.bind(this);
+    this.update =  this.update.bind(this);
   }
   async create(req, res) {
     try {
@@ -108,6 +109,68 @@ class UserController {
       return res.status(500).json({ error: 'Invalid authentication type' });
     }
   }
+  async update(req, res) {
+    try {
+      const { id } = req.params;
+      const { name, surname, email, password, bio, profilePicture, birthDate, role } = req.body;
+  
+      let user;
+      if (process.env.DB_TYPE === 'mongo') {
+        user = await UserModel.findById(id);
+      } else if (process.env.DB_TYPE === 'mysql') {
+        user = await UserModel.findByPk(id);
+      }
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found.' });
+      }
+  
+        await this.validateUserData({
+          name: name || user.name,
+          surname: surname || user.surname,
+          email: email || user.email,
+          password: password || user.password,
+        });
+  
+      if (email && email !== user.email) {
+        let existingUser;
+        if (process.env.DB_TYPE === 'mongo') {
+          existingUser = await UserModel.findOne({ email });
+        } else if (process.env.DB_TYPE === 'mysql') {
+          existingUser = await UserModel.findOne({ where: { email } });
+        }
+  
+        if (existingUser) {
+          return res.status(400).json({ error: 'Email is already in use by another user.' });
+        }
+      }
+  
+      // Update only the modified fields
+      user.name = name || user.name;
+      user.surname = surname || user.surname;
+      user.email = email || user.email;
+      user.bio = bio || user.bio;
+      user.profilePicture = profilePicture || user.profilePicture;
+      user.birthDate = birthDate || user.birthDate;
+      user.role = role || user.role;
+  
+      // Password hash will be automatically be updated by the hooks on the DB 
+      if (password) {
+        user.password = password;
+      }
+  
+      await user.save();
+  
+      const updatedUser = { ...user.toJSON() };
+      delete updatedUser.password;
+  
+      return res.status(200).json(updatedUser);
+    } catch (error) {
+      logger.error('Error updating user:', error);
+      return res.status(500).json({ error: 'Internal server error.' });
+    }
+  }
+  
 
   // Validate user by querying the appropriate database
   async validateUser(email, password) {
