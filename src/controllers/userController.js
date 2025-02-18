@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import { logger } from "../../app.js";
 import "dotenv/config";
 import dotenvExpand from "dotenv-expand";
+import jwt from 'jsonwebtoken';
+import { logger } from "../../app.js";
 dotenvExpand.expand(process.env);
 
 // Dynamically import the appropriate model based on DB_TYPE
@@ -22,22 +22,24 @@ try {
 class UserController {
   constructor() {
     this.validateUserData = this.validateUserData.bind(this);
+    this.validateUserDataForUpdate = this.validateUserDataForUpdate.bind(this);
     this.create = this.create.bind(this);
     this.update =  this.update.bind(this);
+    this.login =  this.login.bind(this);
   }
+
   async create(req, res) {
     try {
       logger.info("Raw Body:", req.body); // Log the raw body
       // Check if req.body exists
       if (!req.body) {
-
         return res.status(400).json({ error: 'Request body is missing.' });
       }
   
       const { name, surname, email, password, bio, profilePicture, birthDate, role } = req.body;
   
       // Validate user data
-      await this.validateUserData({ name, surname, email, password });
+      await this.validateUserData({ name, surname, email, password }, res);
   
       // Check if user already exists
       let existingUser;
@@ -80,40 +82,58 @@ class UserController {
       return res.status(400).json({ error: error.message });
     }
   }
-  async login(req, res) {
-    const { email, password } = req.body;
 
-    // Validate user
-    const user = await this.validateUser(email, password);
-
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password' });
-    }
-
-    const authType = process.env.TYPEAUTH;
-
-    if (authType === 'JWT') {
-      // JWT-based authentication
-      const token = jwt.sign(
-        { id: user.id || user._id, email: user.email }, // Handle both MongoDB and MySQL IDs
-        process.env.JWTSECRET || "defaultsecret",
-        { expiresIn: '1h' } // Token expiration time
-      );
-
-      return res.json({ token });
-    } else if (authType === 'session') {
-      // Session-based authentication
-      req.session.user = { id: user.id || user._id, email: user.email }; // Handle both MongoDB and MySQL IDs
-      return res.json({ message: 'Logged in successfully' });
-    } else {
-      return res.status(500).json({ error: 'Invalid authentication type' });
+  async getUsers(req, res) {
+    try {
+      let users;
+  
+      if (process.env.DB_TYPE === 'mongo') {
+        users = await UserModel.find().select({ password: 0 }); // MongoDB query
+        
+      } else if (process.env.DB_TYPE === 'mysql') {
+        users = await UserModel.findAll({
+          attributes: { exclude: ['password'] },
+        });// MySQL query
+      }
+      
+      if (!users) {
+        return res.status(404).json({ message: 'No users were found' });
+      }
+  
+      return res.status(200).json(users);
+    } catch (error) {
+      logger.error('Error fetching users:', error);
+      return res.status(500).json({ error: 'Internal server error.' });
     }
   }
+
+  async getUser(req, res) {
+    try {
+      const id = req.params.id || req.body.id;
+      let user;
+  
+      if (process.env.DB_TYPE === 'mongo') {
+        user = await UserModel.findOne({ _id: id }); // MongoDB query
+      } else if (process.env.DB_TYPE === 'mysql') {
+        user = await UserModel.findOne({ where: { id: id } }); // MySQL query
+      }
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found.' });
+      }
+  
+      return res.status(200).json(user);
+    } catch (error) {
+      logger.error('Error fetching user:', error);
+      return res.status(500).json({ error: 'Internal server error.' });
+    }
+  }
+
   async update(req, res) {
     try {
-      const { id } = req.params;
+      const id = req.params.id || req.body.id;
       const { name, surname, email, password, bio, profilePicture, birthDate, role } = req.body;
-  
+      console.log('User ID:', id); 
       let user;
       if (process.env.DB_TYPE === 'mongo') {
         user = await UserModel.findById(id);
@@ -125,12 +145,14 @@ class UserController {
         return res.status(404).json({ error: 'User not found.' });
       }
   
-        await this.validateUserData({
-          name: name || user.name,
-          surname: surname || user.surname,
-          email: email || user.email,
-          password: password || user.password,
-        });
+      // Validate user data for update
+      await this.validateUserDataForUpdate({
+        name,
+        surname,
+        email,
+        password,
+        role,
+      }, res);
   
       if (email && email !== user.email) {
         let existingUser;
@@ -170,7 +192,39 @@ class UserController {
       return res.status(500).json({ error: 'Internal server error.' });
     }
   }
-  
+
+
+
+
+  async login(req, res) {
+    const { email, password } = req.body;
+
+    // Validate user
+    const user = await this.validateUser(email, password);
+
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    const authType = process.env.TYPEAUTH;
+
+    if (authType === 'JWT') {
+      // JWT-based authentication
+      const token = jwt.sign(
+        { id: user.id || user._id, email: user.email }, // Handle both MongoDB and MySQL IDs
+        process.env.JWTSECRET || "defaultsecret",
+        { expiresIn: '1h' } // Token expiration time
+      );
+
+      return res.json({ token });
+    } else if (authType === 'session') {
+      // Session-based authentication
+      req.session.user = { id: user.id || user._id, email: user.email }; // Handle both MongoDB and MySQL IDs
+      return res.json({ message: 'Logged in successfully' });
+    } else {
+      return res.status(500).json({ error: 'Invalid authentication type' });
+    }
+  }
 
   // Validate user by querying the appropriate database
   async validateUser(email, password) {
@@ -197,38 +251,79 @@ class UserController {
     }
   }
 
-
-  async validateUserData(userData) {
-    const { name, surname, email, password } = userData;
+  async validateUserData(userData, res) {
+    const { name, surname, email, password, role } = userData;
   
     // Validate required fields
     if (!name || !surname || !email || !password) {
-      throw new Error('All fields (name, surname, email, password) are required.');
+      return res.status(400).json({ error: 'All fields (name, surname, email, password) are required.' });
     }
-
+  
     // Validate name and surname length
     if (name.length < 2 || surname.length < 2) {
-      throw new Error('Name and surname must be at least 2 characters long.');
+      return res.status(400).json({ error: 'Name and surname must be at least 2 characters long.' });
     }
   
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      throw new Error('Invalid email format.');
-    }
-
-    // Validate password length and strength
-    //const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; <- password regex including special chars
-    const passwordREgex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!passwordRegex.test(password)) {
-      throw new Error('Password must be at least 8 characters long and include an uppercase letter, a lowercase letter and a number.');
-    }
-     // Validate role
-    if (role && !['User', 'Admin'].includes(role)) {
-      throw new Error('Invalid role. Allowed values are "User" or "Admin".');
+      return res.status(400).json({ error: 'Invalid email format.' });
     }
   
+    // Validate password length and strength
+    //const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; <- password regex including special chars    //const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; <- password regex including special chars
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        error: 'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number.',
+      });
+    }
+  
+    // Validate role
+    if (role && !['User', 'Admin'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid role. Allowed values are "User" or "Admin".' });
+    }
+  
+    return true; // Validation successful
   }
+
+  async validateUserDataForUpdate(userData, res) {
+    const { name, surname, email, password, role } = userData;
+  
+    // Validate name and surname length if provided
+    if (name && name.length < 2) {
+      return res.status(400).json({ error: 'Name must be at least 2 characters long.' });
+    }
+    if (surname && surname.length < 2) {
+      return res.status(400).json({ error: 'Surname must be at least 2 characters long.' });
+    }
+  
+    // Validate email format if provided
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Invalid email format.' });
+      }
+    }
+  
+    // Validate password length and strength if provided
+    if (password) {
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      if (!passwordRegex.test(password)) {
+        return res.status(400).json({
+          error: 'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number.',
+        });
+      }
+    }
+  
+    // Validate role if provided
+    if (role && !['User', 'Admin'].includes(role)) {
+      return res.status(400).json({ error: 'Invalid role. Allowed values are "User" or "Admin".' });
+    }
+  
+    return true; // Validation successful
+  }
+
 }
 
 export default new UserController();
