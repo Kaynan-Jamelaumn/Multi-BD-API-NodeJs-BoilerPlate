@@ -84,28 +84,41 @@ class UserController {
     }
   }
 
-  async getUsers(req, res) {
+  async fetchUsers(query, res) {
     try {
       let users;
-  
+
       if (process.env.DB_TYPE === 'mongo') {
-        users = await UserModel.find().select({ password: 0 }); // MongoDB query
-        
+        users = await UserModel.find(query).select({ password: 0 }); // MongoDB query
       } else if (process.env.DB_TYPE === 'mysql') {
+        const whereClause = query ? { where: query } : {};
         users = await UserModel.findAll({
+          ...whereClause,
           attributes: { exclude: ['password'] },
-        });// MySQL query
+        }); // MySQL query
       }
-      
-      if (!users) {
+
+      if (!users || users.length === 0) {
         return res.status(404).json({ message: 'No users were found' });
       }
-  
+
       return res.status(200).json(users);
     } catch (error) {
       logger.error('Error fetching users:', error);
       return res.status(500).json({ error: 'Internal server error.' });
     }
+  }
+
+  async getUsers(req, res) {
+    return this.fetchUsers(null, res); // Fetch all users
+  }
+
+  async getInactiveUsers(req, res) {
+    return this.fetchUsers({ isActive: false }, res); // Fetch inactive users
+  }
+
+  async getActiveUsers(req, res) {
+    return this.fetchUsers({ isActive: true }, res); // Fetch active users
   }
 
   async self(req, res) {
@@ -249,6 +262,10 @@ class UserController {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    // Check if the user is active
+    if (user.isActive === false) {
+      return res.status(403).json({ error: 'Your account is deactivated. Please contact support.' });
+    }
     const authType = process.env.TYPEAUTH;
 
     if (authType === 'JWT') {
