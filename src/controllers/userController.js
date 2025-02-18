@@ -131,7 +131,8 @@ class UserController {
 
   async update(req, res) {
     try {
-      const id = req.params.id || req.body.id;
+      // Use the logged-in user's ID if they are not an admin
+      const id = req.user.role === 'Admin' ? req.params.id || req.body.id : req.user.id;
       const { name, surname, email, password, bio, profilePicture, birthDate, role } = req.body;
       console.log('User ID:', id); 
       let user;
@@ -144,11 +145,7 @@ class UserController {
       if (!user) {
         return res.status(404).json({ error: 'User not found.' });
       }
-
-      // Check if the logged-in user is the same as the user being updated or if the user is an admin
-      if (req.user.id !== id && req.user.role !== 'Admin') {
-        return res.status(403).json({ error: 'Forbidden. You do not have permission to update this user.' });
-      }
+  
   
       // Validate user data for update
       await this.validateUserDataForUpdate({
@@ -181,7 +178,7 @@ class UserController {
       user.birthDate = birthDate || user.birthDate;
       user.role = role || user.role;
   
-      // Password hash will be automatically be updated by the hooks on the DB 
+      // Password hash will be automatically updated by the hooks on the DB
       if (password) {
         user.password = password;
       }
