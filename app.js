@@ -141,7 +141,7 @@ class App {
         }
     }
     // Function to setup session management and flash messaging
-    setupSessionAndFlash() {
+    async setupSessionAndFlash() {
         let store;
 
         // Create a session store using MongoDB or MySQL
@@ -157,6 +157,7 @@ class App {
                 db: this.sequelize,
                 tableName: "sessions",
             });
+            await store.sync();
         }
         // Configure session options
         const sessionOptions = session({
@@ -212,16 +213,16 @@ class App {
     // Function to setup global middlewares and routes
     setupGlobalMiddlewaresAndRoutes() {
         this.app.use(helmet());
-        this.app.use(express.urlencoded({ extended: true })); // Use global middleware (e.g., logging, error handling)
         this.app.use(express.json()); // Check for CSRF errors
+        this.app.use(express.urlencoded({ extended: true })); // Use global middleware (e.g., logging, error handling)
         this.app.use(express.static("./public")); // Apply custom application routes
 
         // Setup rate limiter to prevent abuse (limit to 100 requests per 15 minutes)
-        // const limiter = rateLimit({
-        //     windowMs: 15 * 60 * 1000, // 15 minutes window
-        //     max: 100, // Max 100 requests per window
-        // });
-        // this.app.use(limiter); // Apply rate limiter globally
+        const limiter = rateLimit({
+            windowMs: 15 * 60 * 1000, // 15 minutes window
+            max: 100, // Max 100 requests per window
+        });
+        this.app.use(limiter); // Apply rate limiter globally
 
         // Setup CORS to allow cross-origin requests (mainly for the frontend)
         this.app.use(
@@ -249,7 +250,7 @@ class App {
         try {
             await this.connectToDatabase(); // Connect to MongoDB
             await this.syncModels(); // SIncronize models between mongo db and mysql
-            this.setupSessionAndFlash(); // Setup session and flash messages
+            await this.setupSessionAndFlash(); // Setup session and flash messages
             this.setupCSRFProtection(); // Setup CSRF protection
             this.setupGlobalMiddlewaresAndRoutes(); // Setup global middlewares and routes
             this.app.listen(port, () =>

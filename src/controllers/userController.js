@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { logger } from '../../app.js';
+import { logger } from "../../app.js";
 import "dotenv/config";
 import dotenvExpand from "dotenv-expand";
 dotenvExpand.expand(process.env);
@@ -15,7 +15,7 @@ try {
     throw new Error('Invalid DB_TYPE in .env file. Must be "mongo" or "mysql".');
   }
 } catch (error) {
-  logger.error('Error loading user model:', error);
+  console.log('Error loading user model:', error);
   throw new Error('Failed to load user model');
 }
 
@@ -23,6 +23,9 @@ class UserController {
 
   async create(req, res) {
     try {
+      logger.info("Headers:", req.headers);
+      logger.info("Body Type:", typeof req.body);
+      logger.info("Received Body:", JSON.stringify(req.body));
       logger.info("Content-Type:", req.headers['content-type']);
       logger.info("Raw Body:", req.body); // Log the raw body
       const userData = req.body;
