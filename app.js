@@ -213,8 +213,7 @@ class App {
     // Function to setup global middlewares and routes
     setupGlobalMiddlewaresAndRoutes() {
         this.app.use(helmet());
-        this.app.use(express.json()); // Check for CSRF errors
-        this.app.use(express.urlencoded({ extended: true })); // Use global middleware (e.g., logging, error handling)
+
         this.app.use(express.static("./public")); // Apply custom application routes
 
         // Setup rate limiter to prevent abuse (limit to 100 requests per 15 minutes)
@@ -251,8 +250,13 @@ class App {
             await this.connectToDatabase(); // Connect to MongoDB
             await this.syncModels(); // SIncronize models between mongo db and mysql
             await this.setupSessionAndFlash(); // Setup session and flash messages
-            this.setupCSRFProtection(); // Setup CSRF protection
+            
+            this.app.use(express.json());
+            this.app.use(express.urlencoded({ extended: true }));
+
             this.setupGlobalMiddlewaresAndRoutes(); // Setup global middlewares and routes
+            this.setupCSRFProtection(); // Setup CSRF protection
+            
             this.app.listen(port, () =>
                 this.logger.info(`Server running on http://localhost:${port}`)
             ); // Start the server
