@@ -20,16 +20,13 @@ try {
 }
 
 class UserController {
-
+  constructor() {
+    this.validateUserData = this.validateUserData.bind(this);
+    this.create = this.create.bind(this);
+  }
   async create(req, res) {
     try {
-      logger.info("Headers:", req.headers);
-      logger.info("Body Type:", typeof req.body);
-      logger.info("Received Body:", JSON.stringify(req.body));
-      logger.info("Content-Type:", req.headers['content-type']);
       logger.info("Raw Body:", req.body); // Log the raw body
-      const userData = req.body;
-      logger.info("Received user data:", userData);
       // Check if req.body exists
       if (!req.body) {
 
@@ -39,7 +36,7 @@ class UserController {
       const { name, surname, email, password, bio, profilePicture, birthDate, role } = req.body;
   
       // Validate user data
-      await validateUserData({ name, surname, email, password });
+      await this.validateUserData({ name, surname, email, password });
   
       // Check if user already exists
       let existingUser;
@@ -137,6 +134,7 @@ class UserController {
     }
   }
 
+
   async validateUserData(userData) {
     const { name, surname, email, password } = userData;
   
@@ -156,7 +154,6 @@ class UserController {
       throw new Error('Password must be at least 8 characters long.');
     }
   
-    // Additional validations can be added here (e.g., birthDate, role, etc.)
   }
 }
 
