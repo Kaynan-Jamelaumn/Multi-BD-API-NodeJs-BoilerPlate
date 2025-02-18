@@ -142,16 +142,27 @@ class UserController {
     if (!name || !surname || !email || !password) {
       throw new Error('All fields (name, surname, email, password) are required.');
     }
+
+    // Validate name and surname length
+    if (name.length < 2 || surname.length < 2) {
+      throw new Error('Name and surname must be at least 2 characters long.');
+    }
   
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       throw new Error('Invalid email format.');
     }
-  
-    // Validate password length
-    if (password.length < 8) {
-      throw new Error('Password must be at least 8 characters long.');
+
+    // Validate password length and strength
+    //const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; <- password regex including special chars
+    const passwordREgex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      throw new Error('Password must be at least 8 characters long and include an uppercase letter, a lowercase letter and a number.');
+    }
+     // Validate role
+    if (role && !['User', 'Admin'].includes(role)) {
+      throw new Error('Invalid role. Allowed values are "User" or "Admin".');
     }
   
   }
