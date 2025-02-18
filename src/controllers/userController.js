@@ -144,6 +144,11 @@ class UserController {
       if (!user) {
         return res.status(404).json({ error: 'User not found.' });
       }
+
+      // Check if the logged-in user is the same as the user being updated or if the user is an admin
+      if (req.user.id !== id && req.user.role !== 'Admin') {
+        return res.status(403).json({ error: 'Forbidden. You do not have permission to update this user.' });
+      }
   
       // Validate user data for update
       await this.validateUserDataForUpdate({
