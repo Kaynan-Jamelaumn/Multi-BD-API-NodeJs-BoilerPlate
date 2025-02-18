@@ -282,6 +282,25 @@ class UserController {
     }
   }
 
+  
+  async logout(req, res) {
+    try {
+      if (process.env.TYPEAUTH === 'session') {
+        req.session.destroy((err) => {
+          if (err) {
+            logger.error('Error destroying session:', err);
+            return res.status(500).json({ error: 'Could not log out, please try again.' });
+          }
+          return res.status(200).json({ message: 'Logged out successfully.' });
+        });
+      } else {
+        return res.status(200).json({ message: 'Logout successful (JWT-based authentication).' });
+      }
+    } catch (error) {
+      logger.error('Error logging out:', error);
+      return res.status(500).json({ error: 'Internal server error.' });
+    }
+  }
 
 
   async login(req, res) {
