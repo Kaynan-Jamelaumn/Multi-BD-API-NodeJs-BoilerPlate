@@ -13,5 +13,7 @@ router.get('/self/:id', UserController.self);
 router.get('/self/', UserController.self);
 router.get('/delete/:id', UserController.delete);
 router.get('/delete/', UserController.delete);
+router.get('/reactivate/:id', UserController.reactivate);
+router.get('/reactivate/', UserController.reactivate);
 // router.delete('/delete/', authMiddleware, UserController.delete);
 export default router;

@@ -250,6 +250,38 @@ class UserController {
     }
   }
 
+  async reactivate(req, res) {
+    try {
+      const id =  req.params.id || req.body.id;
+  
+      let user;
+      if (process.env.DB_TYPE === 'mongo') {
+        user = await UserModel.findById(id);
+      } else if (process.env.DB_TYPE === 'mysql') {
+        user = await UserModel.findByPk(id);
+      }
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found.' });
+      }
+  
+      if (user.isActive === true) {
+        return res.status(400).json({ error: 'User is already active.' });
+      }
+  
+      user.isActive = true;
+      await user.save();
+  
+      const updatedUser = user.toJSON();
+      delete updatedUser.password;
+  
+      return res.status(200).json({ message: 'User reactivated successfully.', user: updatedUser });
+    } catch (error) {
+      logger.error('Error reactivating user:', error);
+      return res.status(500).json({ error: 'Internal server error.' });
+    }
+  }
+
 
 
   async login(req, res) {
