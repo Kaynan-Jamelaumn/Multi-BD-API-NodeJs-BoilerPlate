@@ -26,6 +26,7 @@ class UserController {
     this.create = this.create.bind(this);
     this.update =  this.update.bind(this);
     this.login =  this.login.bind(this);
+    this.delete =  this.delete.bind(this);
   }
 
   async create(req, res) {
@@ -107,7 +108,7 @@ class UserController {
     }
   }
 
-  async getUser(req, res) {
+  async self(req, res) {
     try {
       const id = req.params.id || req.body.id;
       let user;
@@ -194,7 +195,47 @@ class UserController {
       return res.status(500).json({ error: 'Internal server error.' });
     }
   }
-
+  async delete(req, res) {
+    try {
+      // Use the logged-in user's ID if they are not an admin
+      const id = req.user.role === 'Admin' ? req.params.id || req.body.id : req.user.id;
+  
+      let user;
+      if (process.env.DB_TYPE === 'mongo') {
+        user = await UserModel.findById(id); // MongoDB
+      } else if (process.env.DB_TYPE === 'mysql') {
+        user = await UserModel.findByPk(id); // MySQL
+      }
+  
+      if (!user) {
+        return res.status(404).json({ error: 'User not found.' });
+      }
+  
+      // Check if the user is already deactivated
+      if (user.isActive === false) {
+        return res.status(400).json({ error: 'User is already deactivated.' });
+      }
+  
+      // Soft delete: Set isActive to false
+      user.isActive = false;
+  
+      // Save the updated user
+      if (process.env.DB_TYPE === 'mongo') {
+        await user.save(); // MongoDB
+      } else if (process.env.DB_TYPE === 'mysql') {
+        await user.save(); // MySQL (or use user.update({ isActive: false }))
+      }
+  
+      // Return the updated user (excluding sensitive fields like password)
+      const updatedUser = user.toJSON();
+      delete updatedUser.password;
+  
+      return res.status(200).json({ message: 'User deactivated successfully.', user: updatedUser });
+    } catch (error) {
+      logger.error('Error deactivating user:', error);
+      return res.status(500).json({ error: 'Internal server error.' });
+    }
+  }
 
 
 
