@@ -317,6 +317,11 @@ class UserController {
     if (user.isActive === false) {
       return res.status(403).json({ error: 'Your account is deactivated. Please contact support.' });
     }
+
+    // Update the lastLogin field to the current date
+    user.lastLogin = new Date();
+    await user.save(); 
+
     const authType = process.env.TYPEAUTH;
 
     if (authType === 'JWT') {

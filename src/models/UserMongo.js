@@ -62,6 +62,10 @@ const userSchema = new mongoose.Schema({
     enum: ["User", "Admin"],
     default: "User",
   },
+  lastLogin: {
+    type: Date,
+    default: null,
+  },
 });
 
 // Middleware to hash the password before saving

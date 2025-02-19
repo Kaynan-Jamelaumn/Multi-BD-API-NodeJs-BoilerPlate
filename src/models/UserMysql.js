@@ -74,6 +74,10 @@ const UserMysql = (sequelize) => {
         type: DataTypes.ENUM("User", "Admin"),
         defaultValue: "User",
       },
+      lastLogin: {
+        type: DataTypes.DATE,
+        defaultValue: null,
+      },
     },
     {
       hooks: {

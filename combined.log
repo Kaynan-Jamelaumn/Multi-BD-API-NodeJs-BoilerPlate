@@ -757,3 +757,7 @@
 {"level":"info","message":"All Mongoose models were loaded successfully."}
 {"level":"info","message":"Server running on http://localhost:8765"}
 {"level":"info","message":"Global middleware"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
