@@ -293,7 +293,7 @@ class UserController {
           }
           return res.status(200).json({ message: 'Logged out successfully.' });
         });
-      } else {
+      } else { //JWT -
         return res.status(200).json({ message: 'Logout successful (JWT-based authentication).' });
       }
     } catch (error) {
@@ -336,6 +336,80 @@ class UserController {
       return res.status(500).json({ error: 'Invalid authentication type' });
     }
   }
+  
+  async searchUsers(req, res) { // exp: GET /users/search?page=1&limit=10&search=john&role=User&sortBy=name&order=asc
+    try {
+        const page = Math.max(1, parseInt(req.query.page || '1'));
+        const limit = Math.min(100, Math.max(1, parseInt(req.query.limit || '10')));
+        const order = ['asc', 'desc'].includes(req.query.order?.toLowerCase()) ? req.query.order.toLowerCase() : 'desc';
+        const { search, role, sortBy = 'createdAt' } = req.query;
+        const query = { isActive: true };
+
+        // If a search term is provided, add it to the query
+        if (search) {
+            if (process.env.DB_TYPE === 'mongo') {
+                // For MongoDB: Use $regex for case-insensitive search on name and email fields
+                query.$or = [
+                    { name: { $regex: search, $options: 'i' } }, // Search in name field
+                    { email: { $regex: search, $options: 'i' } }, // Search in email field
+                    { username: { $regex: search, $options: 'i' } } // Search in username field
+                    
+                ];
+            } else {
+                // For MySQL: Use Sequelize's Op.like for case-insensitive search on name and email fields
+                const { Op } = require('sequelize'); // Import Sequelize operators
+                query[Op.or] = [
+                    { name: { [Op.like]: `%${search}%` } }, // Search in name field
+                    { email: { [Op.like]: `%${search}%` } }, // Search in email field
+                    { username: { [Op.like]: `%${search}%` } } // Search in username field
+                ];
+            }
+        }
+
+        // If a role is provided, add it to the query
+        if (role) {
+            query.role = role; // Filter users by role (e.g., "User" or "Admin")
+        }
+
+        const options = {
+            where: query, // Apply the query filters
+            attributes: { exclude: ['password'] },
+            order: [[sortBy, order.toUpperCase()]], // Sort by the specified field and order
+            offset: (page - 1) * limit, // Calculate the offset for pagination
+            limit: parseInt(limit) // Limit the number of results per page
+        };
+
+        let result;
+        if (process.env.DB_TYPE === 'mongo') {
+            const users = await UserModel.find(query)
+                .select({ password: 0 })
+                .sort({ [sortBy]: order === 'desc' ? -1 : 1 })  // Sort by field and order
+                .skip((page - 1) * limit) // Skip records for pagination
+                .limit(parseInt(limit)); // Limit the number of results
+
+            // Count the total number of matching users
+            const count = await UserModel.countDocuments(query);
+            result = { count, rows: users };
+        } else {
+            // For MySQL:
+            // Use Sequelize's findAndCountAll to fetch users and count total matches
+            result = await UserModel.findAndCountAll(options);
+        }
+
+        // Return the response with pagination details
+        res.json({
+            total: result.count, // Total number of matching users
+            page: parseInt(page),  // Current page number
+            totalPages: Math.ceil(result.count / limit), // Total number of pages
+            users: result.rows // List of users for the current page
+        });
+    } catch (error) {
+        logger.error('Search error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+  }
+
+
 
   // Validate user by querying the appropriate database
   async validateUser(email, password) {
