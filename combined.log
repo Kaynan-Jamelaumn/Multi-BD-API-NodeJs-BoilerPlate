@@ -761,3 +761,92 @@
 {"level":"info","message":"MongoDB connected!"}
 {"level":"info","message":"All Mongoose models were loaded successfully."}
 {"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"password123","surname":"Doe1"}
+{"level":"error","message":"Error creating user: path is not defined","stack":"ReferenceError: path is not defined\n    at UserController.create (file:///C:/Users/enricky.hipolito/Documents/gitjhonson/Node-BoilerPlate/src/controllers/userController.js:43:51)\n    at Layer.handle [as handle_request] (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\express\\lib\\router\\route.js:149:13)\n    at done (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\multer\\lib\\make-middleware.js:45:7)\n    at indicateDone (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\multer\\lib\\make-middleware.js:49:68)\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\multer\\lib\\make-middleware.js:155:11\n    at WriteStream.<anonymous> (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\multer\\storage\\disk.js:43:9)\n    at WriteStream.emit (node:events:525:35)\n    at finish (node:internal/streams/writable:748:10)\n    at finishMaybe (node:internal/streams/writable:733:9)"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"password123","surname":"Doe1"}
+{"_message":"User validation failed","errors":{"username":{"kind":"required","message":"Path `username` is required.","name":"ValidatorError","path":"username","properties":{"message":"Path `username` is required.","path":"username","type":"required"}}},"level":"error","message":"Error creating user: User validation failed: username: Path `username` is required.","stack":"ValidationError: User validation failed: username: Path `username` is required.\n    at Document.invalidate (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3334:32)\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3095:17\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"Password123","surname":"Doe1"}
+{"_message":"User validation failed","errors":{"username":{"kind":"required","message":"Path `username` is required.","name":"ValidatorError","path":"username","properties":{"message":"Path `username` is required.","path":"username","type":"required"}}},"level":"error","message":"Error creating user: User validation failed: username: Path `username` is required.","stack":"ValidationError: User validation failed: username: Path `username` is required.\n    at Document.invalidate (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3334:32)\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3095:17\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"Password123","surname":"Doe1","username":"jhondoe"}
+{"_message":"User validation failed","errors":{"username":{"kind":"required","message":"Path `username` is required.","name":"ValidatorError","path":"username","properties":{"message":"Path `username` is required.","path":"username","type":"required"}}},"level":"error","message":"Error creating user: User validation failed: username: Path `username` is required.","stack":"ValidationError: User validation failed: username: Path `username` is required.\n    at Document.invalidate (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3334:32)\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3095:17\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"Password123","surname":"Doe1","username":"jhondoe"}
+{"_message":"User validation failed","errors":{"username":{"kind":"required","message":"Path `username` is required.","name":"ValidatorError","path":"username","properties":{"message":"Path `username` is required.","path":"username","type":"required"}}},"level":"error","message":"Error creating user: User validation failed: username: Path `username` is required.","stack":"ValidationError: User validation failed: username: Path `username` is required.\n    at Document.invalidate (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3334:32)\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3095:17\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"Password123","surname":"Doe1","username":"jhondoe"}
+{"_message":"User validation failed","errors":{"username":{"kind":"required","message":"Path `username` is required.","name":"ValidatorError","path":"username","properties":{"message":"Path `username` is required.","path":"username","type":"required"}}},"level":"error","message":"Error creating user: User validation failed: username: Path `username` is required.","stack":"ValidationError: User validation failed: username: Path `username` is required.\n    at Document.invalidate (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3334:32)\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3095:17\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"Password123","surname":"Doe1","username":"jhondoe"}
+{"_message":"User validation failed","errors":{"username":{"kind":"required","message":"Path `username` is required.","name":"ValidatorError","path":"username","properties":{"message":"Path `username` is required.","path":"username","type":"required"}}},"level":"error","message":"Error creating user: User validation failed: username: Path `username` is required.","stack":"ValidationError: User validation failed: username: Path `username` is required.\n    at Document.invalidate (C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3334:32)\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\document.js:3095:17\n    at C:\\Users\\enricky.hipolito\\Documents\\gitjhonson\\Node-BoilerPlate\\node_modules\\mongoose\\lib\\schemaType.js:1407:9\n    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"Password123","surname":"Doe1","username":"jhondoe"}
+{"level":"info","message":"Global middleware"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"Password123","surname":"Doe1","username":"jhondoe"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"Password123","surname":"Doe1","username":"jhondoe"}
+{"level":"info","message":"Global middleware"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"Password123","surname":"Doe1","username":"jhondoe"}
+{"level":"info","message":"Global middleware"}
+{"level":"info","message":"Middleware Test Initialized"}
+{"level":"info","message":"Global middleware"}
+{"level":"info","message":"Global middleware"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}
+{"bio":"A software developer.","email":"john1.doe@example.com","level":"info","message":"Raw Body:","name":"John1","password":"Password123","surname":"Doe1","username":"jhondoe"}
+{"level":"info","message":"Global middleware"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}
+{"level":"info","message":"Global middleware"}
+{"level":"info","message":"MongoDB"}
+{"level":"info","message":"MongoDB connected!"}
+{"level":"info","message":"All Mongoose models were loaded successfully."}
+{"level":"info","message":"Server running on http://localhost:8765"}
+{"level":"info","message":"Global middleware"}

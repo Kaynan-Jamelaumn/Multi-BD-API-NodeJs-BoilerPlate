@@ -33,7 +33,7 @@ NODE_ENV=development # or production
 
 # Server configuration
 PORT=3000
-UPLOAD_DIR #To where the image files will be uploaded
+UPLOAD_DIR=public/uploads #To where the image files will be uploaded
 
 #MODELS_PATH='./src/models' #models required by the DB
 
