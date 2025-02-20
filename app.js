@@ -16,9 +16,9 @@ import MongoStore from "connect-mongo"; // Session store for MongoDB
 //import { Sequelize } from "sequelize";
 import connectSessionSequelize from "connect-session-sequelize";
 
-// Flash
+// Session
 import session from "express-session"; // Middleware for session management
-import flash from "connect-flash"; // Flash messages for session-based notifications
+//import flash from "connect-flash"; // Flash messages for session-based notifications
 
 // Security
 import helmet from "helmet"; // Security headers middleware
@@ -173,7 +173,7 @@ class App {
         });
 
         this.app.use(sessionOptions);
-        this.app.use(flash());
+        //this.app.use(flash());
     }
     // Function to setup CSRF protection
     setupCSRFProtection() {
