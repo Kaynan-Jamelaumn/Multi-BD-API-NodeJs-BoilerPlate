@@ -2,6 +2,8 @@ import "dotenv/config";
 import dotenvExpand from "dotenv-expand";
 import jwt from 'jsonwebtoken';
 import { logger } from "../../app.js";
+import path from 'path'
+
 dotenvExpand.expand(process.env);
 
 // Dynamically import the appropriate model based on DB_TYPE
@@ -31,14 +33,16 @@ class UserController {
 
   async create(req, res) {
     try {
-      logger.info("Raw Body:", req.body); // Log the raw body
-      // Check if req.body exists
-      if (!req.body) {
-        return res.status(400).json({ error: 'Request body is missing.' });
-      }
+
   
-      const { name, surname, email, password, bio, profilePicture, birthDate, role } = req.body;
+      // Dynamically construct the profile picture path
+      const uploadDir = process.env.UPLOAD_DIR || path.resolve("public/uploads");
+      const relativeUploadPath = path.relative(path.resolve("public"), uploadDir); //get relative path from public folder
+      const profilePicture = req.file ? `/${relativeUploadPath}/${req.file.filename}` : null;
+
+      const { username, name, surname, email, password, bio, birthDate, role } = req.body;
   
+
       // Validate user data
       await this.validateUserData({ name, surname, email, password }, res);
   
@@ -56,12 +60,13 @@ class UserController {
   
       // Create new user
       const newUser = {
+        username,
         name,
         surname,
         email,
         password,
         bio,
-        profilePicture,
+        profilePicture, // Save profile picture path
         birthDate,
         role: role || 'User', // Default role is 'User'
       };
@@ -76,6 +81,11 @@ class UserController {
       // Return the created user (excluding the password)
       const userResponse = { ...createdUser.toJSON() };
       delete userResponse.password;
+
+      if (userResponse.profilePicture) {
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        userResponse.profilePicture = `${baseUrl}${userResponse.profilePicture}`;
+    }
   
       return res.status(201).json(userResponse);
     } catch (error) {
@@ -102,7 +112,15 @@ class UserController {
         return res.status(404).json({ message: 'No users were found' });
       }
 
-      return res.status(200).json(users);
+      const baseUrl = `${res.req.protocol}://${res.req.get('host')}`;
+    
+      // Map users to include the full profile picture URL
+      const usersWithProfilePictures = users.map(user => ({
+        ...user.toJSON(),
+        profilePicture: user.profilePicture ? `${baseUrl}${user.profilePicture}` : null,
+      }));
+
+      return res.status(200).json(usersWithProfilePictures);
     } catch (error) {
       logger.error('Error fetching users:', error);
       return res.status(500).json({ error: 'Internal server error.' });
@@ -135,8 +153,20 @@ class UserController {
       if (!user) {
         return res.status(404).json({ message: 'User not found.' });
       }
-  
-      return res.status(200).json(user);
+    // Convert profilePicture path to full URL
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const profilePictureUrl = user.profilePicture ? `${baseUrl}${user.profilePicture}` : null;
+
+    return res.status(200).json({
+      id: user.id,
+      name: user.name,
+      surname: user.surname,
+      email: user.email,
+      bio: user.bio,
+      birthDate: user.birthDate,
+      role: user.role,
+      profilePicture: profilePictureUrl, // Send full URL
+    });
     } catch (error) {
       logger.error('Error fetching user:', error);
       return res.status(500).json({ error: 'Internal server error.' });
@@ -147,8 +177,14 @@ class UserController {
     try {
       // Use the logged-in user's ID if they are not an admin
       const id = req.user.role === 'Admin' ? req.params.id || req.body.id : req.user.id;
-      const { name, surname, email, password, bio, profilePicture, birthDate, role } = req.body;
-      console.log('User ID:', id); 
+      const { name, surname, email, password, bio, birthDate, role } = req.body;
+
+      // Check if a file was uploaded
+      // Dynamically construct the profile picture path
+      const uploadDir = process.env.UPLOAD_DIR || path.resolve("public/uploads");
+      const relativeUploadPath = path.relative(path.resolve("public"), uploadDir); //get relative path from public folder
+      const profilePicture = req.file ? `/${relativeUploadPath}/${req.file.filename}` : null;
+
       let user;
       if (process.env.DB_TYPE === 'mongo') {
         user = await UserModel.findById(id);
@@ -183,6 +219,15 @@ class UserController {
         }
       }
   
+      // Delete old profile picture if a new one is uploaded
+      if (profilePicture && user.profilePicture) {
+        const oldProfilePath = path.resolve('public', user.profilePicture);
+        if (fs.existsSync(oldProfilePath)) {
+          fs.unlinkSync(oldProfilePath);
+        }
+      }
+
+
       // Update only the modified fields
       user.name = name || user.name;
       user.surname = surname || user.surname;
@@ -201,6 +246,11 @@ class UserController {
   
       const updatedUser = { ...user.toJSON() };
       delete updatedUser.password;
+
+      if (updatedUser.profilePicture) {
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        userResponse.profilePicture = `${baseUrl}${userResponse.profilePicture}`;
+    }
   
       return res.status(200).json(updatedUser);
     } catch (error) {
@@ -400,13 +450,18 @@ class UserController {
             // Use Sequelize's findAndCountAll to fetch users and count total matches
             result = await UserModel.findAndCountAll(options);
         }
+        
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
 
         // Return the response with pagination details
         res.json({
             total: result.count, // Total number of matching users
             page: parseInt(page),  // Current page number
             totalPages: Math.ceil(result.count / limit), // Total number of pages
-            users: result.rows // List of users for the current page
+            users: result.rows.map(user => ({
+              ...user.toJSON(),
+              profilePicture: user.profilePicture ? `${baseUrl}${user.profilePicture}` : null,
+            }))// List of users for the current page  including mapping for the url for the profile picture
         });
     } catch (error) {
         logger.error('Search error:', error);
