@@ -3,6 +3,7 @@ import dotenvExpand from "dotenv-expand";
 import jwt from 'jsonwebtoken';
 import { logger } from "../../app.js";
 import path from 'path'
+import fs from "fs";
 
 dotenvExpand.expand(process.env);
 
@@ -23,8 +24,9 @@ try {
 
 class UserController {
   constructor() {
-    this.validateUserData = this.validateUserData.bind(this);
-    this.validateUserDataForUpdate = this.validateUserDataForUpdate.bind(this);
+    this.validateFields = this.validateFields.bind(this);
+    this.checkFieldAvailability = this.checkFieldAvailability.bind(this);
+    this.failedValidationAndDeletePhoto = this.failedValidationAndDeletePhoto.bind(this);
     this.create = this.create.bind(this);
     this.update =  this.update.bind(this);
     this.login =  this.login.bind(this);
@@ -33,6 +35,7 @@ class UserController {
     this.getUsers = this.getUsers.bind(this);
     this.getInactiveUsers = this.getInactiveUsers.bind(this);
     this.getActiveUsers = this.getActiveUsers.bind(this);
+
   }
 
   async create(req, res) {
@@ -42,25 +45,37 @@ class UserController {
       // Dynamically construct the profile picture path
       const uploadDir = process.env.UPLOAD_DIR || path.resolve("public/uploads");
       const relativeUploadPath = path.relative(path.resolve("public"), uploadDir); //get relative path from public folder
-      const profilePicture = req.file ? `/${relativeUploadPath}/${req.file.filename}` : null;
-
+      const profilePicture = req.file ? `/${relativeUploadPath}/${req.file.filename}` : null;  // the Path that is saved in the bd starting from public exemple /uploads/picture.png
+      const profilePictureTruePath = profilePicture? path.join(uploadDir, req.file.filename) : null; // exemple /plublic/uploads/picture.png
       const { username, name, surname, email, password, bio, birthDate, role } = req.body;
   
+      this.failedValidationAndDeletePhoto(req, res,   this.validateFields({ username, name, surname, email, password, role }, { required: false }), profilePictureTruePath)
+  
+  
+      const isEmailAvailable = await this.checkFieldAvailability(
+        req,
+        res,
+        'email',
+        email,
+        null,
+        profilePicture,
+        profilePictureTruePath
+      );
+      if (!isEmailAvailable) return; // Stop execution if email is not available
+  
+      // Check if username is available
+      const isUsernameAvailable = await this.checkFieldAvailability(
+        req,
+        res,
+        'username',
+        username,
+        null,
+        profilePicture,
+        profilePictureTruePath
+      );
+      if (!isUsernameAvailable) return; // Stop execution if username is not available
+  
 
-      // Validate user data
-      await this.validateUserData({ name, surname, email, password }, res);
-  
-      // Check if user already exists
-      let existingUser;
-      if (process.env.DB_TYPE === 'mongo') {
-        existingUser = await UserModel.findOne({ email });
-      } else if (process.env.DB_TYPE === 'mysql') {
-        existingUser = await UserModel.findOne({ where: { email } });
-      }
-  
-      if (existingUser) {
-        return res.status(400).json({ error: 'User with this email already exists.' });
-      }
   
       // Create new user
       const newUser = {
@@ -176,18 +191,19 @@ class UserController {
       return res.status(500).json({ error: 'Internal server error.' });
     }
   }
-
+  
   async update(req, res) {
     try {
       // Use the logged-in user's ID if they are not an admin
       const id = req.user.role === 'Admin' ? req.params.id || req.body.id : req.user.id;
-      const { name, surname, email, password, bio, birthDate, role } = req.body;
+      const { username, name, surname, email, password, bio, birthDate, role } = req.body;
 
       // Check if a file was uploaded
       // Dynamically construct the profile picture path
       const uploadDir = process.env.UPLOAD_DIR || path.resolve("public/uploads");
       const relativeUploadPath = path.relative(path.resolve("public"), uploadDir); //get relative path from public folder
-      const profilePicture = req.file ? `/${relativeUploadPath}/${req.file.filename}` : null;
+      const profilePicture = req.file ? `/${relativeUploadPath}/${req.file.filename}` : null; // exemple /updloads/picture.png
+      const profilePictureTruePath = profilePicture? path.join(uploadDir, req.file.filename) : null; // exemple /plublic/uploads/picture.png
 
       let user;
       if (process.env.DB_TYPE === 'mongo') {
@@ -199,40 +215,36 @@ class UserController {
       if (!user) {
         return res.status(404).json({ error: 'User not found.' });
       }
+      this.failedValidationAndDeletePhoto(req, res,   this.validateFields({ username, name, surname, email, password, role }, { required: false }), profilePictureTruePath)
   
   
-      // Validate user data for update
-      await this.validateUserDataForUpdate({
-        name,
-        surname,
+      const isEmailAvailable = await this.checkFieldAvailability(
+        req,
+        res,
+        'email',
         email,
-        password,
-        role,
-      }, res);
+        user,
+        profilePicture,
+        profilePictureTruePath
+      );
+      if (!isEmailAvailable) return; // Stop execution if email is not available
   
-      if (email && email !== user.email) {
-        let existingUser;
-        if (process.env.DB_TYPE === 'mongo') {
-          existingUser = await UserModel.findOne({ email });
-        } else if (process.env.DB_TYPE === 'mysql') {
-          existingUser = await UserModel.findOne({ where: { email } });
-        }
+      // Check if username is available
+      const isUsernameAvailable = await this.checkFieldAvailability(
+        req,
+        res,
+        'username',
+        username,
+        user,
+        profilePicture,
+        profilePictureTruePath
+      );
+      if (!isUsernameAvailable) return; // Stop execution if username is not available
   
-        if (existingUser) {
-          return res.status(400).json({ error: 'Email is already in use by another user.' });
-        }
-      }
-  
-      // Delete old profile picture if a new one is uploaded
-      if (profilePicture && user.profilePicture) {
-        const oldProfilePath = path.resolve('public', user.profilePicture);
-        if (fs.existsSync(oldProfilePath)) {
-          fs.unlinkSync(oldProfilePath);
-        }
-      }
 
 
       // Update only the modified fields
+      user.username = name || user.username;
       user.name = name || user.name;
       user.surname = surname || user.surname;
       user.email = email || user.email;
@@ -253,7 +265,7 @@ class UserController {
 
       if (updatedUser.profilePicture) {
         const baseUrl = `${req.protocol}://${req.get('host')}`;
-        userResponse.profilePicture = `${baseUrl}${userResponse.profilePicture}`;
+        updatedUser.profilePicture = `${baseUrl}${updatedUser.profilePicture}`;
     }
   
       return res.status(200).json(updatedUser);
@@ -303,6 +315,7 @@ class UserController {
       return res.status(500).json({ error: 'Internal server error.' });
     }
   }
+
 
   async reactivate(req, res) {
     try {
@@ -500,77 +513,112 @@ class UserController {
     }
   }
 
-  async validateUserData(userData, res) {
-    const { name, surname, email, password, role } = userData;
+  validateFields(userData, options = { required: true }) {
+    const { username, name, surname, email, password, role } = userData;
+    const { required } = options;
   
     // Validate required fields
-    if (!name || !surname || !email || !password) {
-      return res.status(400).json({ error: 'All fields (name, surname, email, password) are required.' });
+    if (required && (!name || !surname || !email || !password || !username)) {
+      return { error: 'All fields (username, name, surname, email, password) are required.', status: 400 };
     }
   
     // Validate name and surname length
-    if (name.length < 2 || surname.length < 2) {
-      return res.status(400).json({ error: 'Name and surname must be at least 2 characters long.' });
+    if (name && name.length < 2) {
+      return { error: 'Name must be at least 2 characters long.', status: 400 };
+    }
+    if (surname && surname.length < 2) {
+      return { error: 'Surname must be at least 2 characters long.', status: 400 };
+    }
+    if (username && username.length < 2) {
+      return { error: 'Username must be at least 2 characters long.', status: 400 };
     }
   
+  
     // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email format.' });
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return { error: 'Invalid email format.', status: 400 };
+      }
     }
   
     // Validate password length and strength
-    //const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; <- password regex including special chars    //const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; <- password regex including special chars
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        error: 'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number.',
-      });
+    if (password) {       //const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; <- password regex including special chars 
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      if (!passwordRegex.test(password)) {
+        return {
+          error:
+            'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number.',
+          status: 400,
+        };
+      }
     }
   
     // Validate role
     if (role && !['User', 'Admin'].includes(role)) {
-      return res.status(400).json({ error: 'Invalid role. Allowed values are "User" or "Admin".' });
+      return { error: 'Invalid role. Allowed values are "User" or "Admin".', status: 400 };
     }
   
-    return true; // Validation successful
+    return null; // No validation errors
   }
 
-  async validateUserDataForUpdate(userData, res) {
-    const { name, surname, email, password, role } = userData;
   
-    // Validate name and surname length if provided
-    if (name && name.length < 2) {
-      return res.status(400).json({ error: 'Name must be at least 2 characters long.' });
-    }
-    if (surname && surname.length < 2) {
-      return res.status(400).json({ error: 'Surname must be at least 2 characters long.' });
-    }
+
+  failedValidationAndDeletePhoto(req, res, validationError, profilePicture, pathToDelete ){
+    if (validationError) {
+      // Delete the uploaded photo if it exists
+      if (profilePicture && pathToDelete && fs.existsSync(pathToDelete)) {
+        fs.unlinkSync(pathToDelete); // Delete the photo file
+      }
   
-    // Validate email format if provided
-    if (email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        return res.status(400).json({ error: 'Invalid email format.' });
+      // Send the validation error response
+      return res.status(validationError.status).json({ error: validationError.error });
+    }
+    
+  }
+  async checkFieldAvailability(req, res, fieldName, fieldValue, user, profilePicture, pathToDelete) {
+    if (fieldValue) {
+      // If user is provided, check if the field value is different from the existing value
+      if (user && fieldValue !== user[fieldName]) {
+        let existingUser;
+        if (process.env.DB_TYPE === 'mongo') {
+          existingUser = await UserModel.findOne({ [fieldName]: fieldValue });
+        } else if (process.env.DB_TYPE === 'mysql') {
+          existingUser = await UserModel.findOne({ where: { [fieldName]: fieldValue } });
+        }
+  
+        if (existingUser) {
+          this.failedValidationAndDeletePhoto(
+            req,
+            res,
+            { error: `${fieldName} is already in use by another user.`, status: 400 },
+            profilePicture,
+            pathToDelete
+          );
+          return false; // Field is not available
+        }
+      } else if (!user) {
+        // If no user is provided (e.g., during user creation), check if the field value already exists
+        let existingUser;
+        if (process.env.DB_TYPE === 'mongo') {
+          existingUser = await UserModel.findOne({ [fieldName]: fieldValue });
+        } else if (process.env.DB_TYPE === 'mysql') {
+          existingUser = await UserModel.findOne({ where: { [fieldName]: fieldValue } });
+        }
+  
+        if (existingUser) {
+          this.failedValidationAndDeletePhoto(
+            req,
+            res,
+            { error: `${fieldName} is already in use by another user.`, status: 400 },
+            profilePicture,
+            pathToDelete
+          );
+          return false; // Field is not available
+        }
       }
     }
-  
-    // Validate password length and strength if provided
-    if (password) {
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-      if (!passwordRegex.test(password)) {
-        return res.status(400).json({
-          error: 'Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, and a number.',
-        });
-      }
-    }
-  
-    // Validate role if provided
-    if (role && !['User', 'Admin'].includes(role)) {
-      return res.status(400).json({ error: 'Invalid role. Allowed values are "User" or "Admin".' });
-    }
-  
-    return true; // Validation successful
+    return true; // Field is available
   }
 
 }
