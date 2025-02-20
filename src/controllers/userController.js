@@ -29,6 +29,10 @@ class UserController {
     this.update =  this.update.bind(this);
     this.login =  this.login.bind(this);
     this.delete =  this.delete.bind(this);
+    this.fetchUsers =  this.fetchUsers.bind(this); 
+    this.getUsers = this.getUsers.bind(this);
+    this.getInactiveUsers = this.getInactiveUsers.bind(this);
+    this.getActiveUsers = this.getActiveUsers.bind(this);
   }
 
   async create(req, res) {
