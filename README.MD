@@ -1,5 +1,4 @@
-# Node.js Application
-
+# Multi DB(Mongo/Mysql) User API creation with multi ID type Validator)
 ## Prerequisites
 
 - Node.js (v14 or higher)
@@ -53,4 +52,313 @@ SESSION_SECRET=your_session_secret
 
 # Frontend URL for CORS
 FRONTEND_URL=http://localhost:8080
+``` 
 
+
+
+# API Endpoints Documentation
+
+This document provides an overview of the API endpoints and their functionalities.
+
+---## Validator Endpoints
+
+### 1. Validate User Fields
+- **Endpoint**: `POST /validator/validate-fields`
+- **Description**: Validates user fields such as `username`, `name`, `surname`, `email`, `password`, and `role`.
+- **Request Body**:
+  - `username`: (string) The username of the user.
+  - `name`: (string) The name of the user.
+  - `surname`: (string) The surname of the user.
+  - `email`: (string) The email of the user.
+  - `password`: (string) The password of the user.
+  - `role`: (string) The role of the user.
+- **Response**:
+  - `200`: `{ message: "All fields are valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 2. Validate Passport
+- **Endpoint**: `POST /validator/validate-passport/:passportNumber?/:countryCode?`
+- **Description**: Validates a passport number and country code.
+- **Request Params**:
+  - `passportNumber`: (string) The passport number.
+  - `countryCode`: (string) The country code.
+- **Response**:
+  - `200`: `{ message: "Passport is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 3. Validate CPF
+- **Endpoint**: `POST /validator/validate-cpf/:cpfNumber?`
+- **Description**: Validates a CPF (Brazilian individual taxpayer registry) number.
+- **Request Params**:
+  - `cpfNumber`: (string) The CPF number.
+- **Response**:
+  - `200`: `{ message: "CPF is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 4. Validate RG
+- **Endpoint**: `POST /validator/validate-rg/:rgNumber?`
+- **Description**: Validates an RG (Brazilian identity card) number.
+- **Request Params**:
+  - `rgNumber`: (string) The RG number.
+- **Response**:
+  - `200`: `{ message: "RG is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 5. Validate SUS
+- **Endpoint**: `POST /validator/validate-sus/:susNumber?`
+- **Description**: Validates a SUS (Brazilian public health system) number.
+- **Request Params**:
+  - `susNumber`: (string) The SUS number.
+- **Response**:
+  - `200`: `{ message: "SUS number is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 6. Validate CNH
+- **Endpoint**: `POST /validator/validate-cnh/:cnhNumber?`
+- **Description**: Validates a CNH (Brazilian driver's license) number.
+- **Request Params**:
+  - `cnhNumber`: (string) The CNH number.
+- **Response**:
+  - `200`: `{ message: "CNH is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 7. Validate CTPS
+- **Endpoint**: `POST /validator/validate-ctps/:ctpsNumber?`
+- **Description**: Validates a CTPS (Brazilian work card) number.
+- **Request Params**:
+  - `ctpsNumber`: (string) The CTPS number.
+- **Response**:
+  - `200`: `{ message: "CTPS is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 8. Validate CRM
+- **Endpoint**: `POST /validator/validate-crm/:crmNumber?`
+- **Description**: Validates a CRM (Brazilian medical council registration) number.
+- **Request Params**:
+  - `crmNumber`: (string) The CRM number.
+- **Response**:
+  - `200`: `{ message: "CRM is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 9. Validate OAB
+- **Endpoint**: `POST /validator/validate-oab/:oabNumber?`
+- **Description**: Validates an OAB (Brazilian bar association) number.
+- **Request Params**:
+  - `oabNumber`: (string) The OAB number.
+- **Response**:
+  - `200`: `{ message: "OAB is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 10. Validate CREA
+- **Endpoint**: `POST /validator/validate-crea/:creaNumber?`
+- **Description**: Validates a CREA (Brazilian engineering council registration) number.
+- **Request Params**:
+  - `creaNumber`: (string) The CREA number.
+- **Response**:
+  - `200`: `{ message: "CREA is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+## User Endpoints
+
+## 1. Create User
+- **Endpoint**: `POST /user/create/`
+- **Description**: Creates a new user with optional profile picture upload.
+- **Request Body**:
+  - `username`: (string) The username of the user.
+  - `name`: (string) The name of the user.
+  - `surname`: (string) The surname of the user.
+  - `email`: (string) The email of the user.
+  - `password`: (string) The password of the user.
+  - `bio`: (string, optional) A short bio of the user.
+  - `birthDate`: (string, optional) The birth date of the user.
+  - `role`: (string, optional) The role of the user (default: `User`).
+  - `profilePicture`: (file, optional) The user's profile picture.
+- **Response**:
+  - `201`: User created successfully. Returns the user object with the profile picture URL.
+  - `400`: Invalid data or validation error.
+  - `409`: Email or username already exists.
+
+---
+
+## 2. Get All Users
+- **Endpoint**: `GET /user/get/`
+- **Description**: Retrieves a list of all users. Passwords are excluded from the response. Requires admin privileges
+- **Response**:
+  - `200`: Returns a list of users with profile picture URLs.
+  - `404`: No users found.
+  - `500`: Internal server error.
+
+---
+
+## 3. Login
+- **Endpoint**: `POST /user/login/`
+- **Description**: Authenticates a user and returns a token (JWT) or sets a session (session-based authentication).
+- **Request Body**:
+  - `email`: (string) The email of the user.
+  - `password`: (string) The password of the user.
+- **Response**:
+  - `200`: Login successful. Returns a token (JWT) or a success message (session-based).
+  - `401`: Invalid email or password.
+  - `403`: Account is deactivated.
+  - `500`: Internal server error.
+
+---
+
+## 4. Logout
+- **Endpoint**: `POST /user/logout/`
+- **Description**: Logs out the user. For session-based authentication, it destroys the session. For JWT, it simply returns a success message.
+- **Response**:
+  - `200`: Logout successful.
+  - `500`: Internal server error.
+
+---
+
+
+## 5. Get Active Users
+- **Endpoint**: `GET /user/getActive/`
+- **Description**: Retrieves a list of all active users. Requires admin privileges.
+- **Response**:
+  - `200`: Returns a list of active users with profile picture URLs.
+  - `404`: No active users found.
+  - `500`: Internal server error.
+
+---
+
+## 6. Get Inactive Users
+- **Endpoint**: `GET /user/getInactive/`
+- **Description**: Retrieves a list of all inactive users. Requires admin privileges.
+- **Response**:
+  - `200`: Returns a list of inactive users with profile picture URLs.
+  - `404`: No inactive users found.
+  - `500`: Internal server error.
+
+---
+
+## 7. Get User by ID (Self)
+- **Endpoint**: `GET /user/self/:id?`
+- **Description**: Retrieves the details of the currently logged-in user or a user by ID.
+- **Request Params**:
+  - `id`: (string, optional) The user ID. If not provided, the logged-in user's details are returned.
+- **Response**:
+  - `200`: Returns the user details with the profile picture URL.
+  - `404`: User not found.
+  - `500`: Internal server error.
+
+---
+
+## 8. Update User
+- **Endpoint**: `PUT /user/update/:id?`
+- **Description**: Updates user details, including an optional profile picture. Admins can update any user, while regular users can only update their own details.
+- **Request Params**:
+  - `id`: (string, optional) The user ID. If not provided, the logged-in user's details are updated.
+- **Request Body**:
+  - `username`: (string, optional) The updated username.
+  - `name`: (string, optional) The updated name.
+  - `surname`: (string, optional) The updated surname.
+  - `email`: (string, optional) The updated email.
+  - `password`: (string, optional) The updated password.
+  - `bio`: (string, optional) The updated bio.
+  - `birthDate`: (string, optional) The updated birth date.
+  - `role`: (string, optional) The updated role.
+  - `profilePicture`: (file, optional) The updated profile picture.
+- **Response**:
+  - `200`: User updated successfully. Returns the updated user object with the profile picture URL.
+  - `400`: Invalid data or validation error.
+  - `404`: User not found.
+  - `409`: Email or username already exists.
+  - `500`: Internal server error.
+
+---
+
+## 9. Delete User (Soft Delete)
+- **Endpoint**: `GET /user/delete/:id?`
+- **Description**: Deactivates a user by setting `isActive` to `false`. Admins can deactivate any user, while regular users can only deactivate themselves.
+- **Request Params**:
+  - `id`: (string, optional) The user ID. If not provided, the logged-in user is deactivated.
+- **Response**:
+  - `200`: User deactivated successfully.
+  - `400`: User is already deactivated.
+  - `404`: User not found.
+  - `500`: Internal server error.
+
+---
+
+## 10. Reactivate User
+- **Endpoint**: `GET /user/reactivate/:id?`
+- **Description**: Reactivates a deactivated user by setting `isActive` to `true`.
+- **Request Params**:
+  - `id`: (string, optional) The user ID. If not provided, the logged-in user is reactivated.
+- **Response**:
+  - `200`: User reactivated successfully.
+  - `400`: User is already active.
+  - `404`: User not found.
+  - `500`: Internal server error.
+
+---
+
+## 11. Search Users
+- **Endpoint**: `GET /user/search/`
+- **Description**: Searches for users based on query parameters. Supports pagination, sorting, and filtering by role.
+- **Query Parameters**:
+  - `page`: (number, optional) The page number for pagination (default: `1`).
+  - `limit`: (number, optional) The number of results per page (default: `10`, max: `100`).
+  - `search`: (string, optional) A search term to filter users by name, email, or username.
+  - `role`: (string, optional) Filters users by role (e.g., `User` or `Admin`).
+  - `sortBy`: (string, optional) The field to sort by (default: `createdAt`).
+  - `order`: (string, optional) The sort order (`asc` or `desc`, default: `desc`).
+- **Response**:
+  - `200`: Returns a paginated list of users with profile picture URLs.
+  - `500`: Internal server error.
+
+---
+
+## Main Router Endpoints
+
+### 1. Home Page
+- **Endpoint**: `GET /`
+- **Description**: Returns the home page.
+- **Response**:
+  - `200`: Home page content.
+
+---
+
+### 2. Health Check
+- **Endpoint**: `GET /health`
+- **Description**: Checks the health of the API.
+- **Response**:
+  - `200`: API is healthy.
+
+---
+
+### 3. Serve Static Files
+- **Endpoint**: `GET /uploads/*`
+- **Description**: Serves static files from the `public/uploads` directory.
+- **Response**:
+  - `200`: File content.
+
+---
+
+### 4. Error Handling
+- **Description**: Handles file upload errors.
+- **Response**:
+  - `400`: Multer-specific errors.

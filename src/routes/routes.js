@@ -2,6 +2,7 @@
 import path from 'path'
 import express from 'express';
 import userRouter from './userRouter.js';// Example user router
+import validatorRouter from './validatorRouter.js';
 // import authRouter from './routes/authRouter.js'; // Example auth router
 
 import { paginaInicial } from '../controllers/homeController.js'; 
@@ -17,9 +18,10 @@ mainRouter.get('/health', (req, res) => {
 });
 
 
-
-// Use the individual routers
  mainRouter.use('/user', userRouter);
+
+mainRouter.use('/validator', validatorRouter);
+
  // Serve static files from the "public" directory
  mainRouter.use('/uploads', express.static(path.resolve('public/uploads')));
 

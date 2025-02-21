@@ -51,8 +51,7 @@ const __dirname = path.dirname(__filename); // Get the directory name of the cur
 // import { setupCSRFProtection } from "./config/csrf.js";
 // import { setupGlobalMiddlewaresAndRoutes } from "./config/middlewares.js";
 
-
-import  loadModels  from './src/utils/loadmodels.js' // models loader from sequelize
+import loadModels from './loadModels.js'; // models loader from sequelize
 
 import sequelizeConfiguration from "./dbconfig/databaseSequelize.js";
 
