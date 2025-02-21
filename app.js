@@ -52,7 +52,7 @@ const __dirname = path.dirname(__filename); // Get the directory name of the cur
 // import { setupGlobalMiddlewaresAndRoutes } from "./config/middlewares.js";
 
 
-import  loadModels  from './loadmodels.js' // models loader from sequelize
+import  loadModels  from './src/utils/loadmodels.js' // models loader from sequelize
 
 import sequelizeConfiguration from "./dbconfig/databaseSequelize.js";
 
