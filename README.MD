@@ -276,18 +276,8 @@ This document provides an overview of the API endpoints and their functionalitie
 
 ---
 
-### 20. Validate CREA
-- **Endpoint**: `POST /validator/validate-crea/:creaNumber?`
-- **Description**: Validates a CREA (Brazilian engineering council registration) number.
-- **Request Params**:
-  - `creaNumber`: (string) The CREA number.
-- **Response**:
-  - `200`: `{ message: "CREA is valid." }`
-  - `400`: `{ error: "<error message>" }`
 
----
-
-### 21. Validate UK Birth Certificate
+### 20. Validate UK Birth Certificate
 - **Endpoint**: `POST /validator/validate-uk-birth-certificate/:birthCertNumber?`
 - **Description**: Validates a UK Birth Certificate number.
 - **Request Params**:
@@ -298,7 +288,7 @@ This document provides an overview of the API endpoints and their functionalitie
 
 ---
 
-### 22. Validate UK Armed Forces ID
+### 21. Validate UK Armed Forces ID
 - **Endpoint**: `POST /validator/validate-uk-armed-forces-id/:armedForcesID?`
 - **Description**: Validates a UK Armed Forces ID number.
 - **Request Params**:
