@@ -180,4 +180,42 @@ router.post('/validate-crea/:creaNumber?', (req, res) => {
     res.status(200).json({ message: 'CREA is valid.' });
 });
 
+
+
+// Route to validate US Driver's License
+router.post('/validate-us-license/:licenseNumber?', (req, res) => {
+    const licenseNumber = getData(req, 'licenseNumber');
+    if (!licenseNumber) return res.status(400).json({ error: 'License number is required.' });
+    const validationResult = IDValidator.validateUSDriversLicense(licenseNumber);
+    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
+    res.status(200).json({ message: 'US Driver\'s License is valid.' });
+});
+
+// Route to validate US SSN
+router.post('/validate-us-ssn/:ssn?', (req, res) => {
+    const ssn = getData(req, 'ssn');
+    if (!ssn) return res.status(400).json({ error: 'SSN is required.' });
+    const validationResult = IDValidator.validateUSSSN(ssn);
+    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
+    res.status(200).json({ message: 'SSN is valid.' });
+});
+
+// Route to validate US Military ID
+router.post('/validate-us-military-id/:militaryID?', (req, res) => {
+    const militaryID = getData(req, 'militaryID');
+    if (!militaryID) return res.status(400).json({ error: 'Military ID is required.' });
+    const validationResult = IDValidator.validateUSMilitaryID(militaryID);
+    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
+    res.status(200).json({ message: 'US Military ID is valid.' });
+});
+
+// Route to validate UK National Insurance Number
+router.post('/validate-uk-ni/:niNumber?', (req, res) => {
+    const niNumber = getData(req, 'niNumber');
+    if (!niNumber) return res.status(400).json({ error: 'NI Number is required.' });
+    const validationResult = IDValidator.validateUKNINumber(niNumber);
+    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
+    res.status(200).json({ message: 'UK NI Number is valid.' });
+});
+
 export default router;

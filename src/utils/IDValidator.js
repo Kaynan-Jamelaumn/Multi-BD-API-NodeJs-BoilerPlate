@@ -224,6 +224,84 @@ class IDValidator {
         return this.validateProfessionalRegistration(creaNumber, 'CREA');
     }
 
+    // Validate US Driver's License (General Format - State-Specific Checks Recommended)
+    static validateUSDriversLicense(licenseNumber) {
+        const licenseRegex = /^[A-Z0-9]{4,16}$/; // Extended to cover some state variations
+        return { valid: licenseRegex.test(licenseNumber), error: licenseRegex.test(licenseNumber) ? null : "Invalid US Driver's License format" };
+    }
+
+    // Validate US Social Security Number (SSN)
+    static validateUSSSN(ssn) {
+        const ssnRegex = /^(?!000|666|9\d{2})\d{3}-(?!00)\d{2}-(?!0000)\d{4}$/;
+        return { valid: ssnRegex.test(ssn), error: ssnRegex.test(ssn) ? null : "Invalid SSN format" };
+    }
+
+    // Validate US Military ID (CAC)
+    static validateUSMilitaryID(militaryID) {
+        const militaryIDRegex = /^[A-Z0-9]{10,12}$/;
+        return { valid: militaryIDRegex.test(militaryID), error: militaryIDRegex.test(militaryID) ? null : "Invalid US Military ID format" };
+    }
+
+    // Validate US Permanent Resident Card (Green Card)
+    static validateUSGreenCard(greenCardNumber) {
+        const greenCardRegex = /^([A-Z]{3}\d{10}|[A-Z]\d{8,9})$/;
+        return { valid: greenCardRegex.test(greenCardNumber), error: greenCardRegex.test(greenCardNumber) ? null : "Invalid Green Card format" };
+    }
+
+    // Validate US Employment Authorization Document (EAD)
+    static validateUSEAD(eadNumber) {
+        const eadRegex = /^[A-Z]{3}\d{10}$/;
+        return { valid: eadRegex.test(eadNumber), error: eadRegex.test(eadNumber) ? null : "Invalid EAD format" };
+    }
+
+    // Validate US Birth Certificate (General Format)
+    static validateUSBirthCertificate(birthCertNumber) {
+        const birthCertRegex = /^[A-Z]{2}\d{6,8}$/;
+        return { valid: birthCertRegex.test(birthCertNumber), error: birthCertRegex.test(birthCertNumber) ? null : "Invalid US Birth Certificate format" };
+    }
+
+    // Validate US Medicare/Medicaid Card (MBI Format)
+    static validateUSMedicareMedicaid(medicareNumber) {
+        const medicareRegex = /^[1-9][A-Z]\d{2}-[A-Z]\d{4}-[A-Z]\d{2}$/;
+        return { valid: medicareRegex.test(medicareNumber), error: medicareRegex.test(medicareNumber) ? null : "Invalid Medicare/Medicaid format" };
+    }
+
+    // Validate US Veteran ID Card (VIC)
+    static validateUSVeteranID(vicNumber) {
+        const vicRegex = /^[A-Z0-9]{8,12}$/;
+        return { valid: vicRegex.test(vicNumber), error: vicRegex.test(vicNumber) ? null : "Invalid Veteran ID format" };
+    }
+
+    // Validate UK Driving Licence (DVLA Format)
+    static validateUKDrivingLicence(licenceNumber) {
+        const licenceRegex = /^[A-Z]{5}\d{6}[A-Z]{2}\d{2}$/;
+        return { valid: licenceRegex.test(licenceNumber), error: licenceRegex.test(licenceNumber) ? null : "Invalid UK Driving Licence format" };
+    }
+
+    // Validate UK Birth Certificate
+    static validateUKBirthCertificate(birthCertNumber) {
+        const birthCertRegex = /^[A-Z]{2}\d{6,8}$/;
+        return { valid: birthCertRegex.test(birthCertNumber), error: birthCertRegex.test(birthCertNumber) ? null : "Invalid UK Birth Certificate format" };
+    }
+
+    // Validate UK Armed Forces ID
+    static validateUKArmedForcesID(armedForcesID) {
+        const armedForcesRegex = /^[A-Z]{2}\d{6}$/;
+        return { valid: armedForcesRegex.test(armedForcesID), error: armedForcesRegex.test(armedForcesID) ? null : "Invalid UK Armed Forces ID format" };
+    }
+
+    // Validate UK National Insurance Number (NI Number)
+    static validateUKNINumber(niNumber) {
+        const niRegex = /^(?!BG|GB|NK|KN|TN|NT|ZZ)[A-Z]{2}\d{6}[ABCD]$/;
+        return { valid: niRegex.test(niNumber), error: niRegex.test(niNumber) ? null : "Invalid UK NI Number format" };
+    }
+
+    // Validate UK Biometric Residence Permit (BRP)
+    static validateUKResidenceCard(residenceCardNumber) {
+        const residenceCardRegex = /^[A-Z0-9]{12}$/;
+        return { valid: residenceCardRegex.test(residenceCardNumber), error: residenceCardRegex.test(residenceCardNumber) ? null : "Invalid UK Residence Card format" };
+    }
+
 
   
 }
