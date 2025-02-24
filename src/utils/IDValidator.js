@@ -224,6 +224,66 @@ class IDValidator {
         return this.validateProfessionalRegistration(creaNumber, 'CREA');
     }
 
+    //Validates Brazilian PIS/PASEP number
+    static validatePIS(pisNumber) {
+        // Ensure the input is exactly 11 digits
+        if (!/^\d{11}$/.test(pisNumber)) {
+            return { valid: false, error: "Invalid PIS/PASEP format" };
+        }
+
+        // Weighting factors for the first 10 digits
+        const weights = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        let sum = 0;
+
+        // Calculate the weighted sum
+        for (let i = 0; i < 10; i++) {
+            sum += parseInt(pisNumber[i]) * weights[i];
+        }
+
+        // Calculate the check digit
+        let remainder = sum % 11;
+        let checkDigit = remainder < 2 ? 0 : 11 - remainder;
+
+        // Validate the check digit against the last digit of the PIS/PASEP number
+        return {
+            valid: checkDigit === parseInt(pisNumber[10]),
+            error: checkDigit === parseInt(pisNumber[10]) ? null : "Invalid PIS/PASEP number"
+        };
+    }
+    //Validates a Brazilian CNPJ (Cadastro Nacional da Pessoa Jurídica).
+    static validateCNPJ(cnpj) {
+        // Ensure the input is exactly 14 digits
+        if (!/^\d{14}$/.test(cnpj)) {
+            return { valid: false, error: "Invalid CNPJ format" };
+        }
+
+        
+        //Helper function to calculate a CNPJ check digit.
+        const calculateCheckDigit = (cnpj, weights) => {
+            let sum = 0;
+            for (let i = 0; i < weights.length; i++) {
+                sum += parseInt(cnpj[i]) * weights[i];
+            }
+            let remainder = sum % 11;
+            return remainder < 2 ? 0 : 11 - remainder;
+        };
+
+        // Weight factors for the first and second check digits
+        const firstWeights = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        const secondWeights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+        // Calculate both check digits
+        const firstDigit = calculateCheckDigit(cnpj, firstWeights);
+        const secondDigit = calculateCheckDigit(cnpj, secondWeights);
+
+        // Validate check digits against the last two digits of the CNPJ number
+        return {
+            valid: firstDigit === parseInt(cnpj[12]) && secondDigit === parseInt(cnpj[13]),
+            error: firstDigit === parseInt(cnpj[12]) && secondDigit === parseInt(cnpj[13]) ? null : "Invalid CNPJ number"
+        };
+    }
+
+
     // Validate US Driver's License (General Format - State-Specific Checks Recommended)
     static validateUSDriversLicense(licenseNumber) {
         const licenseRegex = /^[A-Z0-9]{4,16}$/; // Extended to cover some state variations

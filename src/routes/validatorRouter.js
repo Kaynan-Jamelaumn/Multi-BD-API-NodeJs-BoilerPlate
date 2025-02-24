@@ -180,6 +180,41 @@ router.post('/validate-crea/:creaNumber?', (req, res) => {
     res.status(200).json({ message: 'CREA is valid.' });
 });
 
+// route to validate PIS/PASEP 
+router.post('/validate-pis-pasep/:pis?', (req, res) => {
+    const creaNumber = getData(req, 'pis');
+
+    if (!creaNumber) {
+        return res.status(400).json({ error: 'PIS number is required.' });
+    }
+
+    const validationResult = IDValidator.validatePIS(creaNumber);
+
+    if (!validationResult.valid) {
+        return res.status(validationResult.status || 400).json({ error: validationResult.error });
+    }
+
+    res.status(200).json({ message: 'PIS-PASEP is valid.' });
+});
+
+
+// route to validate CNPJ
+router.post('/validate-cnpj/:cnpj?', (req, res) => {
+    const creaNumber = getData(req, 'cnpj');
+
+    if (!creaNumber) {
+        return res.status(400).json({ error: 'CNPJ number is required.' });
+    }
+
+    const validationResult = IDValidator.validateCNPJ(creaNumber);
+
+    if (!validationResult.valid) {
+        return res.status(validationResult.status || 400).json({ error: validationResult.error });
+    }
+
+    res.status(200).json({ message: 'CNPJ is valid.' });
+});
+
 
 
 // Route to validate US Driver's License
