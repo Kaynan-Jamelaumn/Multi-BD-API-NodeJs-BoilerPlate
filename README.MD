@@ -1,4 +1,7 @@
 # Multi DB(Mongo/Mysql) User API creation with multi ID type Validator)
+
+
+This Project Is a Functional NodeJs  API BoilerPlate which you can choose to use either MongoDB or Mysql in your project. Where the User(Model) can have any necessary UniqueID such as Passport, CPF(Brazilian ID) SSN, (US ID), etc. And you just have to pick the specific id you want, modify the User Model and call the Validator class to properly validate the ID Field 
 ## Prerequisites
 
 - Node.js (v14 or higher)
