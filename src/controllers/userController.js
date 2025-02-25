@@ -160,7 +160,7 @@ class UserController {
 
   async self(req, res) {
     try {
-      const id = req.params.id || req.body.id;
+      const id = req.params.userId || req.body.userId;
       let user;
   
       if (process.env.DB_TYPE === 'mongo') {
@@ -195,7 +195,7 @@ class UserController {
   async update(req, res) {
     try {
       // Use the logged-in user's ID if they are not an admin
-      const id = req.user.role === 'Admin' ? req.params.id || req.body.id : req.user.id;
+      const id = req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user.id;
       const { username, name, surname, email, password, bio, birthDate, role } = req.body;
 
       // Check if a file was uploaded
@@ -277,7 +277,7 @@ class UserController {
   async delete(req, res) {
     try {
       // Use the logged-in user's ID if they are not an admin
-      const id = req.user.role === 'Admin' ? req.params.id || req.body.id : req.user.id;
+      const id = req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user.id;
   
       let user;
       if (process.env.DB_TYPE === 'mongo') {
@@ -319,7 +319,7 @@ class UserController {
 
   async reactivate(req, res) {
     try {
-      const id =  req.params.id || req.body.id;
+      const id =  req.params.userId || req.body.userId;
   
       let user;
       if (process.env.DB_TYPE === 'mongo') {

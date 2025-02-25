@@ -321,6 +321,28 @@ This document provides an overview of the API endpoints and their functionalitie
 
 ---
 
+### 25. Validate PIS/PASEP
+- **Endpoint**: `POST /validate-pis-pasep/:pis?`
+- **Description**: Validates a PIS/PASEP number.
+- **Request Params**:
+  - `pis`: (string) The PIS/PASEP number.
+- **Response**:
+  - `200`: `{ message: "PIS-PASEP is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 26. Validate CNPJ
+- **Endpoint**: `POST /validate-cnpj/:cnpj?`
+- **Description**: Validates a CNPJ number.
+- **Request Params**:
+  - `cnpj`: (string) The CNPJ number.
+- **Response**:
+  - `200`: `{ message: "CNPJ is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
 ## User Endpoints
 
 ## 1. Create User
@@ -368,7 +390,7 @@ This document provides an overview of the API endpoints and their functionalitie
 ---
 
 ## 4. Logout
-- **Endpoint**: `POST /user/logout/`
+- **Endpoint**: `GET /user/logout/`
 - **Description**: Logs out the user. For session-based authentication, it destroys the session. For JWT, it simply returns a success message.
 - **Response**:
   - `200`: Logout successful.
