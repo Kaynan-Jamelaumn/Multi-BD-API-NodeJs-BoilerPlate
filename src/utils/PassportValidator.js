@@ -196,6 +196,7 @@ class PassportValidator {
         // Return true if the expected checksum matches the actual checksum, otherwise false
         return expectedChecksum === actualChecksum;
     }
+    
 
 }
 export default PassportValidator;

@@ -1,6 +1,5 @@
 import { logger } from "../../app.js";
-import IDValidator from "../utils/IDValidator.js";
-
+import AddressValidator from "../utils/AddressValidator.js";
 // Dynamically import the appropriate model based on DB_TYPE
 let AddressModel;
 try {
@@ -30,11 +29,13 @@ class AddressController {
     try {
       const { userId, street, number, complement, neighborhood, city, state, zipCode, country } = req.body;
 
-      IDValidator.validateFields(
-        { userId, street, number, neighborhood, city, state, zipCode },
+      const validationError = AddressValidator.validateAddressFields(
+        { userId, street, number, complement, neighborhood, city, state, zipCode, country },
         { required: true }
       );
-
+      if(validationError){
+        return res.status(validationError.status).json({ error: validationError.error });
+      }
       const newAddress = { userId, street, number, complement, neighborhood, city, state, zipCode, country };
       const createdAddress = await AddressModel.create(newAddress);
       return res.status(201).json(createdAddress);
@@ -112,21 +113,29 @@ class AddressController {
 
 
 
+
   async update(req, res) {
     try {
-      const id = req.params.addressId || req.body.addressId
+      const id = req.params.addressId || req.body.addressId;
       const updatedData = req.body;
+  
+
+      const validationError = AddressValidator.validateAddressFields(updatedData, { required: false });
+      if(validationError){
+        return res.status(validationError.status).json({ error: validationError.error });
+      }
 
       const address = await AddressModel.findByPk(id);
       if (!address) {
         return res.status(404).json({ error: "Address not found." });
       }
-
+  
+      // Update the address with validated data
       await address.update(updatedData);
       return res.status(200).json(address);
     } catch (error) {
       logger.error("Error updating address:", error);
-      return res.status(500).json({ error: "Internal server error." });
+      return res.status(400).json({ error: error.message });
     }
   }
 
