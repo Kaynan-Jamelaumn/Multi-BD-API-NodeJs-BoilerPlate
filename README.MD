@@ -63,7 +63,189 @@ FRONTEND_URL=http://localhost:8080
 
 This document provides an overview of the API endpoints and their functionalities.
 
----## Validator Endpoints
+## Main Router Endpoints
+
+---
+
+### 1. Health Check
+- **Endpoint**: `GET /health`
+- **Description**: Checks the health of the API.
+- **Response**:
+  - `200`: API is healthy.
+
+---
+
+### 2. Serve Static Files
+- **Endpoint**: `GET /uploads/*`
+- **Description**: Serves static files from the `public/uploads` directory.
+- **Response**:
+  - `200`: File content.
+
+---
+
+### 3. Error Handling
+- **Description**: Handles file upload errors.
+- **Response**:
+  - `400`: Multer-specific errors.
+
+
+
+## User Endpoints
+
+## 1. Create User
+- **Endpoint**: `POST /user/create/`
+- **Description**: Creates a new user with optional profile picture upload.
+- **Request Body**:
+  - `username`: (string) The username of the user.
+  - `name`: (string) The name of the user.
+  - `surname`: (string) The surname of the user.
+  - `email`: (string) The email of the user.
+  - `password`: (string) The password of the user.
+  - `bio`: (string, optional) A short bio of the user.
+  - `birthDate`: (string, optional) The birth date of the user.
+  - `role`: (string, optional) The role of the user (default: `User`).
+  - `profilePicture`: (file, optional) The user's profile picture.
+- **Response**:
+  - `201`: User created successfully. Returns the user object with the profile picture URL.
+  - `400`: Invalid data or validation error.
+  - `409`: Email or username already exists.
+
+---
+
+## 2. Get All Users
+- **Endpoint**: `GET /user/get/`
+- **Description**: Retrieves a list of all users. Passwords are excluded from the response. Requires admin privileges
+- **Response**:
+  - `200`: Returns a list of users with profile picture URLs.
+  - `404`: No users found.
+  - `500`: Internal server error.
+
+---
+
+## 3. Login
+- **Endpoint**: `POST /user/login/`
+- **Description**: Authenticates a user and returns a token (JWT) or sets a session (session-based authentication).
+- **Request Body**:
+  - `email`: (string) The email of the user.
+  - `password`: (string) The password of the user.
+- **Response**:
+  - `200`: Login successful. Returns a token (JWT) or a success message (session-based).
+  - `401`: Invalid email or password.
+  - `403`: Account is deactivated.
+  - `500`: Internal server error.
+
+---
+
+## 4. Logout
+- **Endpoint**: `GET /user/logout/`
+- **Description**: Logs out the user. For session-based authentication, it destroys the session. For JWT, it simply returns a success message.
+- **Response**:
+  - `200`: Logout successful.
+  - `500`: Internal server error.
+
+---
+
+
+## 5. Get Active Users
+- **Endpoint**: `GET /user/getActive/`
+- **Description**: Retrieves a list of all active users. Requires admin privileges.
+- **Response**:
+  - `200`: Returns a list of active users with profile picture URLs.
+  - `404`: No active users found.
+  - `500`: Internal server error.
+
+---
+
+## 6. Get Inactive Users
+- **Endpoint**: `GET /user/getInactive/`
+- **Description**: Retrieves a list of all inactive users. Requires admin privileges.
+- **Response**:
+  - `200`: Returns a list of inactive users with profile picture URLs.
+  - `404`: No inactive users found.
+  - `500`: Internal server error.
+
+---
+
+## 7. Get User by ID (Self)
+- **Endpoint**: `GET /user/self/:id?`
+- **Description**: Retrieves the details of the currently logged-in user or a user by ID.
+- **Request Params**:
+  - `id`: (string, optional) The user ID. If not provided, the logged-in user's details are returned.
+- **Response**:
+  - `200`: Returns the user details with the profile picture URL.
+  - `404`: User not found.
+  - `500`: Internal server error.
+
+---
+
+## 8. Update User
+- **Endpoint**: `PUT /user/update/:id?`
+- **Description**: Updates user details, including an optional profile picture. Admins can update any user, while regular users can only update their own details.
+- **Request Params**:
+  - `id`: (string, optional) The user ID. If not provided, the logged-in user's details are updated.
+- **Request Body**:
+  - `username`: (string, optional) The updated username.
+  - `name`: (string, optional) The updated name.
+  - `surname`: (string, optional) The updated surname.
+  - `email`: (string, optional) The updated email.
+  - `password`: (string, optional) The updated password.
+  - `bio`: (string, optional) The updated bio.
+  - `birthDate`: (string, optional) The updated birth date.
+  - `role`: (string, optional) The updated role.
+  - `profilePicture`: (file, optional) The updated profile picture.
+- **Response**:
+  - `200`: User updated successfully. Returns the updated user object with the profile picture URL.
+  - `400`: Invalid data or validation error.
+  - `404`: User not found.
+  - `409`: Email or username already exists.
+  - `500`: Internal server error.
+
+---
+
+## 9. Delete User (Soft Delete)
+- **Endpoint**: `GET /user/delete/:id?`
+- **Description**: Deactivates a user by setting `isActive` to `false`. Admins can deactivate any user, while regular users can only deactivate themselves.
+- **Request Params**:
+  - `id`: (string, optional) The user ID. If not provided, the logged-in user is deactivated.
+- **Response**:
+  - `200`: User deactivated successfully.
+  - `400`: User is already deactivated.
+  - `404`: User not found.
+  - `500`: Internal server error.
+
+---
+
+## 10. Reactivate User
+- **Endpoint**: `GET /user/reactivate/:id?`
+- **Description**: Reactivates a deactivated user by setting `isActive` to `true`.
+- **Request Params**:
+  - `id`: (string, optional) The user ID. If not provided, the logged-in user is reactivated.
+- **Response**:
+  - `200`: User reactivated successfully.
+  - `400`: User is already active.
+  - `404`: User not found.
+  - `500`: Internal server error.
+
+---
+
+## 11. Search Users
+- **Endpoint**: `GET /user/search/`
+- **Description**: Searches for users based on query parameters. Supports pagination, sorting, and filtering by role.
+- **Query Parameters**:
+  - `page`: (number, optional) The page number for pagination (default: `1`).
+  - `limit`: (number, optional) The number of results per page (default: `10`, max: `100`).
+  - `search`: (string, optional) A search term to filter users by name, email, or username.
+  - `role`: (string, optional) Filters users by role (e.g., `User` or `Admin`).
+  - `sortBy`: (string, optional) The field to sort by (default: `createdAt`).
+  - `order`: (string, optional) The sort order (`asc` or `desc`, default: `desc`).
+- **Response**:
+  - `200`: Returns a paginated list of users with profile picture URLs.
+  - `500`: Internal server error.
+
+---
+## Validator Endpoints
+
+In case you wish to use the multi ID Validator as an API you can just use it in the following endpoints below, or import the Validator class from /src/utils/IDValidator.js 
 
 ### 1. Validate User Fields
 - **Endpoint**: `POST /validator/validate-fields`
@@ -346,187 +528,3 @@ This document provides an overview of the API endpoints and their functionalitie
 
 ---
 
-## User Endpoints
-
-## 1. Create User
-- **Endpoint**: `POST /user/create/`
-- **Description**: Creates a new user with optional profile picture upload.
-- **Request Body**:
-  - `username`: (string) The username of the user.
-  - `name`: (string) The name of the user.
-  - `surname`: (string) The surname of the user.
-  - `email`: (string) The email of the user.
-  - `password`: (string) The password of the user.
-  - `bio`: (string, optional) A short bio of the user.
-  - `birthDate`: (string, optional) The birth date of the user.
-  - `role`: (string, optional) The role of the user (default: `User`).
-  - `profilePicture`: (file, optional) The user's profile picture.
-- **Response**:
-  - `201`: User created successfully. Returns the user object with the profile picture URL.
-  - `400`: Invalid data or validation error.
-  - `409`: Email or username already exists.
-
----
-
-## 2. Get All Users
-- **Endpoint**: `GET /user/get/`
-- **Description**: Retrieves a list of all users. Passwords are excluded from the response. Requires admin privileges
-- **Response**:
-  - `200`: Returns a list of users with profile picture URLs.
-  - `404`: No users found.
-  - `500`: Internal server error.
-
----
-
-## 3. Login
-- **Endpoint**: `POST /user/login/`
-- **Description**: Authenticates a user and returns a token (JWT) or sets a session (session-based authentication).
-- **Request Body**:
-  - `email`: (string) The email of the user.
-  - `password`: (string) The password of the user.
-- **Response**:
-  - `200`: Login successful. Returns a token (JWT) or a success message (session-based).
-  - `401`: Invalid email or password.
-  - `403`: Account is deactivated.
-  - `500`: Internal server error.
-
----
-
-## 4. Logout
-- **Endpoint**: `GET /user/logout/`
-- **Description**: Logs out the user. For session-based authentication, it destroys the session. For JWT, it simply returns a success message.
-- **Response**:
-  - `200`: Logout successful.
-  - `500`: Internal server error.
-
----
-
-
-## 5. Get Active Users
-- **Endpoint**: `GET /user/getActive/`
-- **Description**: Retrieves a list of all active users. Requires admin privileges.
-- **Response**:
-  - `200`: Returns a list of active users with profile picture URLs.
-  - `404`: No active users found.
-  - `500`: Internal server error.
-
----
-
-## 6. Get Inactive Users
-- **Endpoint**: `GET /user/getInactive/`
-- **Description**: Retrieves a list of all inactive users. Requires admin privileges.
-- **Response**:
-  - `200`: Returns a list of inactive users with profile picture URLs.
-  - `404`: No inactive users found.
-  - `500`: Internal server error.
-
----
-
-## 7. Get User by ID (Self)
-- **Endpoint**: `GET /user/self/:id?`
-- **Description**: Retrieves the details of the currently logged-in user or a user by ID.
-- **Request Params**:
-  - `id`: (string, optional) The user ID. If not provided, the logged-in user's details are returned.
-- **Response**:
-  - `200`: Returns the user details with the profile picture URL.
-  - `404`: User not found.
-  - `500`: Internal server error.
-
----
-
-## 8. Update User
-- **Endpoint**: `PUT /user/update/:id?`
-- **Description**: Updates user details, including an optional profile picture. Admins can update any user, while regular users can only update their own details.
-- **Request Params**:
-  - `id`: (string, optional) The user ID. If not provided, the logged-in user's details are updated.
-- **Request Body**:
-  - `username`: (string, optional) The updated username.
-  - `name`: (string, optional) The updated name.
-  - `surname`: (string, optional) The updated surname.
-  - `email`: (string, optional) The updated email.
-  - `password`: (string, optional) The updated password.
-  - `bio`: (string, optional) The updated bio.
-  - `birthDate`: (string, optional) The updated birth date.
-  - `role`: (string, optional) The updated role.
-  - `profilePicture`: (file, optional) The updated profile picture.
-- **Response**:
-  - `200`: User updated successfully. Returns the updated user object with the profile picture URL.
-  - `400`: Invalid data or validation error.
-  - `404`: User not found.
-  - `409`: Email or username already exists.
-  - `500`: Internal server error.
-
----
-
-## 9. Delete User (Soft Delete)
-- **Endpoint**: `GET /user/delete/:id?`
-- **Description**: Deactivates a user by setting `isActive` to `false`. Admins can deactivate any user, while regular users can only deactivate themselves.
-- **Request Params**:
-  - `id`: (string, optional) The user ID. If not provided, the logged-in user is deactivated.
-- **Response**:
-  - `200`: User deactivated successfully.
-  - `400`: User is already deactivated.
-  - `404`: User not found.
-  - `500`: Internal server error.
-
----
-
-## 10. Reactivate User
-- **Endpoint**: `GET /user/reactivate/:id?`
-- **Description**: Reactivates a deactivated user by setting `isActive` to `true`.
-- **Request Params**:
-  - `id`: (string, optional) The user ID. If not provided, the logged-in user is reactivated.
-- **Response**:
-  - `200`: User reactivated successfully.
-  - `400`: User is already active.
-  - `404`: User not found.
-  - `500`: Internal server error.
-
----
-
-## 11. Search Users
-- **Endpoint**: `GET /user/search/`
-- **Description**: Searches for users based on query parameters. Supports pagination, sorting, and filtering by role.
-- **Query Parameters**:
-  - `page`: (number, optional) The page number for pagination (default: `1`).
-  - `limit`: (number, optional) The number of results per page (default: `10`, max: `100`).
-  - `search`: (string, optional) A search term to filter users by name, email, or username.
-  - `role`: (string, optional) Filters users by role (e.g., `User` or `Admin`).
-  - `sortBy`: (string, optional) The field to sort by (default: `createdAt`).
-  - `order`: (string, optional) The sort order (`asc` or `desc`, default: `desc`).
-- **Response**:
-  - `200`: Returns a paginated list of users with profile picture URLs.
-  - `500`: Internal server error.
-
----
-
-## Main Router Endpoints
-
-### 1. Home Page
-- **Endpoint**: `GET /`
-- **Description**: Returns the home page.
-- **Response**:
-  - `200`: Home page content.
-
----
-
-### 2. Health Check
-- **Endpoint**: `GET /health`
-- **Description**: Checks the health of the API.
-- **Response**:
-  - `200`: API is healthy.
-
----
-
-### 3. Serve Static Files
-- **Endpoint**: `GET /uploads/*`
-- **Description**: Serves static files from the `public/uploads` directory.
-- **Response**:
-  - `200`: File content.
-
----
-
-### 4. Error Handling
-- **Description**: Handles file upload errors.
-- **Response**:
-  - `400`: Multer-specific errors.
