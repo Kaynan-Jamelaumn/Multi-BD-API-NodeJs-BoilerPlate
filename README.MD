@@ -1,7 +1,7 @@
-# Multi DB(Mongo/Mysql) User API creation with multi ID type Validator)
+# Multi DB(Mongo/Mysql) User API creation with multi ID type Validator
 
 
-This Project Is a Functional NodeJs  API BoilerPlate which you can choose to use either MongoDB or Mysql in your project. Where the User(Model) can have any necessary UniqueID such as Passport, CPF(Brazilian ID) SSN, (US ID), etc. And you just have to pick the specific id you want, modify the User Model and call the Validator class to properly validate the ID Field 
+This Project Is a Functional NodeJs API BoilerPlate which you can choose to use either MongoDB or Mysql in your project. Where the User(Model) can have any necessary UniqueID such as Passport, CPF(Brazilian ID) SSN (US ID), etc. And you just have to pick the specific id you want, modify the User Model and call the Validator class to properly validate the ID Field 
 ## Prerequisites
 
 - Node.js (v14 or higher)
@@ -36,8 +36,9 @@ NODE_ENV=development # or production
 # Server configuration
 PORT=3000
 UPLOAD_DIR=public/uploads #To where the image files will be uploaded
+STATIC_FILE_DIR=public # Directory for serving static files (defaults to 'public' if not set)
 
-#MODELS_PATH='./src/models' #models required by the DB
+MODELS_PATH='./src/models' #models required by the DB
 
 # Database configuration
 DB_TYPE=mongo # or mysql
@@ -53,7 +54,7 @@ DB_PORT=3306
 # Session secret
 SESSION_SECRET=your_session_secret
 
-# Frontend URL for CORS
+# Frontend URL allowed for CORS
 FRONTEND_URL=http://localhost:8080
 ``` 
 

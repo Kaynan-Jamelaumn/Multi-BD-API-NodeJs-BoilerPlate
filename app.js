@@ -194,17 +194,35 @@ class App {
                 req.session.csrfSecret = crypto.randomBytes(32).toString("hex"); // Generate a random secret
                 req.session.save((err) => {
                     // Save session
-                    if (err) return next(err);
+                    if (err) {
+                        //logger.error('Error saving session:', err);
+                        return next(err);
+                    }
+                    //logger.log('CSRF secret set:', req.session.csrfSecret);
                     next();
                 });
             } else {
+                //logger.log('CSRF secret already set:', req.session.csrfSecret);
                 next();
             }
         });
 
-        this.app.use(doubleCsrfProtection); // Apply CSRF protection middleware
+
+        // // Apply CSRF protection only to non-static routes
         this.app.use((req, res, next) => {
-            res.locals.csrfToken = generateToken(req, res); // Generate CSRF token for views
+            if (req.path.startsWith('/uploads')) {
+                // Skip CSRF protection for /uploads
+                return next();
+            }
+            // Apply CSRF protection to all other routes
+            doubleCsrfProtection(req, res, next);
+        });
+
+        // Generate CSRF token for views
+        this.app.use((req, res, next) => {
+            if (!req.path.startsWith('/uploads')) {
+                res.locals.csrfToken = generateToken(req, res);
+            }
             next();
         });
     }
@@ -213,7 +231,8 @@ class App {
     setupGlobalMiddlewaresAndRoutes() {
         this.app.use(helmet());
 
-        this.app.use(express.static("./public")); // Apply custom application routes
+        const staticFileDir = process.env.STATIC_FILE_DIR || 'public';
+        this.app.use(express.static(staticFileDir));
 
         // Setup rate limiter to prevent abuse (limit to 100 requests per 15 minutes)
         const limiter = rateLimit({
@@ -239,8 +258,17 @@ class App {
         
         // Function to setup global middlewares and routes
         this.app.use(middleWareGlobal); // Use global middleware (e.g., logging, error handling)
-        this.app.use(checkCSRFError); // Check for CSRF errors
         this.app.use(mainRouter); // Apply custom application routes
+        
+        
+        this.setupCSRFProtection(); // Setup CSRF protection
+        
+        // Handle 404 errors
+        this.app.use((req, res, next) => {
+            res.status(404).send("404 Not Found");
+        });
+        // Handle CSRF errors
+        this.app.use(checkCSRFError); // Check for CSRF errors
     }
     // Main function to connect to the database, setup app, and start the server
     async start(port) {
@@ -254,7 +282,6 @@ class App {
             this.app.use(express.urlencoded({ extended: true }));
 
             this.setupGlobalMiddlewaresAndRoutes(); // Setup global middlewares and routes
-            this.setupCSRFProtection(); // Setup CSRF protection
             
             this.app.listen(port, () =>
                 this.logger.info(`Server running on http://localhost:${port}`)

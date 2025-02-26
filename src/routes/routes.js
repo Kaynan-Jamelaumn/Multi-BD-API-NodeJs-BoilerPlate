@@ -22,8 +22,9 @@ mainRouter.get('/health', (req, res) => {
 
 mainRouter.use('/validator', validatorRouter);
 
- // Serve static files from the "public" directory
- mainRouter.use('/uploads', express.static(path.resolve('public/uploads')));
+ // Serve static files(exp images) from the "public" directory
+ const uploadDir = process.env.UPLOAD_DIR || 'public/uploads';
+ mainRouter.use('/uploads', express.static(path.resolve(uploadDir)));
 
 // Error-handling file upload middleware
 mainRouter.use((err, req, res, next) => {
