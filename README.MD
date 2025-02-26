@@ -244,6 +244,120 @@ This document provides an overview of the API endpoints and their functionalitie
   - `500`: Internal server error.
 
 ---
+## User Addreses Endpoint
+
+## 1. Create Address
+- **Endpoint**: `POST /address/create`
+- **Description**: Creates a new address for the authenticated user.
+- **Authentication**: Required.
+- **Request Body**:
+  - `userId`: (string, required) The ID of the user associated with the address.
+  - `street`: (string, required) The street name.
+  - `number`: (string, required) The street number.
+  - `complement`: (string, optional) Additional address details (e.g., apartment number).
+  - `neighborhood`: (string, required) The neighborhood name.
+  - `city`: (string, required) The city name.
+  - `state`: (string, required) The state or region.
+  - `zipCode`: (string, required) The postal or ZIP code.
+  - `country`: (string, required) The country name.
+- **Response**:
+  - `201`: Returns the created address object.
+  - `400`: Bad request (e.g., validation error or missing fields).
+  - `500`: Internal server error.
+
+---
+
+## 2. Get All Addresses for Authenticated User
+- **Endpoint**: `GET /address/get`
+- **Description**: Retrieves all addresses associated with the authenticated user.
+- **Authentication**: Required.
+- **Response**:
+  - `200`: Returns a list of addresses for the authenticated user.
+  - `500`: Internal server error.
+
+---
+
+## 3. Get Address by ID
+- **Endpoint**: `GET /address/get/:addressId?`
+- **Description**: Retrieves a specific address by its ID. The authenticated user must be the owner of the address.
+- **Authentication**: Required.
+- **Path Parameters**:
+  - `addressId`: (string, optional) The ID of the address to retrieve. If not provided, it can be passed in the request body.
+- **Response**:
+  - `200`: Returns the address object.
+  - `404`: Address not found.
+  - `500`: Internal server error.
+
+---
+
+## 4. Get Addresses by User ID
+- **Endpoint**: `GET /address/get-user-addresses/:userId?`
+- **Description**: Retrieves all addresses associated with a specific user ID. Admins can access any user's addresses, while regular users can only access their own.
+- **Authentication**: Required.
+- **Path Parameters**:
+  - `userId`: (string, optional) The ID of the user whose addresses are being retrieved. If not provided, it defaults to the authenticated user's ID.
+- **Response**:
+  - `200`: Returns a list of addresses for the specified user.
+  - `404`: No addresses found for the user.
+  - `500`: Internal server error.
+
+---
+
+## 5. Update Address
+- **Endpoint**: `PUT /address/update/:addressId?`
+- **Description**: Updates an existing address by its ID. The authenticated user must be the owner of the address.
+- **Authentication**: Required.
+- **Path Parameters**:
+  - `addressId`: (string, optional) The ID of the address to update. If not provided, it can be passed in the request body.
+- **Request Body**:
+  - Any of the address fields (`street`, `number`, `complement`, `neighborhood`, `city`, `state`, `zipCode`, `country`) can be updated.
+- **Response**:
+  - `200`: Returns the updated address object.
+  - `404`: Address not found.
+  - `400`: Bad request (e.g., validation error).
+  - `500`: Internal server error.
+
+---
+
+## 6. Delete Address
+- **Endpoint**: `DELETE /address/delete/:addressId?`
+- **Description**: Deletes an address by its ID. The authenticated user must be the owner of the address.
+- **Authentication**: Required.
+- **Path Parameters**:
+  - `addressId`: (string, optional) The ID of the address to delete. If not provided, it can be passed in the request body.
+- **Response**:
+  - `200`: Returns a success message.
+  - `404`: Address not found.
+  - `500`: Internal server error.
+
+---
+
+## 7. Set Primary Address
+- **Endpoint**: `PUT /address/set-primary/:userId?/:addressId?`
+- **Description**: Sets an address as the primary address for a user. The authenticated user must be the owner of the address.
+- **Authentication**: Required.
+- **Path Parameters**:
+  - `userId`: (string, optional) The ID of the user whose primary address is being updated. If not provided, it can be passed in the request body.
+  - `addressId`: (string, optional) The ID of the address to set as primary. If not provided, it can be passed in the request body.
+- **Response**:
+  - `200`: Returns a success message.
+  - `500`: Internal server error.
+
+---
+
+## 8. Get Primary Address
+- **Endpoint**: `GET /address/primary/:userId?`
+- **Description**: Retrieves the primary address for a specific user. Admins can access any user's primary address, while regular users can only access their own.
+- **Authentication**: Required.
+- **Path Parameters**:
+  - `userId`: (string, optional) The ID of the user whose primary address is being retrieved. If not provided, it defaults to the authenticated user's ID.
+- **Response**:
+  - `200`: Returns the primary address object.
+  - `404`: Primary address not found.
+  - `500`: Internal server error.
+
+
+
 ## Validator Endpoints
 
 In case you wish to use the multi ID Validator as an API you can just use it in the following endpoints below, or import the Validator class from /src/utils/IDValidator.js 
