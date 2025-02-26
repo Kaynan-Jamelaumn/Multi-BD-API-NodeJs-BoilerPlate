@@ -56,6 +56,9 @@ import loadModels from './loadModels.js'; // models loader from sequelize
 import sequelizeConfiguration from "./dbconfig/databaseSequelize.js";
 
 
+// Import the Swagger configuration
+import swaggerConfig from './swagger.js';
+
 class App {
     constructor() {
         this.app = express();
@@ -253,7 +256,9 @@ class App {
         // Configure view engine to use EJS for dynamic views
         this.app.set("views", path.resolve(__dirname, "src", "views")); // Set the views directory
         this.app.set("view engine", "ejs"); // Set the template engine to EJS
-
+    
+         // Setup Swagger documentation
+         swaggerConfig(this.app);
 
         
         // Function to setup global middlewares and routes

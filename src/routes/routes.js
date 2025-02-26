@@ -10,9 +10,37 @@ import { testMiddleware } from '../middlewares/middleware.js';
 
 const mainRouter = express.Router();
 
+
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Returns the homepage
+ *     responses:
+ *       200:
+ *         description: The homepage
+ */
 mainRouter.get('/', testMiddleware, paginaInicial);
 
-
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check endpoint
+ *     responses:
+ *       200:
+ *         description: Health check passed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ */
 mainRouter.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date() });
 });

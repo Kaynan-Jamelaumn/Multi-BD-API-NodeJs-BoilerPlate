@@ -64,6 +64,296 @@ FRONTEND_URL=http://localhost:8080
 
 This document provides an overview of the API endpoints and their functionalities.
 
+
+This API is documented with swagger which you could access trough the endpoint /api-docs example: http://localhost:8765/api-docs/
+nevertheless the API endpoints will also have a less detailed documentation in the readme which you can access below:
+
+## Validator Endpoints
+
+In case you wish to use the multi ID Validator as an API you can just use it in the following endpoints below, or import the Validator class from /src/utils/IDValidator.js 
+
+### 1. Validate User Fields
+- **Endpoint**: `POST /validator/validate-fields`
+- **Description**: Validates user fields such as `username`, `name`, `surname`, `email`, `password`, and `role`.
+- **Request Body**:
+  - `username`: (string) The username of the user.
+  - `name`: (string) The name of the user.
+  - `surname`: (string) The surname of the user.
+  - `email`: (string) The email of the user.
+  - `password`: (string) The password of the user.
+  - `role`: (string) The role of the user.
+- **Response**:
+  - `200`: `{ message: "All fields are valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 2. Validate Passport
+- **Endpoint**: `POST /validator/validate-passport/:passportNumber?/:countryCode?`
+- **Description**: Validates a passport number and country code.
+- **Request Params**:
+  - `passportNumber`: (string) The passport number.
+  - `countryCode`: (string) The country code.
+- **Response**:
+  - `200`: `{ message: "Passport is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 3. Validate CPF
+- **Endpoint**: `POST /validator/validate-cpf/:cpfNumber?`
+- **Description**: Validates a CPF (Brazilian individual taxpayer registry) number.
+- **Request Params**:
+  - `cpfNumber`: (string) The CPF number.
+- **Response**:
+  - `200`: `{ message: "CPF is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 4. Validate RG
+- **Endpoint**: `POST /validator/validate-rg/:rgNumber?`
+- **Description**: Validates an RG (Brazilian identity card) number.
+- **Request Params**:
+  - `rgNumber`: (string) The RG number.
+- **Response**:
+  - `200`: `{ message: "RG is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 5. Validate SUS
+- **Endpoint**: `POST /validator/validate-sus/:susNumber?`
+- **Description**: Validates a SUS (Brazilian public health system) number.
+- **Request Params**:
+  - `susNumber`: (string) The SUS number.
+- **Response**:
+  - `200`: `{ message: "SUS number is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 6. Validate CNH
+- **Endpoint**: `POST /validator/validate-cnh/:cnhNumber?`
+- **Description**: Validates a CNH (Brazilian driver's license) number.
+- **Request Params**:
+  - `cnhNumber`: (string) The CNH number.
+- **Response**:
+  - `200`: `{ message: "CNH is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 7. Validate CTPS
+- **Endpoint**: `POST /validator/validate-ctps/:ctpsNumber?`
+- **Description**: Validates a CTPS (Brazilian work card) number.
+- **Request Params**:
+  - `ctpsNumber`: (string) The CTPS number.
+- **Response**:
+  - `200`: `{ message: "CTPS is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 8. Validate CRM
+- **Endpoint**: `POST /validator/validate-crm/:crmNumber?`
+- **Description**: Validates a CRM (Brazilian medical council registration) number.
+- **Request Params**:
+  - `crmNumber`: (string) The CRM number.
+- **Response**:
+  - `200`: `{ message: "CRM is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 9. Validate OAB
+- **Endpoint**: `POST /validator/validate-oab/:oabNumber?`
+- **Description**: Validates an OAB (Brazilian bar association) number.
+- **Request Params**:
+  - `oabNumber`: (string) The OAB number.
+- **Response**:
+  - `200`: `{ message: "OAB is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 10. Validate CREA
+- **Endpoint**: `POST /validator/validate-crea/:creaNumber?`
+- **Description**: Validates a CREA (Brazilian engineering council registration) number.
+- **Request Params**:
+  - `creaNumber`: (string) The CREA number.
+- **Response**:
+  - `200`: `{ message: "CREA is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+
+### 11. Validate US Driver's License
+- **Endpoint**: `POST /validator/validate-us-license/:licenseNumber?`
+- **Description**: Validates a US Driver's License number (General Format - state-specific checks recommended).
+- **Request Params**:
+  - `licenseNumber`: (string) The US Driver's License number.
+- **Response**:
+  - `200`: `{ message: "US Driver's License is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 12. Validate US Social Security Number (SSN)
+- **Endpoint**: `POST /validator/validate-us-ssn/:ssn?`
+- **Description**: Validates a US Social Security Number (SSN).
+- **Request Params**:
+  - `ssn`: (string) The SSN in the format XXX-XX-XXXX.
+- **Response**:
+  - `200`: `{ message: "SSN is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 13. Validate US Military ID (CAC)
+- **Endpoint**: `POST /validator/validate-us-military-id/:militaryID?`
+- **Description**: Validates a US Military ID (CAC).
+- **Request Params**:
+  - `militaryID`: (string) The US Military ID.
+- **Response**:
+  - `200`: `{ message: "US Military ID is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 14. Validate US Green Card
+- **Endpoint**: `POST /validator/validate-us-green-card/:greenCardNumber?`
+- **Description**: Validates a US Permanent Resident Card (Green Card) number.
+- **Request Params**:
+  - `greenCardNumber`: (string) The Green Card number.
+- **Response**:
+  - `200`: `{ message: "US Green Card is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 15. Validate US Employment Authorization Document (EAD)
+- **Endpoint**: `POST /validator/validate-us-ead/:eadNumber?`
+- **Description**: Validates a US Employment Authorization Document (EAD).
+- **Request Params**:
+  - `eadNumber`: (string) The EAD number.
+- **Response**:
+  - `200`: `{ message: "US Employment Authorization Document is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 16. Validate US Birth Certificate
+- **Endpoint**: `POST /validator/validate-us-birth-certificate/:birthCertNumber?`
+- **Description**: Validates a US Birth Certificate number.
+- **Request Params**:
+  - `birthCertNumber`: (string) The US Birth Certificate number.
+- **Response**:
+  - `200`: `{ message: "US Birth Certificate is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 17. Validate US Medicare/Medicaid Card
+- **Endpoint**: `POST /validator/validate-us-medicare-medicaid/:medicareNumber?`
+- **Description**: Validates a US Medicare/Medicaid card number using the MBI format.
+- **Request Params**:
+  - `medicareNumber`: (string) The Medicare/Medicaid card number.
+- **Response**:
+  - `200`: `{ message: "US Medicare/Medicaid Card is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 18. Validate US Veteran ID Card (VIC)
+- **Endpoint**: `POST /validator/validate-us-veteran-id/:vicNumber?`
+- **Description**: Validates a US Veteran ID Card (VIC) number.
+- **Request Params**:
+  - `vicNumber`: (string) The Veteran ID number.
+- **Response**:
+  - `200`: `{ message: "US Veteran ID is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 19. Validate UK Driving Licence
+- **Endpoint**: `POST /validator/validate-uk-driving-licence/:licenceNumber?`
+- **Description**: Validates a UK Driving Licence number using the DVLA format.
+- **Request Params**:
+  - `licenceNumber`: (string) The UK Driving Licence number.
+- **Response**:
+  - `200`: `{ message: "UK Driving Licence is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+
+### 20. Validate UK Birth Certificate
+- **Endpoint**: `POST /validator/validate-uk-birth-certificate/:birthCertNumber?`
+- **Description**: Validates a UK Birth Certificate number.
+- **Request Params**:
+  - `birthCertNumber`: (string) The UK Birth Certificate number.
+- **Response**:
+  - `200`: `{ message: "UK Birth Certificate is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 21. Validate UK Armed Forces ID
+- **Endpoint**: `POST /validator/validate-uk-armed-forces-id/:armedForcesID?`
+- **Description**: Validates a UK Armed Forces ID number.
+- **Request Params**:
+  - `armedForcesID`: (string) The Armed Forces ID.
+- **Response**:
+  - `200`: `{ message: "UK Armed Forces ID is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 23. Validate UK National Insurance Number
+- **Endpoint**: `POST /validator/validate-uk-ni/:niNumber?`
+- **Description**: Validates a UK National Insurance Number (NI Number).
+- **Request Params**:
+  - `niNumber`: (string) The National Insurance number.
+- **Response**:
+  - `200`: `{ message: "UK NI Number is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 24. Validate UK Residence Card
+- **Endpoint**: `POST /validator/validate-uk-residence-card/:residenceCardNumber?`
+- **Description**: Validates a UK Biometric Residence Permit (BRP) number.
+- **Request Params**:
+  - `residenceCardNumber`: (string) The residence card number.
+- **Response**:
+  - `200`: `{ message: "UK Residence Card is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 25. Validate PIS/PASEP
+- **Endpoint**: `POST /validate-pis-pasep/:pis?`
+- **Description**: Validates a PIS/PASEP number.
+- **Request Params**:
+  - `pis`: (string) The PIS/PASEP number.
+- **Response**:
+  - `200`: `{ message: "PIS-PASEP is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
+### 26. Validate CNPJ
+- **Endpoint**: `POST /validate-cnpj/:cnpj?`
+- **Description**: Validates a CNPJ number.
+- **Request Params**:
+  - `cnpj`: (string) The CNPJ number.
+- **Response**:
+  - `200`: `{ message: "CNPJ is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+
+
+
 ## Main Router Endpoints
 
 ---
@@ -356,290 +646,6 @@ This document provides an overview of the API endpoints and their functionalitie
   - `404`: Primary address not found.
   - `500`: Internal server error.
 
-
-
-## Validator Endpoints
-
-In case you wish to use the multi ID Validator as an API you can just use it in the following endpoints below, or import the Validator class from /src/utils/IDValidator.js 
-
-### 1. Validate User Fields
-- **Endpoint**: `POST /validator/validate-fields`
-- **Description**: Validates user fields such as `username`, `name`, `surname`, `email`, `password`, and `role`.
-- **Request Body**:
-  - `username`: (string) The username of the user.
-  - `name`: (string) The name of the user.
-  - `surname`: (string) The surname of the user.
-  - `email`: (string) The email of the user.
-  - `password`: (string) The password of the user.
-  - `role`: (string) The role of the user.
-- **Response**:
-  - `200`: `{ message: "All fields are valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 2. Validate Passport
-- **Endpoint**: `POST /validator/validate-passport/:passportNumber?/:countryCode?`
-- **Description**: Validates a passport number and country code.
-- **Request Params**:
-  - `passportNumber`: (string) The passport number.
-  - `countryCode`: (string) The country code.
-- **Response**:
-  - `200`: `{ message: "Passport is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 3. Validate CPF
-- **Endpoint**: `POST /validator/validate-cpf/:cpfNumber?`
-- **Description**: Validates a CPF (Brazilian individual taxpayer registry) number.
-- **Request Params**:
-  - `cpfNumber`: (string) The CPF number.
-- **Response**:
-  - `200`: `{ message: "CPF is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 4. Validate RG
-- **Endpoint**: `POST /validator/validate-rg/:rgNumber?`
-- **Description**: Validates an RG (Brazilian identity card) number.
-- **Request Params**:
-  - `rgNumber`: (string) The RG number.
-- **Response**:
-  - `200`: `{ message: "RG is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 5. Validate SUS
-- **Endpoint**: `POST /validator/validate-sus/:susNumber?`
-- **Description**: Validates a SUS (Brazilian public health system) number.
-- **Request Params**:
-  - `susNumber`: (string) The SUS number.
-- **Response**:
-  - `200`: `{ message: "SUS number is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 6. Validate CNH
-- **Endpoint**: `POST /validator/validate-cnh/:cnhNumber?`
-- **Description**: Validates a CNH (Brazilian driver's license) number.
-- **Request Params**:
-  - `cnhNumber`: (string) The CNH number.
-- **Response**:
-  - `200`: `{ message: "CNH is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 7. Validate CTPS
-- **Endpoint**: `POST /validator/validate-ctps/:ctpsNumber?`
-- **Description**: Validates a CTPS (Brazilian work card) number.
-- **Request Params**:
-  - `ctpsNumber`: (string) The CTPS number.
-- **Response**:
-  - `200`: `{ message: "CTPS is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 8. Validate CRM
-- **Endpoint**: `POST /validator/validate-crm/:crmNumber?`
-- **Description**: Validates a CRM (Brazilian medical council registration) number.
-- **Request Params**:
-  - `crmNumber`: (string) The CRM number.
-- **Response**:
-  - `200`: `{ message: "CRM is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 9. Validate OAB
-- **Endpoint**: `POST /validator/validate-oab/:oabNumber?`
-- **Description**: Validates an OAB (Brazilian bar association) number.
-- **Request Params**:
-  - `oabNumber`: (string) The OAB number.
-- **Response**:
-  - `200`: `{ message: "OAB is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 10. Validate CREA
-- **Endpoint**: `POST /validator/validate-crea/:creaNumber?`
-- **Description**: Validates a CREA (Brazilian engineering council registration) number.
-- **Request Params**:
-  - `creaNumber`: (string) The CREA number.
-- **Response**:
-  - `200`: `{ message: "CREA is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
-
-### 11. Validate US Driver's License
-- **Endpoint**: `POST /validator/validate-us-license/:licenseNumber?`
-- **Description**: Validates a US Driver's License number (General Format - state-specific checks recommended).
-- **Request Params**:
-  - `licenseNumber`: (string) The US Driver's License number.
-- **Response**:
-  - `200`: `{ message: "US Driver's License is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 12. Validate US Social Security Number (SSN)
-- **Endpoint**: `POST /validator/validate-us-ssn/:ssn?`
-- **Description**: Validates a US Social Security Number (SSN).
-- **Request Params**:
-  - `ssn`: (string) The SSN in the format XXX-XX-XXXX.
-- **Response**:
-  - `200`: `{ message: "SSN is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 13. Validate US Military ID (CAC)
-- **Endpoint**: `POST /validator/validate-us-military-id/:militaryID?`
-- **Description**: Validates a US Military ID (CAC).
-- **Request Params**:
-  - `militaryID`: (string) The US Military ID.
-- **Response**:
-  - `200`: `{ message: "US Military ID is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 14. Validate US Green Card
-- **Endpoint**: `POST /validator/validate-us-green-card/:greenCardNumber?`
-- **Description**: Validates a US Permanent Resident Card (Green Card) number.
-- **Request Params**:
-  - `greenCardNumber`: (string) The Green Card number.
-- **Response**:
-  - `200`: `{ message: "US Green Card is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 15. Validate US Employment Authorization Document (EAD)
-- **Endpoint**: `POST /validator/validate-us-ead/:eadNumber?`
-- **Description**: Validates a US Employment Authorization Document (EAD).
-- **Request Params**:
-  - `eadNumber`: (string) The EAD number.
-- **Response**:
-  - `200`: `{ message: "US Employment Authorization Document is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 16. Validate US Birth Certificate
-- **Endpoint**: `POST /validator/validate-us-birth-certificate/:birthCertNumber?`
-- **Description**: Validates a US Birth Certificate number.
-- **Request Params**:
-  - `birthCertNumber`: (string) The US Birth Certificate number.
-- **Response**:
-  - `200`: `{ message: "US Birth Certificate is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 17. Validate US Medicare/Medicaid Card
-- **Endpoint**: `POST /validator/validate-us-medicare-medicaid/:medicareNumber?`
-- **Description**: Validates a US Medicare/Medicaid card number using the MBI format.
-- **Request Params**:
-  - `medicareNumber`: (string) The Medicare/Medicaid card number.
-- **Response**:
-  - `200`: `{ message: "US Medicare/Medicaid Card is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 18. Validate US Veteran ID Card (VIC)
-- **Endpoint**: `POST /validator/validate-us-veteran-id/:vicNumber?`
-- **Description**: Validates a US Veteran ID Card (VIC) number.
-- **Request Params**:
-  - `vicNumber`: (string) The Veteran ID number.
-- **Response**:
-  - `200`: `{ message: "US Veteran ID is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 19. Validate UK Driving Licence
-- **Endpoint**: `POST /validator/validate-uk-driving-licence/:licenceNumber?`
-- **Description**: Validates a UK Driving Licence number using the DVLA format.
-- **Request Params**:
-  - `licenceNumber`: (string) The UK Driving Licence number.
-- **Response**:
-  - `200`: `{ message: "UK Driving Licence is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-
-### 20. Validate UK Birth Certificate
-- **Endpoint**: `POST /validator/validate-uk-birth-certificate/:birthCertNumber?`
-- **Description**: Validates a UK Birth Certificate number.
-- **Request Params**:
-  - `birthCertNumber`: (string) The UK Birth Certificate number.
-- **Response**:
-  - `200`: `{ message: "UK Birth Certificate is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 21. Validate UK Armed Forces ID
-- **Endpoint**: `POST /validator/validate-uk-armed-forces-id/:armedForcesID?`
-- **Description**: Validates a UK Armed Forces ID number.
-- **Request Params**:
-  - `armedForcesID`: (string) The Armed Forces ID.
-- **Response**:
-  - `200`: `{ message: "UK Armed Forces ID is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 23. Validate UK National Insurance Number
-- **Endpoint**: `POST /validator/validate-uk-ni/:niNumber?`
-- **Description**: Validates a UK National Insurance Number (NI Number).
-- **Request Params**:
-  - `niNumber`: (string) The National Insurance number.
-- **Response**:
-  - `200`: `{ message: "UK NI Number is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 24. Validate UK Residence Card
-- **Endpoint**: `POST /validator/validate-uk-residence-card/:residenceCardNumber?`
-- **Description**: Validates a UK Biometric Residence Permit (BRP) number.
-- **Request Params**:
-  - `residenceCardNumber`: (string) The residence card number.
-- **Response**:
-  - `200`: `{ message: "UK Residence Card is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 25. Validate PIS/PASEP
-- **Endpoint**: `POST /validate-pis-pasep/:pis?`
-- **Description**: Validates a PIS/PASEP number.
-- **Request Params**:
-  - `pis`: (string) The PIS/PASEP number.
-- **Response**:
-  - `200`: `{ message: "PIS-PASEP is valid." }`
-  - `400`: `{ error: "<error message>" }`
-
----
-
-### 26. Validate CNPJ
-- **Endpoint**: `POST /validate-cnpj/:cnpj?`
-- **Description**: Validates a CNPJ number.
-- **Request Params**:
-  - `cnpj`: (string) The CNPJ number.
-- **Response**:
-  - `200`: `{ message: "CNPJ is valid." }`
-  - `400`: `{ error: "<error message>" }`
 
 ---
 
