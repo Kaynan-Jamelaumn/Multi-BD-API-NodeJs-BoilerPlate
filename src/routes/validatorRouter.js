@@ -663,5 +663,36 @@ router.get('/validate-kr-rrn/:rrnNumber?', (req, res) => {
     res.status(200).json({ message: 'South Korean RRN is valid.' });
 });
 
+/**
+ * @swagger
+ * /validate/validate-de-personalausweis/{idNumber}:
+ *   get:
+ *     summary: Validate German Personalausweis (ID)
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: idNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The German Personalausweis number (10 digits)
+ *     responses:
+ *       200:
+ *         description: German Personalausweis is valid.
+ *       400:
+ *         description: Invalid ID format/Invalid checksum
+ */
+router.get('/validate-de-personalausweis/:idNumber?', (req, res) => {
+    const idNumber = req.params.idNumber;
+    if (!idNumber) return res.status(400).json({ error: 'ID Number is required.' });
+
+    const validationResult = IDValidator.validateGermanPersonalausweis(idNumber);
+
+    if (!validationResult.valid) {
+        return res.status(400).json({ error: validationResult.error });
+    }
+
+    res.status(200).json({ message: 'German Personalausweis is valid.' });
+});
 
 export default router;

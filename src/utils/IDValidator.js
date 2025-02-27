@@ -499,6 +499,52 @@ class IDValidator {
         };
     }
 
+    static validateGermanPersonalausweis(id) {
+        // The German Personalausweis number must be exactly 10 digits long.
+        // This regex checks if the input consists of exactly 10 digits.
+        if (!/^\d{10}$/.test(id)) {
+            return { valid: false, error: "Invalid format: Must be exactly 10 digits" };
+        }
+    
+        // The official weighting factors for the checksum calculation are [7, 3, 1].
+        // These weights are applied to the last 9 digits of the 10-digit number.
+        const weights = [7, 3, 1, 7, 3, 1, 7, 3, 1];
+    
+        // The checksum will be calculated by multiplying each digit by its corresponding weight
+        // and summing up the results.
+        let checksum = 0;
+    
+        // Loop through the last 9 digits of the input (from index 1 to 9).
+        // The first digit (index 0) is the issuing authority number and is not used in the checksum.
+        for (let i = 1; i < 10; i++) {
+            // Extract the current digit and convert it to a number.
+            const digit = parseInt(id[i], 10);
+    
+            // If the character is not a valid digit, return an error.
+            if (isNaN(digit)) {
+                return { valid: false, error: "Invalid character detected" };
+            }
+    
+            // Multiply the digit by its corresponding weight and add it to the checksum.
+            // Note: `weights[i - 1]` is used because the weights array starts from index 0.
+            checksum += digit * weights[i - 1];
+        }
+        // The expected check digit is the last digit of the checksum (checksum % 10).
+        const expectedCheckDigit = checksum % 10;
+    
+        // The actual check digit is the 10th digit of the input (index 9).
+        const actualCheckDigit = parseInt(id[9], 10);
+    
+        // If the actual check digit is not a number or does not match the expected check digit,
+        // the input is invalid.
+        if (isNaN(actualCheckDigit) || expectedCheckDigit !== actualCheckDigit) {
+            return { valid: false, error: "Invalid checksum" };
+        }
+    
+        // If all checks pass, the input is valid.
+        return { valid: true, error: null };
+    }
+
 
   
 }

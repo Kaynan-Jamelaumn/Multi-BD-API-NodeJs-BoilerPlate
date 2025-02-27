@@ -375,6 +375,18 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 
 ---
 
+
+### 28. Validate German Personalausweis
+- **Endpoint**: `GET /validate-de-personalausweis/:idNumber?`
+- **Description**: Validates a German Personalausweis (ID) number.
+- **Request Params**:
+  - `idNumber`: (string) The German Personalausweis number (must be exactly 10 digits).
+- **Response**:
+  - `200`: `{ message: "German Personalausweis is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
 ## Main Router Endpoints
 
 ---
