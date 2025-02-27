@@ -494,7 +494,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ## 9. Delete User (Soft Delete)
-- **Endpoint**: `GET /user/delete/:id?`
+- **Endpoint**: `DELETE /user/delete/:id?`
 - **Description**: Deactivates a user by setting `isActive` to `false`. Admins can deactivate any user, while regular users can only deactivate themselves.
 - **Request Params**:
   - `id`: (string, optional) The user ID. If not provided, the logged-in user is deactivated.
@@ -507,7 +507,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ## 10. Reactivate User
-- **Endpoint**: `GET /user/reactivate/:id?`
+- **Endpoint**: `PUT /user/reactivate/:id?`
 - **Description**: Reactivates a deactivated user by setting `isActive` to `true`.
 - **Request Params**:
   - `id`: (string, optional) The user ID. If not provided, the logged-in user is reactivated.
