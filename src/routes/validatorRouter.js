@@ -7,6 +7,37 @@ const router = new Router();
 const getData = (req, field) => req.body[field] || req.params[field];
 
 // route to validate user fields
+/**
+ * @swagger
+ * /validate/validate-fields:
+ *   post:
+ *     summary: Validate user fields
+ *     tags: [Validation]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               surname:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: All fields are valid
+ *       400:
+ *         description: Invalid fields
+ */
 router.post('/validate-fields', (req, res) => {
     const userData = {
         username: getData(req, 'username'),
@@ -27,6 +58,31 @@ router.post('/validate-fields', (req, res) => {
 });
 
 // route to validate passport
+/**
+ * @swagger
+ * /validate/validate-passport/{passportNumber}/{countryCode}:
+ *   post:
+ *     summary: Validate passport
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: passportNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The passport number
+ *       - in: path
+ *         name: countryCode
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The country code
+ *     responses:
+ *       200:
+ *         description: Passport is valid
+ *       400:
+ *         description: Invalid passport or missing parameters
+ */
 router.post('/validate-passport/:passportNumber?/:countryCode?', (req, res) => {
     const passportNumber = getData(req, 'passportNumber');
     const countryCode = getData(req, 'countryCode');
@@ -45,6 +101,25 @@ router.post('/validate-passport/:passportNumber?/:countryCode?', (req, res) => {
 });
 
 // route to validate CPF
+/**
+ * @swagger
+ * /validate/validate-cpf/{cpfNumber}:
+ *   post:
+ *     summary: Validate CPF
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: cpfNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The CPF number
+ *     responses:
+ *       200:
+ *         description: CPF is valid
+ *       400:
+ *         description: Invalid CPF or missing parameter
+ */
 router.post('/validate-cpf/:cpfNumber?', (req, res) => {
     const cpfNumber = getData(req, 'cpfNumber');
 
@@ -62,6 +137,25 @@ router.post('/validate-cpf/:cpfNumber?', (req, res) => {
 });
 
 // route to validate RG
+/**
+ * @swagger
+ * /validate/validate-rg/{rgNumber}:
+ *   post:
+ *     summary: Validate RG
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: rgNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The RG number
+ *     responses:
+ *       200:
+ *         description: RG is valid
+ *       400:
+ *         description: Invalid RG or missing parameter
+ */
 router.post('/validate-rg/:rgNumber?', (req, res) => {
     const rgNumber = getData(req, 'rgNumber');
 
@@ -79,6 +173,25 @@ router.post('/validate-rg/:rgNumber?', (req, res) => {
 });
 
 // route to validate SUS
+/**
+ * @swagger
+ * /validate/validate-sus/{susNumber}:
+ *   post:
+ *     summary: Validate SUS number
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: susNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The SUS number
+ *     responses:
+ *       200:
+ *         description: SUS number is valid
+ *       400:
+ *         description: Invalid SUS number or missing parameter
+ */
 router.post('/validate-sus/:susNumber?', (req, res) => {
     const susNumber = getData(req, 'susNumber');
 
@@ -96,6 +209,25 @@ router.post('/validate-sus/:susNumber?', (req, res) => {
 });
 
 // route to validate CNH
+/**
+ * @swagger
+ * /validate/validate-cnh/{cnhNumber}:
+ *   post:
+ *     summary: Validate CNH
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: cnhNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The CNH number
+ *     responses:
+ *       200:
+ *         description: CNH is valid
+ *       400:
+ *         description: Invalid CNH or missing parameter
+ */
 router.post('/validate-cnh/:cnhNumber?', (req, res) => {
     const cnhNumber = getData(req, 'cnhNumber');
 
@@ -113,6 +245,25 @@ router.post('/validate-cnh/:cnhNumber?', (req, res) => {
 });
 
 // route to validate CTPS
+/**
+ * @swagger
+ * /validate/validate-ctps/{ctpsNumber}:
+ *   post:
+ *     summary: Validate CTPS
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: ctpsNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The CTPS number
+ *     responses:
+ *       200:
+ *         description: CTPS is valid
+ *       400:
+ *         description: Invalid CTPS or missing parameter
+ */
 router.post('/validate-ctps/:ctpsNumber?', (req, res) => {
     const ctpsNumber = getData(req, 'ctpsNumber');
 
@@ -130,6 +281,25 @@ router.post('/validate-ctps/:ctpsNumber?', (req, res) => {
 });
 
 // route to validate CRM
+/**
+ * @swagger
+ * /validate/validate-crm/{crmNumber}:
+ *   post:
+ *     summary: Validate CRM
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: crmNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The CRM number
+ *     responses:
+ *       200:
+ *         description: CRM is valid
+ *       400:
+ *         description: Invalid CRM or missing parameter
+ */
 router.post('/validate-crm/:crmNumber?', (req, res) => {
     const crmNumber = getData(req, 'crmNumber');
 
@@ -147,6 +317,25 @@ router.post('/validate-crm/:crmNumber?', (req, res) => {
 });
 
 // route to validate OAB
+/**
+ * @swagger
+ * /validate/validate-oab/{oabNumber}:
+ *   post:
+ *     summary: Validate OAB
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: oabNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The OAB number
+ *     responses:
+ *       200:
+ *         description: OAB is valid
+ *       400:
+ *         description: Invalid OAB or missing parameter
+ */
 router.post('/validate-oab/:oabNumber?', (req, res) => {
     const oabNumber = getData(req, 'oabNumber');
 
@@ -164,6 +353,25 @@ router.post('/validate-oab/:oabNumber?', (req, res) => {
 });
 
 // route to validate CREA
+/**
+ * @swagger
+ * /validate/validate-crea/{creaNumber}:
+ *   post:
+ *     summary: Validate CREA
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: creaNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The CREA number
+ *     responses:
+ *       200:
+ *         description: CREA is valid
+ *       400:
+ *         description: Invalid CREA or missing parameter
+ */
 router.post('/validate-crea/:creaNumber?', (req, res) => {
     const creaNumber = getData(req, 'creaNumber');
 
@@ -181,6 +389,25 @@ router.post('/validate-crea/:creaNumber?', (req, res) => {
 });
 
 // route to validate PIS/PASEP 
+/**
+ * @swagger
+ * /validate/validate-pis-pasep/{pis}:
+ *   post:
+ *     summary: Validate PIS/PASEP
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: pis
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The PIS/PASEP number
+ *     responses:
+ *       200:
+ *         description: PIS/PASEP is valid
+ *       400:
+ *         description: Invalid PIS/PASEP or missing parameter
+ */
 router.post('/validate-pis-pasep/:pis?', (req, res) => {
     const creaNumber = getData(req, 'pis');
 
@@ -199,6 +426,25 @@ router.post('/validate-pis-pasep/:pis?', (req, res) => {
 
 
 // route to validate CNPJ
+/**
+ * @swagger
+ * /validate/validate-cnpj/{cnpj}:
+ *   post:
+ *     summary: Validate CNPJ
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: cnpj
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The CNPJ number
+ *     responses:
+ *       200:
+ *         description: CNPJ is valid
+ *       400:
+ *         description: Invalid CNPJ or missing parameter
+ */
 router.post('/validate-cnpj/:cnpj?', (req, res) => {
     const creaNumber = getData(req, 'cnpj');
 
@@ -218,6 +464,25 @@ router.post('/validate-cnpj/:cnpj?', (req, res) => {
 
 
 // Route to validate US Driver's License
+/**
+ * @swagger
+ * /validate/validate-us-license/{licenseNumber}:
+ *   post:
+ *     summary: Validate US Driver's License
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: licenseNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The US Driver's License number
+ *     responses:
+ *       200:
+ *         description: US Driver's License is valid
+ *       400:
+ *         description: Invalid US Driver's License or missing parameter
+ */
 router.post('/validate-us-license/:licenseNumber?', (req, res) => {
     const licenseNumber = getData(req, 'licenseNumber');
     if (!licenseNumber) return res.status(400).json({ error: 'License number is required.' });
@@ -227,6 +492,25 @@ router.post('/validate-us-license/:licenseNumber?', (req, res) => {
 });
 
 // Route to validate US SSN
+/**
+ * @swagger
+ * /validate/validate-us-ssn/{ssn}:
+ *   post:
+ *     summary: Validate US SSN
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: ssn
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The US SSN
+ *     responses:
+ *       200:
+ *         description: US SSN is valid
+ *       400:
+ *         description: Invalid US SSN or missing parameter
+ */
 router.post('/validate-us-ssn/:ssn?', (req, res) => {
     const ssn = getData(req, 'ssn');
     if (!ssn) return res.status(400).json({ error: 'SSN is required.' });
@@ -236,6 +520,25 @@ router.post('/validate-us-ssn/:ssn?', (req, res) => {
 });
 
 // Route to validate US Military ID
+/**
+ * @swagger
+ * /validate/validate-us-military-id/{militaryID}:
+ *   post:
+ *     summary: Validate US Military ID
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: militaryID
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The US Military ID
+ *     responses:
+ *       200:
+ *         description: US Military ID is valid
+ *       400:
+ *         description: Invalid US Military ID or missing parameter
+ */
 router.post('/validate-us-military-id/:militaryID?', (req, res) => {
     const militaryID = getData(req, 'militaryID');
     if (!militaryID) return res.status(400).json({ error: 'Military ID is required.' });
@@ -245,6 +548,25 @@ router.post('/validate-us-military-id/:militaryID?', (req, res) => {
 });
 
 // Route to validate UK National Insurance Number
+/**
+ * @swagger
+ * /validate/validate-uk-ni/{niNumber}:
+ *   post:
+ *     summary: Validate UK National Insurance Number
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: niNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The UK National Insurance Number
+ *     responses:
+ *       200:
+ *         description: UK NI Number is valid
+ *       400:
+ *         description: Invalid UK NI Number or missing parameter
+ */
 router.post('/validate-uk-ni/:niNumber?', (req, res) => {
     const niNumber = getData(req, 'niNumber');
     if (!niNumber) return res.status(400).json({ error: 'NI Number is required.' });
