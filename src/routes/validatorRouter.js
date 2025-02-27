@@ -593,7 +593,7 @@ router.post('/validate-uk-ni/:niNumber?', (req, res) => {
  *       200:
  *         description: Canadian SIN Number is valid.
  *       400:
- *         description: Invalid Canadian SIN Number or missing parameter
+ *         description: Invalid SIN format/Invalid SIN number
  */
 router.post('/validate-ca-sin/:sinNumber?', (req, res) => {
     const niNumber = getData(req, 'sinNumber');
@@ -601,6 +601,36 @@ router.post('/validate-ca-sin/:sinNumber?', (req, res) => {
     const validationResult = IDValidator.validateCanadianSIN(niNumber);
     if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
     res.status(200).json({ message: 'Canadian SIN Number is valid.' });
+});
+
+
+
+// Route to validate Mexican CURP (Clave Única de Registro de Población)
+/**
+ * @swagger
+ * /validate/validate-mx-curp/{curpNumber}:
+ *   post:
+ *     summary: Validate Mexican CURP (Clave Única de Registro de Población)
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: sinNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The MX  CURP (Clave Única de Registro de Población) number
+ *     responses:
+ *       200:
+ *         description: Mexican CURP Number is valid.
+ *       400:
+ *         description: Invalid CURP format/Invalid CURP checksum
+ */
+router.post('/validate-mx-curp/:curpNumber?', (req, res) => {
+    const niNumber = getData(req, 'curpNumber');
+    if (!niNumber) return res.status(400).json({ error: 'CURP Number is required.' });
+    const validationResult = IDValidator.validateCanadianSIN(curpNumber);
+    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
+    res.status(200).json({ message: 'Mexican CURP Number is valid.' });
 });
 
 export default router;

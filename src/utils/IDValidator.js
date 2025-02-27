@@ -398,6 +398,45 @@ class IDValidator {
             error: luhnCheck(sin) ? null : "Invalid SIN number"
         };
     }
+
+
+    static validateMexicanCURP(curp) {
+        // CURP format: 18 alphanumeric characters
+        const curpRegex = /^[A-Z]{4}\d{6}[HM][A-Z]{5}\d{2}$/;
+        if (!curpRegex.test(curp)) {
+            return { valid: false, error: "Invalid CURP format" };
+        }
+    
+        // Checksum validation
+        const checksum = (curp) => {
+            // Define the valid characters for the CURP, including numbers and letters
+            const chars = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    
+            let sum = 0;
+    
+            // Iterate over the first 17 characters of the CURP
+            for (let i = 0; i < 17; i++) {
+                const char = curp[i]; // Get the current character
+                const value = chars.indexOf(char); // Find its position in the `chars` string
+                sum += value * (18 - i); // Multiply the character's value by its weight (18 - position)
+            }
+    
+            // Calculate the checksum digit: 10 - (sum % 10)
+            // If the result is 10, it wraps around to 0
+            const checksumDigit = 10 - (sum % 10);
+            if (checksumDigit === 10) {
+                checksumDigit = 0;
+            }
+    
+            // Compare the calculated checksum digit with the 18th character of the CURP
+            return checksumDigit === parseInt(curp[17]);
+        };
+    
+        return {
+            valid: checksum(curp),
+            error: checksum(curp) ? null : "Invalid CURP checksum"
+        };
+    }
     
 
 
