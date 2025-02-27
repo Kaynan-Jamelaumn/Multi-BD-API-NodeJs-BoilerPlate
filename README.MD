@@ -73,7 +73,7 @@ nevertheless the API endpoints will also have a less detailed documentation in t
 In case you wish to use the multi ID Validator as an API you can just use it in the following endpoints below, or import the Validator class from /src/utils/IDValidator.js 
 
 ### 1. Validate User Fields
-- **Endpoint**: `POST /validator/validate-fields`
+- **Endpoint**: `GET /validator/validate-fields`
 - **Description**: Validates user fields such as `username`, `name`, `surname`, `email`, `password`, and `role`.
 - **Request Body**:
   - `username`: (string) The username of the user.
@@ -89,7 +89,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 2. Validate Passport
-- **Endpoint**: `POST /validator/validate-passport/:passportNumber?/:countryCode?`
+- **Endpoint**: `GET /validator/validate-passport/:passportNumber?/:countryCode?`
 - **Description**: Validates a passport number and country code.
 - **Request Params**:
   - `passportNumber`: (string) The passport number.
@@ -101,7 +101,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 3. Validate CPF
-- **Endpoint**: `POST /validator/validate-cpf/:cpfNumber?`
+- **Endpoint**: `GET /validator/validate-cpf/:cpfNumber?`
 - **Description**: Validates a CPF (Brazilian individual taxpayer registry) number.
 - **Request Params**:
   - `cpfNumber`: (string) The CPF number.
@@ -112,7 +112,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 4. Validate RG
-- **Endpoint**: `POST /validator/validate-rg/:rgNumber?`
+- **Endpoint**: `GET /validator/validate-rg/:rgNumber?`
 - **Description**: Validates an RG (Brazilian identity card) number.
 - **Request Params**:
   - `rgNumber`: (string) The RG number.
@@ -123,7 +123,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 5. Validate SUS
-- **Endpoint**: `POST /validator/validate-sus/:susNumber?`
+- **Endpoint**: `GET /validator/validate-sus/:susNumber?`
 - **Description**: Validates a SUS (Brazilian public health system) number.
 - **Request Params**:
   - `susNumber`: (string) The SUS number.
@@ -134,7 +134,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 6. Validate CNH
-- **Endpoint**: `POST /validator/validate-cnh/:cnhNumber?`
+- **Endpoint**: `GET /validator/validate-cnh/:cnhNumber?`
 - **Description**: Validates a CNH (Brazilian driver's license) number.
 - **Request Params**:
   - `cnhNumber`: (string) The CNH number.
@@ -145,7 +145,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 7. Validate CTPS
-- **Endpoint**: `POST /validator/validate-ctps/:ctpsNumber?`
+- **Endpoint**: `GET /validator/validate-ctps/:ctpsNumber?`
 - **Description**: Validates a CTPS (Brazilian work card) number.
 - **Request Params**:
   - `ctpsNumber`: (string) The CTPS number.
@@ -156,7 +156,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 8. Validate CRM
-- **Endpoint**: `POST /validator/validate-crm/:crmNumber?`
+- **Endpoint**: `GET /validator/validate-crm/:crmNumber?`
 - **Description**: Validates a CRM (Brazilian medical council registration) number.
 - **Request Params**:
   - `crmNumber`: (string) The CRM number.
@@ -167,7 +167,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 9. Validate OAB
-- **Endpoint**: `POST /validator/validate-oab/:oabNumber?`
+- **Endpoint**: `GET /validator/validate-oab/:oabNumber?`
 - **Description**: Validates an OAB (Brazilian bar association) number.
 - **Request Params**:
   - `oabNumber`: (string) The OAB number.
@@ -178,7 +178,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 10. Validate CREA
-- **Endpoint**: `POST /validator/validate-crea/:creaNumber?`
+- **Endpoint**: `GET /validator/validate-crea/:creaNumber?`
 - **Description**: Validates a CREA (Brazilian engineering council registration) number.
 - **Request Params**:
   - `creaNumber`: (string) The CREA number.
@@ -188,7 +188,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 
 
 ### 11. Validate US Driver's License
-- **Endpoint**: `POST /validator/validate-us-license/:licenseNumber?`
+- **Endpoint**: `GET /validator/validate-us-license/:licenseNumber?`
 - **Description**: Validates a US Driver's License number (General Format - state-specific checks recommended).
 - **Request Params**:
   - `licenseNumber`: (string) The US Driver's License number.
@@ -199,7 +199,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 12. Validate US Social Security Number (SSN)
-- **Endpoint**: `POST /validator/validate-us-ssn/:ssn?`
+- **Endpoint**: `GET /validator/validate-us-ssn/:ssn?`
 - **Description**: Validates a US Social Security Number (SSN).
 - **Request Params**:
   - `ssn`: (string) The SSN in the format XXX-XX-XXXX.
@@ -210,7 +210,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 13. Validate US Military ID (CAC)
-- **Endpoint**: `POST /validator/validate-us-military-id/:militaryID?`
+- **Endpoint**: `GET /validator/validate-us-military-id/:militaryID?`
 - **Description**: Validates a US Military ID (CAC).
 - **Request Params**:
   - `militaryID`: (string) The US Military ID.
@@ -221,7 +221,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 14. Validate US Green Card
-- **Endpoint**: `POST /validator/validate-us-green-card/:greenCardNumber?`
+- **Endpoint**: `GET /validator/validate-us-green-card/:greenCardNumber?`
 - **Description**: Validates a US Permanent Resident Card (Green Card) number.
 - **Request Params**:
   - `greenCardNumber`: (string) The Green Card number.
@@ -232,7 +232,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 15. Validate US Employment Authorization Document (EAD)
-- **Endpoint**: `POST /validator/validate-us-ead/:eadNumber?`
+- **Endpoint**: `GET /validator/validate-us-ead/:eadNumber?`
 - **Description**: Validates a US Employment Authorization Document (EAD).
 - **Request Params**:
   - `eadNumber`: (string) The EAD number.
@@ -243,7 +243,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 16. Validate US Birth Certificate
-- **Endpoint**: `POST /validator/validate-us-birth-certificate/:birthCertNumber?`
+- **Endpoint**: `GET /validator/validate-us-birth-certificate/:birthCertNumber?`
 - **Description**: Validates a US Birth Certificate number.
 - **Request Params**:
   - `birthCertNumber`: (string) The US Birth Certificate number.
@@ -254,7 +254,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 17. Validate US Medicare/Medicaid Card
-- **Endpoint**: `POST /validator/validate-us-medicare-medicaid/:medicareNumber?`
+- **Endpoint**: `GET /validator/validate-us-medicare-medicaid/:medicareNumber?`
 - **Description**: Validates a US Medicare/Medicaid card number using the MBI format.
 - **Request Params**:
   - `medicareNumber`: (string) The Medicare/Medicaid card number.
@@ -265,7 +265,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 18. Validate US Veteran ID Card (VIC)
-- **Endpoint**: `POST /validator/validate-us-veteran-id/:vicNumber?`
+- **Endpoint**: `GET /validator/validate-us-veteran-id/:vicNumber?`
 - **Description**: Validates a US Veteran ID Card (VIC) number.
 - **Request Params**:
   - `vicNumber`: (string) The Veteran ID number.
@@ -276,7 +276,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 19. Validate UK Driving Licence
-- **Endpoint**: `POST /validator/validate-uk-driving-licence/:licenceNumber?`
+- **Endpoint**: `GET /validator/validate-uk-driving-licence/:licenceNumber?`
 - **Description**: Validates a UK Driving Licence number using the DVLA format.
 - **Request Params**:
   - `licenceNumber`: (string) The UK Driving Licence number.
@@ -288,7 +288,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 
 
 ### 20. Validate UK Birth Certificate
-- **Endpoint**: `POST /validator/validate-uk-birth-certificate/:birthCertNumber?`
+- **Endpoint**: `GET /validator/validate-uk-birth-certificate/:birthCertNumber?`
 - **Description**: Validates a UK Birth Certificate number.
 - **Request Params**:
   - `birthCertNumber`: (string) The UK Birth Certificate number.
@@ -299,7 +299,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 21. Validate UK Armed Forces ID
-- **Endpoint**: `POST /validator/validate-uk-armed-forces-id/:armedForcesID?`
+- **Endpoint**: `GET /validator/validate-uk-armed-forces-id/:armedForcesID?`
 - **Description**: Validates a UK Armed Forces ID number.
 - **Request Params**:
   - `armedForcesID`: (string) The Armed Forces ID.
@@ -310,7 +310,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 23. Validate UK National Insurance Number
-- **Endpoint**: `POST /validator/validate-uk-ni/:niNumber?`
+- **Endpoint**: `GET /validator/validate-uk-ni/:niNumber?`
 - **Description**: Validates a UK National Insurance Number (NI Number).
 - **Request Params**:
   - `niNumber`: (string) The National Insurance number.
@@ -321,7 +321,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 24. Validate UK Residence Card
-- **Endpoint**: `POST /validator/validate-uk-residence-card/:residenceCardNumber?`
+- **Endpoint**: `GET /validator/validate-uk-residence-card/:residenceCardNumber?`
 - **Description**: Validates a UK Biometric Residence Permit (BRP) number.
 - **Request Params**:
   - `residenceCardNumber`: (string) The residence card number.
@@ -332,7 +332,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 25. Validate PIS/PASEP
-- **Endpoint**: `POST /validate-pis-pasep/:pis?`
+- **Endpoint**: `GET /validate-pis-pasep/:pis?`
 - **Description**: Validates a PIS/PASEP number.
 - **Request Params**:
   - `pis`: (string) The PIS/PASEP number.
@@ -343,7 +343,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 26. Validate CNPJ
-- **Endpoint**: `POST /validate-cnpj/:cnpj?`
+- **Endpoint**: `GET /validate-cnpj/:cnpj?`
 - **Description**: Validates a CNPJ number.
 - **Request Params**:
   - `cnpj`: (string) The CNPJ number.
@@ -354,7 +354,7 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 ---
 
 ### 26. Validate CA SIN
-- **Endpoint**: `POST /validate-ca-sin/:sinNumber?`
+- **Endpoint**: `GET /validate-ca-sin/:sinNumber?`
 - **Description**: Validates a Canadian Social Insurance Numbers (SIN).
 - **Request Params**:
   - `cnpj`: (string) The CA SIN number.
