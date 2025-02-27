@@ -351,8 +351,18 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
   - `200`: `{ message: "CNPJ is valid." }`
   - `400`: `{ error: "<error message>" }`
 
+---
 
+### 26. Validate CA SIN
+- **Endpoint**: `POST /validate-ca-sin/:sinNumber?`
+- **Description**: Validates a Canadian Social Insurance Numbers (SIN).
+- **Request Params**:
+  - `cnpj`: (string) The CA SIN number.
+- **Response**:
+  - `200`: `{ message: "Canadian SIN is valid." }`
+  - `400`: `{ error: "<error message>" }`
 
+---
 
 ## Main Router Endpoints
 

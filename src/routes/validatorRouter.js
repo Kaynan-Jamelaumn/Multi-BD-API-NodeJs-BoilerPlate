@@ -575,4 +575,32 @@ router.post('/validate-uk-ni/:niNumber?', (req, res) => {
     res.status(200).json({ message: 'UK NI Number is valid.' });
 });
 
+// Route to validate Canadian SIN (Social Insurance Number)
+/**
+ * @swagger
+ * /validate/validate-ca-sin/{sinNumber}:
+ *   post:
+ *     summary: Validate Canadian SIN (Social Insurance Number)
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: sinNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The SIN (Social Insurance Number)
+ *     responses:
+ *       200:
+ *         description: Canadian SIN Number is valid.
+ *       400:
+ *         description: Invalid Canadian SIN Number or missing parameter
+ */
+router.post('/validate-ca-sin/:sinNumber?', (req, res) => {
+    const niNumber = getData(req, 'sinNumber');
+    if (!niNumber) return res.status(400).json({ error: 'SIN Number is required.' });
+    const validationResult = IDValidator.validateCanadianSIN(niNumber);
+    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
+    res.status(200).json({ message: 'Canadian SIN Number is valid.' });
+});
+
 export default router;

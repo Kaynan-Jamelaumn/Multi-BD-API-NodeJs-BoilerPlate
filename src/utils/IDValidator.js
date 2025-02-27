@@ -362,6 +362,44 @@ class IDValidator {
         return { valid: residenceCardRegex.test(residenceCardNumber), error: residenceCardRegex.test(residenceCardNumber) ? null : "Invalid UK Residence Card format" };
     }
 
+    //Canadian SIN (Social Insurance Number)
+    static validateCanadianSIN(sin) {
+        // Ensure the input is exactly 9 digits
+        if (!/^\d{9}$/.test(sin)) {
+            return { valid: false, error: "Invalid SIN format" };
+        }
+    
+        // Luhn algorithm for SIN validation
+        const luhnCheck = (sin) => {
+            let sum = 0;
+
+             // Loop through each digit in the SIN
+            for (let i = 0; i < sin.length; i++) {
+                let digit = parseInt(sin[i]);
+
+                // Double every second digit (even index positions in zero-based indexing)
+                if (i % 2 === 0) {
+                    digit *= 2;
+
+                    // If doubling results in a two-digit number, subtract 9 (e.g., 8 * 2 = 16 → 1 + 6 = 7)
+                    if (digit > 9) digit = digit - 9;
+                }
+                 // Add the processed digit to the sum
+                sum += digit;
+            }
+
+            // If the sum is a multiple of 10, the SIN is valid
+            return sum % 10 === 0;
+        };
+    
+         // Return validation result along with an error message if invalid
+        return {
+            valid: luhnCheck(sin),
+            error: luhnCheck(sin) ? null : "Invalid SIN number"
+        };
+    }
+    
+
 
   
 }
