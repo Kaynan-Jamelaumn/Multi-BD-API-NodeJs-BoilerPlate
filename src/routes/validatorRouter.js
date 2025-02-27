@@ -633,4 +633,35 @@ router.post('/validate-mx-curp/:curpNumber?', (req, res) => {
     res.status(200).json({ message: 'Mexican CURP Number is valid.' });
 });
 
+
+// Route to validate South Korean RRN (Resident Registration Number)
+/**
+ * @swagger
+ * /validate/validate-kr-rrn/{rrnNumber}:
+ *   post:
+ *     summary: Validate South Korean RRN (Resident Registration Number)
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: rrnNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The South Korean RRN (Resident Registration Number)
+ *     responses:
+ *       200:
+ *         description: South Korean RRN is valid.
+ *       400:
+ *         description: Invalid RRN format/Invalid RRN checksum
+ */
+router.get('/validate-kr-rrn/:rrnNumber?', (req, res) => {
+    const rrnNumber = getData(req, 'rrnNumber');
+    if (!rrnNumber) return res.status(400).json({ error: 'RRN Number is required.' });
+    const validationResult = IDValidator.validateSouthKoreanRRN(rrnNumber);
+
+    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
+    res.status(200).json({ message: 'South Korean RRN is valid.' });
+});
+
+
 export default router;

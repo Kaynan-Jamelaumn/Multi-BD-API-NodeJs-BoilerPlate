@@ -432,12 +432,72 @@ class IDValidator {
             return checksumDigit === parseInt(curp[17]);
         };
     
+        // Return the validation result
         return {
             valid: checksum(curp),
             error: checksum(curp) ? null : "Invalid CURP checksum"
         };
     }
     
+
+    static validateSouthKoreanRRN(rrn) {
+        // Ensure the input is a 13-digit string
+        // The RRN must be exactly 13 digits long and consist only of numbers.
+        if (typeof rrn !== "string" || !/^\d{13}$/.test(rrn)) {
+            return { valid: false, error: "Invalid RRN format" };
+        }
+    
+        // Validate gender digit (7th digit: 1-4)
+        // The 7th digit of the RRN indicates the gender and the century of birth:
+        // 1 or 2: Male or female born in the 1900s
+        // 3 or 4: Male or female born in the 2000s
+        const genderDigit = parseInt(rrn[6]);
+        if (genderDigit < 1 || genderDigit > 4) {
+            return { valid: false, error: "Invalid gender digit in RRN" };
+        }
+    
+        // Validate birthdate (first 6 digits: YYMMDD)
+        // The first 6 digits represent the birthdate in the format YYMMDD.
+        const year = parseInt(rrn.substring(0, 2));  // Extract the year (YY)
+        const month = parseInt(rrn.substring(2, 4)); // Extract the month (MM)
+        const day = parseInt(rrn.substring(4, 6));  // Extract the day (DD)
+    
+        // Determine the century based on the gender digit
+        // If the gender digit is 1 or 2, the birth year is in the 1900s.
+        // If the gender digit is 3 or 4, the birth year is in the 2000s.
+        let fullYear;
+        if (genderDigit === 1 || genderDigit === 2) {
+            fullYear = 1900 + year; // Birth year is in the 1900s
+        } else if (genderDigit === 3 || genderDigit === 4) {
+            fullYear = 2000 + year; // Birth year is in the 2000s
+        }
+    
+        // Validate the date
+        // Create a Date object using the extracted year, month, and day.
+        // Subtract 1 from the month because JavaScript months are 0-indexed (0 = January).
+        const date = new Date(fullYear, month - 1, day);
+        // Check if the date is valid by verifying if the Date object's time is NaN.
+        if (isNaN(date.getTime())) {
+            return { valid: false, error: "Invalid birthdate in RRN" };
+        }
+    
+        // Check digit validation
+        // The 13th digit is a check digit used to validate the RRN.
+        // The check digit is calculated using a weighted sum of the first 12 digits.
+        const weights = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5]; // Weights for each digit
+        // Calculate the weighted sum of the first 12 digits.
+        const sum = weights.reduce((acc, weight, i) => acc + parseInt(rrn[i]) * weight, 0);
+        // Calculate the remainder: (11 - (sum % 11)) % 10
+        const remainder = (11 - (sum % 11)) % 10;
+        // Compare the calculated remainder with the 13th digit (check digit).
+        const isValid = remainder === parseInt(rrn[12]);
+    
+        // Return the validation result
+        return {
+            valid: isValid,
+            error: isValid ? null : "Invalid RRN number"
+        };
+    }
 
 
   

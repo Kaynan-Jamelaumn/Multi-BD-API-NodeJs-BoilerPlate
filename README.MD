@@ -364,6 +364,17 @@ In case you wish to use the multi ID Validator as an API you can just use it in 
 
 ---
 
+### 27. Validate South Korean RRN
+- **Endpoint**: `GET /validate-kr-rrn/:rrnNumber?`
+- **Description**: Validates a South Korean Resident Registration Number (RRN).
+- **Request Params**:
+  - `rrnNumber`: (string) The South Korean RRN number.
+- **Response**:
+  - `200`: `{ message: "South Korean RRN is valid." }`
+  - `400`: `{ error: "<error message>" }`
+
+---
+
 ## Main Router Endpoints
 
 ---
