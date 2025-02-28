@@ -252,12 +252,15 @@ class App {
         const protocol = process.env.HTTPS_ENABLED === 'true' ? 'https' : 'http' || 'http';
 
         // Setup CORS to allow cross-origin requests (mainly for the frontend)
-        this.app.use(
-            cors({
-                origin: process.env.FRONTEND_URL || `${protocol}://${this.host}:${this.port}`, // Allow frontend from specified URL or localhost
-                credentials: true, // Allow credentials (cookies) to be included
-            })
-        );
+        const corsEnabled = process.env.ENABLE_CORS === 'true' || true;
+        if (corsEnabled) {
+            this.app.use(
+                cors({
+                    origin: process.env.FRONTEND_URL || `${protocol}://${this.host}:${this.port}`, // Allow frontend from specified URL or localhost
+                    credentials: true, // Allow credentials (cookies) to be included
+                })
+            );
+        }
 
         // Configure view engine to use EJS for dynamic views
         this.app.set("views", path.resolve(__dirname, "src", "views")); // Set the views directory
@@ -289,7 +292,13 @@ class App {
             await this.syncModels(); // SIncronize models between mongo db and mysql
             await this.setupSessionAndFlash(); // Setup session and flash messages
             
-            this.app.use(express.json());
+            const hasPayloadLimit = process.env.HAS_PAYLOAD_LIMIT === 'true' || true
+            if (hasPayloadLimit){
+                this.app.use(express.json({ limit: process.env.MAX_PAYLOAD_SIZE || '50mb'}));
+            }
+            else{
+                this.app.use(express.json());
+            }
             this.app.use(express.urlencoded({ extended: true }));
 
             this.setupGlobalMiddlewaresAndRoutes(); // Setup global middlewares and routes

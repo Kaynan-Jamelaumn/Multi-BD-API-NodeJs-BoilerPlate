@@ -396,7 +396,7 @@ class UserController {
       const token = jwt.sign(
         { id: user.id || user._id, email: user.email }, // Handle both MongoDB and MySQL IDs
         process.env.JWTSECRET || "defaultsecret",
-        { expiresIn: '1h' } // Token expiration time
+        { expiresIn: process.env.JWT_EXPIRATION || "1h" } // Token expiration time
       );
 
       return res.json({ token });

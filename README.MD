@@ -60,11 +60,16 @@ DB_PORT=3306
 CSRF_COOKIE_NAME=csrf-token
 CSRF_COOKIE_SAMESITE=strict
 
+
+HAS_PAYLOAD_LIMIT=false
+MAX_PAYLOAD_SIZE=50mb
+
 TYPEAUTH=JWS #or session
+JWT_EXPIRATION=1h 
 
 # Session Configuration
 SESSION_SECRET=your-secret-key
-SESSION_COOKIE_MAX_AGE=2678400000
+SESSION_COOKIE_MAX_AGE=2678400000 # 31 days
 SESSION_COOKIE_SECURE=true
 
 # Rate Limiting Configuration
@@ -76,13 +81,13 @@ RATE_LIMIT_MAX_REQUESTS=100
 SWAGGER_ENABLED=true
 SWAGGER_ROUTE=/api-docs
 
-
 # Frontend URL allowed for CORS
+ENABLE_CORS=true
 FRONTEND_URL=http://localhost:8080
 ``` 
 
 
-
+  
 # API Endpoints Documentation
 
 This document provides an overview of the API endpoints and their functionalities.
