@@ -5,7 +5,9 @@ dotenvExpand.expand(process.env);
 
 // Import necessary modules for application setup
 import path from "path"; // To handle file and directory paths
-import { fileURLToPath } from "url"; // To work with URLs in ES modules
+import {
+    fileURLToPath
+} from "url"; // To work with URLs in ES modules
 
 // Import third-party libraries for various functionalities
 
@@ -22,7 +24,9 @@ import session from "express-session"; // Middleware for session management
 
 // Security
 import helmet from "helmet"; // Security headers middleware
-import { doubleCsrf } from "csrf-csrf"; // CSRF protection middleware
+import {
+    doubleCsrf
+} from "csrf-csrf"; // CSRF protection middleware
 
 // Rate Limiting & CORS
 import rateLimit from "express-rate-limit"; // Rate limiting middleware
@@ -80,37 +84,40 @@ class App {
                     filename: "error.log",
                     level: "error",
                 }),
-                new winston.transports.File({ filename: "combined.log" }),
+                new winston.transports.File({
+                    filename: "combined.log"
+                }),
             ],
         });
         this.port = null;
         this.https = null;
         this.host = null;
-        this.modelsPath = path.resolve('./src/models');
+        this.modelsPath =  path.resolve(process.env.MODELS_PATH) || path.resolve('./src/models');
+        this.server = null; // Store the server instance for graceful shutdown
     }
 
     async connectToDatabase() {
         const maxRetries = 5; // Define the maximum number of retries for a connection attempt.
         let retries = 0; // Initialize the retry counter.
-    
+
         // Helper function to attempt connection with retry logic.
         const connectWithRetry = async (connectFunction, loggerInfo, loggerError, errorMessage) => {
             while (retries < maxRetries) { // Loop until the maximum retries are reached.
                 try {
                     this.logger.info(loggerInfo);
                     await connectFunction(); // Try to establish the connection.
-                    this.logger.info(`${loggerInfo} connected!`); 
+                    this.logger.info(`${loggerInfo} connected!`);
                     return; // Exit the function successfully if the connection is successful.
                 } catch (error) {
-                    retries++; 
-                    this.logger.error(`${loggerError} attempt ${retries} failed:`, error); 
+                    retries++;
+                    this.logger.error(`${loggerError} attempt ${retries} failed:`, error);
                     await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 5 seconds before retrying.
                 }
             }
             // Throw an error if the connection attempts exceed the maximum retries.
             throw new Error(errorMessage);
         };
-    
+
         // Check if the database type is MongoDB.
         if (this.DB_TYPE === "mongo") {
             // Attempt to connect to MongoDB using the specified connection string.
@@ -133,12 +140,14 @@ class App {
             throw new Error(`Unsupported database type: ${this.DB_TYPE}`);
         }
     }
-    
+
     async syncModels() {
         try {
             await loadModels(this.DB_TYPE, this.sequelize, this.mongoose, this.modelsPath);
             if (this.DB_TYPE === "mysql") {
-                await this.sequelize.sync({ force: false }); // Synchronize Sequelize models
+                await this.sequelize.sync({
+                    force: false
+                }); // Synchronize Sequelize models
                 this.logger.info('All Sequelize models were synchronized successfully.');
             } else if (this.DB_TYPE === "mongo") {
                 // Mongoose models are automatically synchronized, so no need to call sync()
@@ -174,7 +183,7 @@ class App {
             resave: false, // Don't resave session if not modified
             saveUninitialized: false, // Don't save empty sessions
             cookie: {
-                maxAge:  parseInt(process.env.SESSION_COOKIE_MAX_AGE) || 1000 * 60 * 60 * 24 * 31, // Cookie expiration (31 days)
+                maxAge: parseInt(process.env.SESSION_COOKIE_MAX_AGE) || 1000 * 60 * 60 * 24 * 31, // Cookie expiration (31 days)
                 httpOnly: true, // Prevent access to cookie via JavaScript
                 secure: process.env.NODE_ENV === "production", // Set secure flag in production
             },
@@ -186,7 +195,10 @@ class App {
 
     setupCSRFProtection() {
         // Configure CSRF protection with double CSRF token
-        const { generateToken, doubleCsrfProtection } = doubleCsrf({
+        const {
+            generateToken,
+            doubleCsrfProtection
+        } = doubleCsrf({
             getSecret: (req) => req.session.csrfSecret, // Retrieve CSRF secret from session
             cookieName: process.env.CSRF_COOKIE_NAME || "csrf-token", // Name of the CSRF token cookie
             cookieOptions: {
@@ -265,16 +277,16 @@ class App {
         // Configure view engine to use EJS for dynamic views
         this.app.set("views", path.resolve(__dirname, "src", "views")); // Set the views directory
         this.app.set("view engine", "ejs"); // Set the template engine to EJS
-    
-         // Setup Swagger documentation
-         swaggerConfig(this.app);
+
+        // Setup Swagger documentation
+        swaggerConfig(this.app);
 
         // Function to setup global middlewares and routes
         this.app.use(middleWareGlobal); // Use global middleware (e.g., logging, error handling)
         this.app.use(mainRouter); // Apply custom application routes
-        
+
         this.setupCSRFProtection(); // Setup CSRF protection
-        
+
         // Handle 404 errors
         this.app.use((req, res, next) => {
             res.status(404).send("404 Not Found");
@@ -291,37 +303,62 @@ class App {
             await this.connectToDatabase(); // Connect to MongoDB
             await this.syncModels(); // SIncronize models between mongo db and mysql
             await this.setupSessionAndFlash(); // Setup session and flash messages
-            
+
             const hasPayloadLimit = process.env.HAS_PAYLOAD_LIMIT === 'true' || true
-            if (hasPayloadLimit){
-                this.app.use(express.json({ limit: process.env.MAX_PAYLOAD_SIZE || '50mb'}));
-            }
-            else{
+            if (hasPayloadLimit) {
+                this.app.use(express.json({
+                    limit: process.env.MAX_PAYLOAD_SIZE || '50mb'
+                }));
+            } else {
                 this.app.use(express.json());
             }
-            this.app.use(express.urlencoded({ extended: true }));
+            this.app.use(express.urlencoded({
+                extended: true
+            }));
 
             this.setupGlobalMiddlewaresAndRoutes(); // Setup global middlewares and routes
-            
-           // Determine if HTTPS is enabled
-           const isHttpsEnabled = this.https;
 
-           // Determine the server type and create the appropriate server
-           const server = isHttpsEnabled
-               ? https.createServer(
-                     {
-                         key: fs.readFileSync(process.env.HTTPS_KEY_PATH, 'utf8'),
-                         cert: fs.readFileSync(process.env.HTTPS_CERT_PATH, 'utf8'),
-                     },
-                     this.app
-                 )
-               : http.createServer(this.app);
-           
-           // Start the server
-           server.listen(this.port, this.host, () => {
-               const protocol = isHttpsEnabled ? 'https' : 'http';
-               this.logger.info(`${protocol.toUpperCase()} Server running on ${protocol}://${this.host}:${this.port}`);
-           });
+            // Determine if HTTPS is enabled
+            const isHttpsEnabled = this.https;
+
+            // Determine the server type and create the appropriate server
+            this.server = isHttpsEnabled ?
+                https.createServer({
+                        key: fs.readFileSync(process.env.HTTPS_KEY_PATH, 'utf8'),
+                        cert: fs.readFileSync(process.env.HTTPS_CERT_PATH, 'utf8'),
+                    },
+                    this.app
+                ) :
+                http.createServer(this.app);
+
+            this.server.listen(this.port, this.host, () => {
+                const protocol = isHttpsEnabled ? 'https' : 'http';
+                this.logger.info(`${protocol.toUpperCase()} Server running on ${protocol}://${this.host}:${this.port}`);
+            });
+
+            // Graceful shutdown logic
+            const shutdown = async () => {
+                this.logger.info('Shutting down gracefully...');
+
+                if (this.server) {
+                    this.server.close(() => {
+                        this.logger.info('Server closed.');
+                    });
+                }
+
+                if (this.DB_TYPE === "mongo") {
+                    await this.mongoose.connection.close();
+                    this.logger.info('MongoDB connection closed.');
+                } else if (this.DB_TYPE === "mysql") {
+                    await this.sequelize.close();
+                    this.logger.info('MySQL connection closed.');
+                }
+
+                process.exit(0);
+            };
+
+            process.on('SIGINT', shutdown);
+            process.on('SIGTERM', shutdown);
         } catch (error) {
             this.logger.error("Failed to initialize:", error); // Log error if initialization fails
         }
