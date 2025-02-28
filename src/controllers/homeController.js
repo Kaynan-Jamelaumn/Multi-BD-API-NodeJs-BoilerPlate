@@ -14,6 +14,7 @@ import HomeModel from '../models/HomeModel.js';
 //   });
 export const paginaInicial = (req, res) => {
   console.log("Global Route Called")
-  res.render('index', { coisa: 'teste', numeros: [0, 1, 2, 3, 4, 5] });
+  res.json({ message: 'Hello from the backend!' });
+  //res.render('index', { coisa: 'teste', numeros: [0, 1, 2, 3, 4, 5] });
   return;
 };

@@ -284,8 +284,17 @@ class App {
         }
 
         // Configure view engine to use EJS for dynamic views
-        this.app.set("views", path.resolve(__dirname, "src", "views")); // Set the views directory
-        this.app.set("view engine", "ejs"); // Set the template engine to EJS
+        // this.app.set("views", path.resolve(__dirname, "src", "views")); // Set the views directory
+        // this.app.set("view engine", "ejs"); // Set the template engine to EJS
+
+        // Serve static files from the React app
+        // const reactBuildPath = path.resolve(__dirname, '..', 'client', 'build');
+        // this.app.use(express.static(reactBuildPath));
+
+        // // Handle React routing, return all requests to React app
+        // this.app.get('*', (req, res) => {
+        //     res.sendFile(path.join(reactBuildPath, 'index.html'));
+        // });
 
         // Setup Swagger documentation
         swaggerConfig(this.app);
