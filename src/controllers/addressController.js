@@ -1,5 +1,5 @@
 import { logger } from "../../app.js";
-import AddressValidator from "../utils/AddressValidator.js";
+import AddressValidator from "../utils/AddressValidators.js";
 // Dynamically import the appropriate model based on DB_TYPE
 let AddressModel;
 try {

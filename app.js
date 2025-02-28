@@ -41,6 +41,11 @@ import {
     checkCSRFError,
 } from "./src/middlewares/middleware.js";
 
+// Import Node.js built-in modules
+import http from "http"; // HTTP server module
+import https from "https"; // HTTPS server module
+import fs from "fs"; // File system module
+
 // Resolve the current file and directory paths (for setting views and static files)
 const __filename = fileURLToPath(import.meta.url); // Get the full path of the current module
 const __dirname = path.dirname(__filename); // Get the directory name of the current module
@@ -54,7 +59,6 @@ const __dirname = path.dirname(__filename); // Get the directory name of the cur
 import loadModels from './loadModels.js'; // models loader from sequelize
 
 import sequelizeConfiguration from "./dbconfig/databaseSequelize.js";
-
 
 // Import the Swagger configuration
 import swaggerConfig from './swagger.js';
@@ -80,6 +84,8 @@ class App {
             ],
         });
         this.port = null;
+        this.https = null;
+        this.host = null;
         this.modelsPath = path.resolve('./src/models');
     }
 
@@ -142,7 +148,7 @@ class App {
             this.logger.error('Error synchronizing models:', error);
         }
     }
-    // Function to setup session management and flash messaging
+
     async setupSessionAndFlash() {
         let store;
 
@@ -177,7 +183,7 @@ class App {
         this.app.use(sessionOptions);
         //this.app.use(flash());
     }
-    // Function to setup CSRF protection
+
     setupCSRFProtection() {
         // Configure CSRF protection with double CSRF token
         const { generateToken, doubleCsrfProtection } = doubleCsrf({
@@ -210,8 +216,7 @@ class App {
             }
         });
 
-
-        // // Apply CSRF protection only to non-static routes
+        // Apply CSRF protection only to non-static routes
         this.app.use((req, res, next) => {
             if (req.path.startsWith('/uploads')) {
                 // Skip CSRF protection for /uploads
@@ -230,7 +235,6 @@ class App {
         });
     }
 
-    // Function to setup global middlewares and routes
     setupGlobalMiddlewaresAndRoutes() {
         this.app.use(helmet());
 
@@ -244,11 +248,13 @@ class App {
         });
         this.app.use(limiter); // Apply rate limiter globally
 
+        // Determine the protocol (http or https) based on HTTPS_ENABLED
+        const protocol = process.env.HTTPS_ENABLED === 'true' ? 'https' : 'http' || 'http';
+
         // Setup CORS to allow cross-origin requests (mainly for the frontend)
         this.app.use(
             cors({
-                origin:
-                process.env.FRONTEND_URL || `http://localhost:${this.port}`, // Allow frontend from specified URL or localhost
+                origin: process.env.FRONTEND_URL || `${protocol}://${this.host}:${this.port}`, // Allow frontend from specified URL or localhost
                 credentials: true, // Allow credentials (cookies) to be included
             })
         );
@@ -260,11 +266,9 @@ class App {
          // Setup Swagger documentation
          swaggerConfig(this.app);
 
-        
         // Function to setup global middlewares and routes
         this.app.use(middleWareGlobal); // Use global middleware (e.g., logging, error handling)
         this.app.use(mainRouter); // Apply custom application routes
-        
         
         this.setupCSRFProtection(); // Setup CSRF protection
         
@@ -275,9 +279,11 @@ class App {
         // Handle CSRF errors
         this.app.use(checkCSRFError); // Check for CSRF errors
     }
-    // Main function to connect to the database, setup app, and start the server
-    async start(port) {
+
+    async start(https, host, port) {
         this.port = port;
+        this.https = https;
+        this.host = host;
         try {
             await this.connectToDatabase(); // Connect to MongoDB
             await this.syncModels(); // SIncronize models between mongo db and mysql
@@ -288,9 +294,25 @@ class App {
 
             this.setupGlobalMiddlewaresAndRoutes(); // Setup global middlewares and routes
             
-            this.app.listen(port, () =>
-                this.logger.info(`Server running on http://localhost:${port}`)
-            ); // Start the server
+           // Determine if HTTPS is enabled
+           const isHttpsEnabled = this.https;
+
+           // Determine the server type and create the appropriate server
+           const server = isHttpsEnabled
+               ? https.createServer(
+                     {
+                         key: fs.readFileSync(process.env.HTTPS_KEY_PATH, 'utf8'),
+                         cert: fs.readFileSync(process.env.HTTPS_CERT_PATH, 'utf8'),
+                     },
+                     this.app
+                 )
+               : http.createServer(this.app);
+           
+           // Start the server
+           server.listen(this.port, this.host, () => {
+               const protocol = isHttpsEnabled ? 'https' : 'http';
+               this.logger.info(`${protocol.toUpperCase()} Server running on ${protocol}://${this.host}:${this.port}`);
+           });
         } catch (error) {
             this.logger.error("Failed to initialize:", error); // Log error if initialization fails
         }

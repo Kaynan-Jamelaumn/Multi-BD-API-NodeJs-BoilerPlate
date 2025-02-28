@@ -35,6 +35,12 @@ NODE_ENV=development # or production
 
 # Server configuration
 PORT=3000
+HOST=localhost
+HTTPS_ENABLED=false
+HTTPS_KEY_PATH=/path/to/your/private.key #if https enabled
+HTTPS_CERT_PATH=/path/to/your/certificate.crt
+
+
 UPLOAD_DIR=public/uploads #To where the image files will be uploaded
 STATIC_FILE_DIR=public # Directory for serving static files (defaults to 'public' if not set)
 

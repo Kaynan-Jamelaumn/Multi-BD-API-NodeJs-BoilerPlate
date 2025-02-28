@@ -7,5 +7,8 @@ const sequelize_models_path = process.env.MODELS_PATH || path.resolve('./src/mod
 
 // Get the port from the environment variable, fallback to 8765 if not defined
 const port = process.env.PORT || 8765;
+const host = process.env.HOST || 'localhost';
+const https =  process.env.HTTPS_ENABLED === 'true' || false;
 
-app.start(port, sequelize_models_path);
+
+app.start(https,host, port, sequelize_models_path);
