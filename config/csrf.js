@@ -5,7 +5,7 @@ import crypto from "crypto";
 export function setupCSRFProtection(app) {
     const { generateToken, doubleCsrfProtection } = doubleCsrf({
         getSecret: (req) => req.session.csrfSecret,
-        cookieName: "csrf-token",
+        cookieName:  CSRF_COOKIE_NAME || "csrf-token",
         cookieOptions: {
             httpOnly: true,
             sameSite: "strict",

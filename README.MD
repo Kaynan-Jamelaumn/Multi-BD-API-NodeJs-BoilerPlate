@@ -57,8 +57,19 @@ DB_PORT=3306
 
 #TYPEAUTH=JWS #or session
 
-# Session secret
-SESSION_SECRET=your_session_secret
+# Security Configuration
+CSRF_COOKIE_NAME=csrf-token
+CSRF_COOKIE_SAMESITE=strict
+
+
+# Session Configuration
+SESSION_SECRET=your-secret-key
+SESSION_COOKIE_MAX_AGE=2678400000
+SESSION_COOKIE_SECURE=true
+
+# Rate Limiting Configuration
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
 
 # Frontend URL allowed for CORS
 FRONTEND_URL=http://localhost:8080

@@ -174,7 +174,7 @@ class App {
             resave: false, // Don't resave session if not modified
             saveUninitialized: false, // Don't save empty sessions
             cookie: {
-                maxAge: 1000 * 60 * 60 * 24 * 31, // Cookie expiration (31 days)
+                maxAge:  parseInt(process.env.SESSION_COOKIE_MAX_AGE) || 1000 * 60 * 60 * 24 * 31, // Cookie expiration (31 days)
                 httpOnly: true, // Prevent access to cookie via JavaScript
                 secure: process.env.NODE_ENV === "production", // Set secure flag in production
             },
@@ -188,10 +188,10 @@ class App {
         // Configure CSRF protection with double CSRF token
         const { generateToken, doubleCsrfProtection } = doubleCsrf({
             getSecret: (req) => req.session.csrfSecret, // Retrieve CSRF secret from session
-            cookieName: "csrf-token", // Name of the CSRF token cookie
+            cookieName: CSRF_COOKIE_NAME || "csrf-token", // Name of the CSRF token cookie
             cookieOptions: {
                 httpOnly: true, // Ensure cookie is not accessible via JavaScript
-                sameSite: "strict", // Enforce SameSite cookie policy
+                sameSite: process.env.CSRF_COOKIE_SAMESITE || "strict", // Enforce SameSite cookie policy
                 secure: process.env.NODE_ENV === "production", // Set secure flag in production
             },
             size: 64, // Size of the CSRF token
@@ -243,8 +243,8 @@ class App {
 
         // Setup rate limiter to prevent abuse (limit to 100 requests per 15 minutes)
         const limiter = rateLimit({
-            windowMs: 15 * 60 * 1000, // 15 minutes window
-            max: 100, // Max 100 requests per window
+            windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes window
+            max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // Max 100 requests per window
         });
         this.app.use(limiter); // Apply rate limiter globally
 
