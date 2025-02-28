@@ -60,6 +60,8 @@ DB_PORT=3306
 CSRF_COOKIE_NAME=csrf-token
 CSRF_COOKIE_SAMESITE=strict
 
+WEBSOCKET_ENABLED=true # or false to disable WebSockets
+
 
 HAS_PAYLOAD_LIMIT=false
 MAX_PAYLOAD_SIZE=50mb

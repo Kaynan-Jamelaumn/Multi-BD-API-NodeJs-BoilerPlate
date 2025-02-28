@@ -51,6 +51,10 @@ import http from "http"; // HTTP server module
 import https from "https"; // HTTPS server module
 import fs from "fs"; // File system module
 
+
+// Import socket.io
+import { Server } from "socket.io"; // WebSocket library for real-time communication
+
 // Resolve the current file and directory paths (for setting views and static files)
 const __filename = fileURLToPath(import.meta.url); // Get the full path of the current module
 const __dirname = path.dirname(__filename); // Get the directory name of the current module
@@ -335,6 +339,42 @@ class App {
                     this.app
                 ) :
                 http.createServer(this.app);
+            
+            // Check if WebSocket is enabled
+            const isWebSocketEnabled = process.env.WEBSOCKET_ENABLED === 'true';
+
+            if (isWebSocketEnabled) {
+                // Initialize socket.io
+                this.io = new Server(this.server, {
+                    cors: {
+                        origin: process.env.FRONTEND_URL || `${isHttpsEnabled ? 'https' : 'http'}://${this.host}:${this.port}`,
+                        methods: ["GET", "POST"],
+                    },
+                });
+
+                // Socket.io connection handler
+                this.io.on("connection", (socket) => {
+                    this.logger.info(`Socket connected: ${socket.id}`);
+
+                    // Example: Handle a custom event
+                    socket.on("customEvent", (data) => {
+                        this.logger.info(`Received customEvent: ${JSON.stringify(data)}`);
+                        // Broadcast the event to all connected clients
+                        this.io.emit("customEventResponse", { message: "Hello from server!" });
+                    });
+
+                    // Handle disconnection
+                    socket.on("disconnect", () => {
+                        this.logger.info(`Socket disconnected: ${socket.id}`);
+                    });
+                });
+
+                this.logger.info('WebSocket is enabled and initialized.');
+            } else {
+                this.logger.info('WebSocket is disabled.');
+            }
+           
+
 
             this.server.listen(this.port, this.host, () => {
                 const protocol = isHttpsEnabled ? 'https' : 'http';
