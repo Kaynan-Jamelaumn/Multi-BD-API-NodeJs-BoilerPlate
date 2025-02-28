@@ -42,8 +42,31 @@ mainRouter.get('/', testMiddleware, paginaInicial);
  *                   type: string
  *                   format: date-time
  */
-mainRouter.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', timestamp: new Date() });
+mainRouter.get('/health', async (req, res) => {
+  try {
+      let databaseStatus;
+      if (req.db.DB_TYPE === "mongo") {
+          databaseStatus = req.db.mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+      } else if (req.db.DB_TYPE === "mysql") {
+          await req.db.sequelize.authenticate();
+          databaseStatus = 'connected';
+      } else {
+          databaseStatus = 'unsupported';
+      }
+
+      res.status(200).json({
+          status: 'UP',
+          database: databaseStatus,
+          timestamp: new Date()
+      });
+  } catch (error) {
+      res.status(500).json({
+          status: 'DOWN',
+          database: 'disconnected',
+          error: error.message,
+          timestamp: new Date()
+      });
+  }
 });
 
 

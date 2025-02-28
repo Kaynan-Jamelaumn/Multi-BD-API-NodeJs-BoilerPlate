@@ -43,6 +43,7 @@ import mainRouter from "./src/routes/routes.js";
 import {
     middleWareGlobal,
     checkCSRFError,
+    databaseMiddleware,
 } from "./src/middlewares/middleware.js";
 
 // Import Node.js built-in modules
@@ -248,6 +249,10 @@ class App {
     }
 
     setupGlobalMiddlewaresAndRoutes() {
+
+        this.app.use(databaseMiddleware(this.mongoose, this.sequelize, this.DB_TYPE));
+
+        
         this.app.use(helmet());
 
         const staticFileDir = process.env.STATIC_FILE_DIR || 'public';

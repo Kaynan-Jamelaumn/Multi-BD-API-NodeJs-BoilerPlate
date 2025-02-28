@@ -5,6 +5,17 @@ export const middleWareGlobal = (req, res, next) => {
   next();
 };
 
+
+export const databaseMiddleware = (mongoose, sequelize, DB_TYPE) => (req, res, next) => {
+  req.db = {
+      mongoose,
+      sequelize,
+      DB_TYPE
+  };
+  next();
+};
+
+
 export const checkCSRFError = (err, req, res, next) => {
   if (err && err.code === 'EBADCSRFTOKEN') {
     logger.error("Invalid CSRF", err, err.code)
