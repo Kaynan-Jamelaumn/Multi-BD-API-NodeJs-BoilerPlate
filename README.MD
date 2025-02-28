@@ -55,12 +55,12 @@ DB_PASSWORD=your_db_password # For MySQL
 DB_HOST=localhost
 DB_PORT=3306
 
-#TYPEAUTH=JWS #or session
 
 # Security Configuration
 CSRF_COOKIE_NAME=csrf-token
 CSRF_COOKIE_SAMESITE=strict
 
+TYPEAUTH=JWS #or session
 
 # Session Configuration
 SESSION_SECRET=your-secret-key
@@ -70,6 +70,12 @@ SESSION_COOKIE_SECURE=true
 # Rate Limiting Configuration
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
+
+
+# Swagger Configuration
+SWAGGER_ENABLED=true
+SWAGGER_ROUTE=/api-docs
+
 
 # Frontend URL allowed for CORS
 FRONTEND_URL=http://localhost:8080

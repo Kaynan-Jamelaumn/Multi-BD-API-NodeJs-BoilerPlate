@@ -188,7 +188,7 @@ class App {
         // Configure CSRF protection with double CSRF token
         const { generateToken, doubleCsrfProtection } = doubleCsrf({
             getSecret: (req) => req.session.csrfSecret, // Retrieve CSRF secret from session
-            cookieName: CSRF_COOKIE_NAME || "csrf-token", // Name of the CSRF token cookie
+            cookieName: process.env.CSRF_COOKIE_NAME || "csrf-token", // Name of the CSRF token cookie
             cookieOptions: {
                 httpOnly: true, // Ensure cookie is not accessible via JavaScript
                 sameSite: process.env.CSRF_COOKIE_SAMESITE || "strict", // Enforce SameSite cookie policy
