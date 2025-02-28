@@ -92,7 +92,7 @@ class App {
         this.port = null;
         this.https = null;
         this.host = null;
-        this.modelsPath =  path.resolve(process.env.MODELS_PATH) || path.resolve('./src/models');
+        this.modelsPath = path.resolve(process.env.MODELS_PATH || './src/models');
         this.server = null; // Store the server instance for graceful shutdown
     }
 
@@ -339,13 +339,13 @@ class App {
             // Graceful shutdown logic
             const shutdown = async () => {
                 this.logger.info('Shutting down gracefully...');
-
+            
                 if (this.server) {
                     this.server.close(() => {
                         this.logger.info('Server closed.');
                     });
                 }
-
+            
                 if (this.DB_TYPE === "mongo") {
                     await this.mongoose.connection.close();
                     this.logger.info('MongoDB connection closed.');
@@ -353,12 +353,26 @@ class App {
                     await this.sequelize.close();
                     this.logger.info('MySQL connection closed.');
                 }
-
+            
+                this.logger.info('Process exiting...');
                 process.exit(0);
             };
-
-            process.on('SIGINT', shutdown);
-            process.on('SIGTERM', shutdown);
+            
+            process.on('SIGINT', () => {
+                this.logger.info('SIGINT received');
+                shutdown().catch(err => {
+                    this.logger.error('Error during shutdown:', err);
+                    process.exit(1);
+                });
+            });
+            
+            process.on('SIGTERM', () => {
+                this.logger.info('SIGTERM received');
+                shutdown().catch(err => {
+                    this.logger.error('Error during shutdown:', err);
+                    process.exit(1);
+                });
+            });
         } catch (error) {
             this.logger.error("Failed to initialize:", error); // Log error if initialization fails
         }
