@@ -2,6 +2,7 @@
 import path from 'path'
 import express from 'express';
 import userRouter from './userRouter.js';// Example user router
+import addressesRouter from './addressRouter.js';
 import validatorRouter from './validatorRouter.js';
 // import authRouter from './routes/authRouter.js'; // Example auth router
 
@@ -46,7 +47,8 @@ mainRouter.get('/health', (req, res) => {
 });
 
 
- mainRouter.use('/user', userRouter);
+mainRouter.use('/user', userRouter);
+mainRouter.use('/address', addressesRouter);
 
 mainRouter.use('/validator', validatorRouter);
 

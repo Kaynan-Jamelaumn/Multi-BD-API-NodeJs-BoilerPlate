@@ -23,6 +23,8 @@ class AddressController {
     this.getAddressById = this.getAddressById.bind(this);
     this.update = this.update.bind(this);
     this.delete = this.delete.bind(this);
+    this.setPrimaryAddress = this.setPrimaryAddress.bind(this);
+    this.getPrimaryAddress = this.getPrimaryAddress.bind(this);
   }
 
   async create(req, res) {
