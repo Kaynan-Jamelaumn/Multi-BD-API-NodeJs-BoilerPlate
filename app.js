@@ -277,7 +277,7 @@ class App {
         if (corsEnabled) {
             this.app.use(
                 cors({
-                    origin: process.env.FRONTEND_URL || `${protocol}://${this.host}:${this.port}`, // Allow frontend from specified URL or localhost
+                    origin: "*",//process.env.FRONTEND_URL || `${protocol}://${this.host}:${this.port}`, // Allow frontend from specified URL or localhost
                     credentials: true, // Allow credentials (cookies) to be included
                 })
             );

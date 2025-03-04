@@ -1,18 +1,16 @@
 import { logger } from "../../app.js";
 import AddressValidator from "../utils/AddressValidators.js";
-// Dynamically import the appropriate model based on DB_TYPE
+
+
+import { getModel } from "../utils/getModel.js";
+// Dynamically import the Address model based on the filename
 let AddressModel;
 try {
-  if (process.env.DB_TYPE === "mongo") {
-    AddressModel = (await import("../models/AddressMongo.js")).default;
-  } else if (process.env.DB_TYPE === "mysql") {
-    AddressModel = (await import("../models/AddressMysql.js")).default;
-  } else {
-    throw new Error("Invalid DB_TYPE in .env file. Must be 'mongo' or 'mysql'.");
-  }
+  // Pass the current file's URL to getModel
+  AddressModel = await getModel(import.meta.url);
 } catch (error) {
-  console.log("Error loading address model:", error);
-  throw new Error("Failed to load address model");
+  console.log('Error loading address model:', error);
+  throw new Error('Failed to load address model');
 }
 
 class AddressController {
