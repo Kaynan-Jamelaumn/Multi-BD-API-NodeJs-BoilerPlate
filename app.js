@@ -151,7 +151,7 @@ class App {
             await loadModels(this.DB_TYPE, this.sequelize, this.mongoose, this.modelsPath);
             if (this.DB_TYPE === "mysql") {
                 await this.sequelize.sync({
-                    force: false
+                    alter: true
                 }); // Synchronize Sequelize models
                 this.logger.info('All Sequelize models were synchronized successfully.');
             } else if (this.DB_TYPE === "mongo") {

@@ -6,6 +6,8 @@ import path from 'path'
 import fs from "fs";
 import IDValidator from "../utils/IDValidator.js";
 
+import sequelizeConfiguration from "../../dbconfig/databaseSequelize.js";
+import UserMysql from "../models/UserMysql.js";
 dotenvExpand.expand(process.env);
 
 // Dynamically import the appropriate model based on DB_TYPE
@@ -14,7 +16,9 @@ try {
   if (process.env.DB_TYPE === 'mongo') {
     UserModel = (await import('../models/UserMongo.js')).default;
   } else if (process.env.DB_TYPE === 'mysql') {
-    UserModel = (await import('../models/UserMysql.js')).default;
+    UserModel = UserMysql(sequelizeConfiguration)
+    //UserModel = (await import('../models/UserMysql.js')).default;
+    // UserModel = sequelizeConfiguration.models.User;
   } else {
     throw new Error('Invalid DB_TYPE in .env file. Must be "mongo" or "mysql".');
   }
@@ -22,7 +26,6 @@ try {
   console.log('Error loading user model:', error);
   throw new Error('Failed to load user model');
 }
-
 class UserController {
   constructor() {
     this.checkFieldAvailability = this.checkFieldAvailability.bind(this);
@@ -536,6 +539,8 @@ class UserController {
         if (process.env.DB_TYPE === 'mongo') {
           existingUser = await UserModel.findOne({ [fieldName]: fieldValue });
         } else if (process.env.DB_TYPE === 'mysql') {
+          console.log("UserModel:", UserModel);
+
           existingUser = await UserModel.findOne({ where: { [fieldName]: fieldValue } });
         }
   
