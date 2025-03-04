@@ -369,25 +369,28 @@ class UserController {
 
   async login(req, res) {
     const { email, password } = req.body;
-
+  
     // Validate user
     const user = await this.validateUser(email, password);
-
+  
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
-
+  
     // Check if the user is active
     if (user.isActive === false) {
       return res.status(403).json({ error: 'Your account is deactivated. Please contact support.' });
     }
-
+  
     // Update the lastLogin field to the current date
     user.lastLogin = new Date();
-    await user.save(); 
-
+    await user.save();
+  
+    // Log the authentication type for debugging
+    console.log("Auth Type:", process.env.TYPEAUTH);
+  
     const authType = process.env.TYPEAUTH;
-
+  
     if (authType === 'JWT') {
       // JWT-based authentication
       const token = jwt.sign(
@@ -395,8 +398,26 @@ class UserController {
         process.env.JWTSECRET || "defaultsecret",
         { expiresIn: process.env.JWT_EXPIRATION || "1h" } // Token expiration time
       );
-
-      return res.json({ token });
+  
+      // Create a user object without the password field
+      let userWithoutPassword;
+  
+      // Handle MongoDB (Mongoose) and MySQL differently
+      if (user._doc) {
+        // MongoDB (Mongoose)
+        userWithoutPassword = { ...user._doc };
+        delete userWithoutPassword.password;
+      } else {
+        // MySQL or other databases
+        userWithoutPassword = { ...user.toJSON() };
+        delete userWithoutPassword.password;
+      }
+  
+      // Return the user (without password) and the token
+      return res.json({ 
+        user: userWithoutPassword,
+        token 
+      });
     } else if (authType === 'session') {
       // Session-based authentication
       req.session.user = { id: user.id || user._id, email: user.email }; // Handle both MongoDB and MySQL IDs

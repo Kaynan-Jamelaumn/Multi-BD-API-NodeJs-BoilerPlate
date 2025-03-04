@@ -44,7 +44,7 @@ HTTPS_CERT_PATH=/path/to/your/certificate.crt
 UPLOAD_DIR=public/uploads #To where the image files will be uploaded
 STATIC_FILE_DIR=public # Directory for serving static files (defaults to 'public' if not set)
 
-MODELS_PATH=./src/models #models required by the DB
+MODELS_PATH=./src/models #models required by the DB. Currently recommend to leave as the default value as it may not work with other paths in the application
 
 # Database configuration
 DB_TYPE=mongo # or mysql
@@ -66,7 +66,7 @@ WEBSOCKET_ENABLED=true # or false to disable WebSockets
 HAS_PAYLOAD_LIMIT=false
 MAX_PAYLOAD_SIZE=50mb
 
-TYPEAUTH=JWS #or session
+TYPEAUTH=JWT #or session
 JWT_EXPIRATION=1h 
 
 # Session Configuration
