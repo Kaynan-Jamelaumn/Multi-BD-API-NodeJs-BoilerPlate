@@ -62,6 +62,5 @@ addressSchema.pre("save", function (next) {
   next();
 });
 
-const AddressMongo = mongoose.model("Address", addressSchema);
-
+const AddressMongo = mongoose.models.Address || mongoose.model("Address", addressSchema);
 export default AddressMongo;
