@@ -46,8 +46,9 @@ class UserController {
       const profilePictureTruePath = profilePicture? path.join(uploadDir, req.file.filename) : null; // exemple /plublic/uploads/picture.png
       const { username, name, surname, email, password, bio, birthDate, role } = req.body;
   
-      this.failedValidationAndDeletePhoto(req, res, IDValidator.validateFields({ username, name, surname, email, password, role }, { required: false }), profilePictureTruePath)
-  
+      if (this.failedValidationAndDeletePhoto(req, res, IDValidator.validateFields({ username, name, surname, email, password, role }, { required: false }), profilePictureTruePath)) {
+        return; // Stop execution to prevent multiple responses
+    }
   
       const isEmailAvailable = await this.checkFieldAvailability(
         req,
@@ -212,9 +213,9 @@ class UserController {
       if (!user) {
         return res.status(404).json({ error: 'User not found.' });
       }
-      this.failedValidationAndDeletePhoto(req, res,   IDValidator.validateFields({ username, name, surname, email, password, role }, { required: false }), profilePictureTruePath)
-  
-  
+      if (this.failedValidationAndDeletePhoto(req, res, IDValidator.validateFields({ username, name, surname, email, password, role }, { required: false }), profilePictureTruePath)) {
+        return; // Stop execution to prevent multiple responses
+      }
       const isEmailAvailable = await this.checkFieldAvailability(
         req,
         res,
@@ -542,8 +543,10 @@ class UserController {
       }
   
       // Send the validation error response
-      return res.status(validationError.status).json({ error: validationError.error });
+      res.status(validationError.status).json({ error: validationError.error });
+      return true;
     }
+    return false;
     
   }
   async checkFieldAvailability(req, res, fieldName, fieldValue, user, profilePicture, pathToDelete) {
