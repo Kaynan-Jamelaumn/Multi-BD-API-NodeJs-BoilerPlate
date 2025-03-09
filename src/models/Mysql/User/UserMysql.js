@@ -1,12 +1,14 @@
-import { DataTypes } from "sequelize";
-import bcrypt from "bcrypt";
+import { DataTypes } from 'sequelize';
+import bcrypt from 'bcrypt';
 
 const UserMysql = (sequelize) => {
   const User = sequelize.define(
     "User",
     {
       id: {
-        type: DataTypes.INTEGER,primaryKey: true, autoIncrement: true,
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
       },
       username: {
         type: DataTypes.STRING,
@@ -20,7 +22,7 @@ const UserMysql = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: true, // Ensures the field is not empty
+          notEmpty: true,
         },
       },
       surname: {
@@ -33,9 +35,9 @@ const UserMysql = (sequelize) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: true, 
         validate: {
-          isEmail: true, // Validates email format
+          isEmail: true,
         },
       },
       createdAt: {
@@ -48,6 +50,7 @@ const UserMysql = (sequelize) => {
       },
       lastLogin: {
         type: DataTypes.DATE,
+        defaultValue: null, 
       },
       password: {
         type: DataTypes.STRING,
@@ -74,10 +77,6 @@ const UserMysql = (sequelize) => {
         type: DataTypes.ENUM("User", "Admin"),
         defaultValue: "User",
       },
-      lastLogin: {
-        type: DataTypes.DATE,
-        defaultValue: null,
-      },
     },
     {
       hooks: {
@@ -96,7 +95,7 @@ const UserMysql = (sequelize) => {
     }
   );
 
-  // Method to compare passwords
+  // Add the comparePassword method as an instance method
   User.prototype.comparePassword = async function (inputPassword) {
     return await bcrypt.compare(inputPassword, this.password);
   };

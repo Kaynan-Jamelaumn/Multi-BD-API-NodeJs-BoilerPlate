@@ -14,18 +14,8 @@ try {
 }
 
 class AddressController {
-  constructor() {
-    this.create = this.create.bind(this);
-    this.getByUserId = this.getByUserId.bind(this);
-    this.getUserAddresses = this.getUserAddresses.bind(this);
-    this.getAddressById = this.getAddressById.bind(this);
-    this.update = this.update.bind(this);
-    this.delete = this.delete.bind(this);
-    this.setPrimaryAddress = this.setPrimaryAddress.bind(this);
-    this.getPrimaryAddress = this.getPrimaryAddress.bind(this);
-  }
 
-  async create(req, res) {
+  create = async (req, res) => {
     try {
       const { userId, street, number, complement, neighborhood, city, state, zipCode, country } = req.body;
 
@@ -45,7 +35,7 @@ class AddressController {
     }
   }
 
-  async getByUserId(req, res) {
+  getByUserId = async (req, res) => {
     try {
       const userId = req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user.id;
       const addresses = await AddressModel.findAll({ where: { userId } });
@@ -59,7 +49,7 @@ class AddressController {
     }
   }
 
-  async getUserAddresses(req, res) {
+  getUserAddresses = async (req, res) => {
     try {
       const addresses = await AddressModel.findAll();
       return res.status(200).json(addresses);
@@ -69,7 +59,7 @@ class AddressController {
     }
   }
 
-  async getAddressById(req, res) {
+  getAddressById = async (req, res) => {
     try {
       const id = req.params.addressId || req.body.addressId 
       const address = await AddressModel.findByPk(id);
@@ -84,7 +74,7 @@ class AddressController {
   }
 
 
-  async setPrimaryAddress(req, res) {
+  setPrimaryAddress = async (req, res) => {
     try {
       const userId =  req.params.userId || req.body.userId
       const addressId =  req.params.addressId || req.body.addressId
@@ -97,7 +87,7 @@ class AddressController {
     }
   }
 
-  async getPrimaryAddress(req, res) {
+  getPrimaryAddress = async (req, res) => {
     try {
       const userId  = req.params.userId || req.body.userId;
       const address = await AddressModel.findOne({ where: { userId, isPrimary: true } });
@@ -114,7 +104,7 @@ class AddressController {
 
 
 
-  async update(req, res) {
+  update = async (req, res) => {
     try {
       const id = req.params.addressId || req.body.addressId;
       const updatedData = req.body;
@@ -139,7 +129,7 @@ class AddressController {
     }
   }
 
-  async delete(req, res) {
+  delete = async (req, res) => {
     try {
       const id = req.params.addressId || req.body.addressId 
       const address = await AddressModel.findByPk(id);

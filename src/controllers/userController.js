@@ -21,21 +21,8 @@ try {
 
 
 class UserController {
-  constructor() {
-    this.checkFieldAvailability = this.checkFieldAvailability.bind(this);
-    this.failedValidationAndDeletePhoto = this.failedValidationAndDeletePhoto.bind(this);
-    this.create = this.create.bind(this);
-    this.update =  this.update.bind(this);
-    this.login =  this.login.bind(this);
-    this.delete =  this.delete.bind(this);
-    this.fetchUsers =  this.fetchUsers.bind(this); 
-    this.getUsers = this.getUsers.bind(this);
-    this.getInactiveUsers = this.getInactiveUsers.bind(this);
-    this.getActiveUsers = this.getActiveUsers.bind(this);
 
-  }
-
-  async create(req, res) {
+  create = async (req, res) => {
     try {
 
   
@@ -111,7 +98,7 @@ class UserController {
     }
   }
 
-  async fetchUsers(query, res) {
+  fetchUsers = async (query, res) => {
     try {
       let users;
 
@@ -144,19 +131,19 @@ class UserController {
     }
   }
 
-  async getUsers(req, res) {
+  getUsers = async (req, res) => {
     return this.fetchUsers(null, res); // Fetch all users
   }
 
-  async getInactiveUsers(req, res) {
+  getInactiveUsers = async (req, res) => {
     return this.fetchUsers({ isActive: false }, res); // Fetch inactive users
   }
 
-  async getActiveUsers(req, res) {
+  getActiveUsers = async (req, res) => {
     return this.fetchUsers({ isActive: true }, res); // Fetch active users
   }
 
-  async self(req, res) {
+  self = async (req, res) => {
     try {
       const id = req.params.userId || req.body.userId;
       let user;
@@ -190,7 +177,7 @@ class UserController {
     }
   }
   
-  async update(req, res) {
+  update = async (req, res) => {
     try {
       // Use the logged-in user's ID if they are not an admin
       const id = req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user.id;
@@ -272,7 +259,7 @@ class UserController {
       return res.status(500).json({ error: 'Internal server error.' });
     }
   }
-  async delete(req, res) {
+  delete = async (req, res) => {
     try {
       // Use the logged-in user's ID if they are not an admin
       const id = req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user.id;
@@ -315,7 +302,7 @@ class UserController {
   }
 
 
-  async reactivate(req, res) {
+  reactivate = async (req, res) => {
     try {
       const id =  req.params.userId || req.body.userId;
   
@@ -348,7 +335,7 @@ class UserController {
   }
 
   
-  async logout(req, res) {
+  logout = async (req, res) => {
     try {
       if (process.env.TYPEAUTH === 'session') {
         req.session.destroy((err) => {
@@ -368,7 +355,7 @@ class UserController {
   }
 
 
-  async login(req, res) {
+  login = async (req, res) => {
     const { email, password } = req.body;
   
     // Validate user
@@ -428,7 +415,7 @@ class UserController {
     }
   }
   
-  async searchUsers(req, res) { // exp: GET /users/search?page=1&limit=10&search=john&role=User&sortBy=name&order=asc
+  searchUsers = async (req, res) => { // exp: GET /users/search?page=1&limit=10&search=john&role=User&sortBy=name&order=asc
     try {
         const page = Math.max(1, parseInt(req.query.page || '1'));
         const limit = Math.min(100, Math.max(1, parseInt(req.query.limit || '10')));
@@ -508,7 +495,7 @@ class UserController {
 
 
   // Validate user by querying the appropriate database
-  async validateUser(email, password) {
+  validateUser = async (email, password) => {
     try {
       let user;
 
@@ -535,7 +522,7 @@ class UserController {
 
   
 
-  failedValidationAndDeletePhoto(req, res, validationError, profilePicture, pathToDelete ){
+  failedValidationAndDeletePhoto = (req, res, validationError, profilePicture, pathToDelete ) => {
     if (validationError) {
       // Delete the uploaded photo if it exists
       if (profilePicture && pathToDelete && fs.existsSync(pathToDelete)) {
@@ -549,7 +536,7 @@ class UserController {
     return false;
     
   }
-  async checkFieldAvailability(req, res, fieldName, fieldValue, user, profilePicture, pathToDelete) {
+  checkFieldAvailability = async (req, res, fieldName, fieldValue, user, profilePicture, pathToDelete) => {
     if (fieldValue) {
       // If user is provided, check if the field value is different from the existing value
       if (user && fieldValue !== user[fieldName]) {
