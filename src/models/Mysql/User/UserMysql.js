@@ -95,10 +95,6 @@ const UserMysql = (sequelize) => {
     }
   );
 
-  // Add the comparePassword method as an instance method
-  User.prototype.comparePassword = async function (inputPassword) {
-    return await bcrypt.compare(inputPassword, this.password);
-  };
 
   return User;
 };

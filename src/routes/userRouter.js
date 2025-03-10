@@ -230,7 +230,7 @@ router.get('/self/:userId?', UserController.self);
  *       500:
  *         description: Internal server error
  */
-router.delete('/delete/:userId?', UserController.delete);
+router.delete('/delete/:userId?',authMiddleware,  UserController.delete);
 
 /**
  * @swagger
