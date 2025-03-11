@@ -174,13 +174,13 @@ class UserController {
     try {
 
       // Use the logged-in user's ID if they are not an admin
-      const id = req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user.id;
-  
-      const user = await dbManager.softDelete(id);
-      if (!user) return res.status(404).json({ error: 'User not found.' });
-  
-      // Check if the user is already deactivated
-      if (user.isActive) return res.status(400).json({ error: 'User already deactivated.' });
+      const id = req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user.id;  
+      const user = await dbManager.findById(id);
+      
+      if (!user.isActive) return res.status(400).json({ error: 'User already deactivated.' });
+
+      await dbManager.softDelete(id);
+
   
       return res.status(200).json({
         message: 'User deactivated successfully.',
