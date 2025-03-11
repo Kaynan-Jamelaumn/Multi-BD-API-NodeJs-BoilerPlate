@@ -26,6 +26,16 @@ const dbManager = getDBManager(UserModel);
 
 class UserController {
 
+  // Helper method to get profile picture paths
+  getProfilePicturePaths(req) {
+    const uploadDir = process.env.UPLOAD_DIR || path.resolve("public/uploads");
+    const relativeUploadPath = path.relative(path.resolve("public"), uploadDir); //get relative path from public folder
+    const profilePicture = req.file ? `/${relativeUploadPath}/${req.file.filename}` : null;  // the Path that is saved in the bd starting from public exemple /uploads/picture.png
+    const profilePictureTruePath = profilePicture ? path.join(uploadDir, req.file.filename) : null; // exemple /plublic/uploads/picture.png
+    return { profilePicture, profilePictureTruePath };
+  }
+
+   // Format the user response and remove sensitive info
   formatUserResponse = (user, req) => {
     const userJson = user.toJSON();
     delete userJson.password;
@@ -41,12 +51,7 @@ class UserController {
   create = async (req, res) => {
     try {
 
-  
-      // Dynamically construct the profile picture path
-      const uploadDir = process.env.UPLOAD_DIR || path.resolve("public/uploads");
-      const relativeUploadPath = path.relative(path.resolve("public"), uploadDir); //get relative path from public folder
-      const profilePicture = req.file ? `/${relativeUploadPath}/${req.file.filename}` : null;  // the Path that is saved in the bd starting from public exemple /uploads/picture.png
-      const profilePictureTruePath = profilePicture? path.join(uploadDir, req.file.filename) : null; // exemple /plublic/uploads/picture.png
+      const { profilePicture, profilePictureTruePath } = this.getProfilePicturePaths(req);
       const { username, name, surname, email, password, bio, birthDate, role } = req.body;
   
       if (this.failedValidationAndDeletePhoto(
@@ -129,12 +134,7 @@ class UserController {
       const id = req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user.id;
       const { username, name, surname, email, password, bio, birthDate, role } = req.body;
 
-      // Check if a file was uploaded
-      // Dynamically construct the profile picture path
-      const uploadDir = process.env.UPLOAD_DIR || path.resolve("public/uploads");
-      const relativeUploadPath = path.relative(path.resolve("public"), uploadDir); //get relative path from public folder
-      const profilePicture = req.file ? `/${relativeUploadPath}/${req.file.filename}` : null; // exemple /updloads/picture.png
-      const profilePictureTruePath = profilePicture ? path.join(uploadDir, req.file.filename) : null; // exemple /plublic/uploads/picture.png
+      const { profilePicture, profilePictureTruePath } = this.getProfilePicturePaths(req);
 
       const user = await dbManager.findById(id);
       if (!user) return res.status(404).json({ error: 'User not found.' });
