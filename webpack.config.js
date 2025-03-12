@@ -1,26 +1,30 @@
 const path = require('path'); // CommonJS
+const { extensions } = require('sequelize/types/utils/validator-extras');
 
 module.exports = {
   mode: 'production',
-  entry: './frontend/assetsController.js',
+  entry: './src/index.ts',
   output: {
-    path: path.resolve(__dirname, 'public', 'assets', 'js'),
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist', 'assets', 'js'),
     filename: 'bundle.js'
   },
+
   module: {
     rules: [{
       exclude: /node_modules/,
       test: /\.js$/,
       use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/env']
-        }
+        loader: 'ts-loader',
+        exclude: /node_modules/,
       }
     }, {
       test: /\.css$/,
       use: ['style-loader', 'css-loader']
     }]
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
   },
   devtool: 'source-map'
 };
