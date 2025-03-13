@@ -75,9 +75,10 @@ declare module "express-session" {
     }
 }
 
+
 class App {
     public app: Express;
-    public DB_TYPE: string;
+    public DB_TYPE: 'mysql' | 'mongo' ;
     public mongoConnectionString: string;
     public sequelize: any;
     public mongoose: typeof mongoose;
@@ -92,7 +93,7 @@ class App {
 
     constructor() {
         this.app = express();
-        this.DB_TYPE = (process.env.DB_TYPE || "mongo") as string;
+        this.DB_TYPE = this.getDBType(process.env.DB_TYPE);
         this.mongoConnectionString =
             process.env.MONGO_DB_CONNECTION_STRING || "mongodb://localhost:27017/test"; // Attempt to connect to the database
         this.sequelize = sequelizeConfiguration;
@@ -118,6 +119,9 @@ class App {
         this.server = null; // Store the server instance for graceful shutdown
     }
 
+    getDBType(envValue: string | undefined): 'mysql' | 'mongo' {
+        return envValue === "mysql" || envValue === "mongo" ? envValue : "mongo";
+    }
 
     async connectToDatabase(): Promise<void> {
         const maxRetries = 5; // Define the maximum number of retries for a connection attempt.

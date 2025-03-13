@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 
 const AddressMysql = (sequelize) => {
-  const Address = sequelize.define(
+  const Address =sequelize.define<MysqlModel>(
     "Address",
     {
       id: {

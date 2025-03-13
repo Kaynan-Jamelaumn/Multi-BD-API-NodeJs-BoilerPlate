@@ -3,71 +3,136 @@ import path from 'path';
 import { pathToFileURL } from 'url';
 import { Logger } from 'winston';
 import mongoose from 'mongoose';
+import {DatabaseConfig} from './types/database.js'
 
 // Define a type alias for Mongoose to avoid circular reference issues
 type MongooseType = typeof mongoose;
 
 async function loadModels(
-    dbType: string,
+    dbType: 'mysql' | 'mongo',
     sequelize: any,
     mongooseInstance: MongooseType,
     modelsPath: string,
     shouldLogModels: boolean = false,
     logger: Logger
 ): Promise<void> {
-    const entries: fs.Dirent[] = fs.readdirSync(modelsPath, { withFileTypes: true }); // Get entries as Dirent objects
+    const entries = fs.readdirSync(modelsPath, { withFileTypes: true });
 
     for (const entry of entries) {
-        const entryPath: string = path.join(modelsPath, entry.name);
+        const entryPath = path.join(modelsPath, entry.name);
 
         if (entry.isDirectory()) {
-            // Recursively process directories
             await loadModels(dbType, sequelize, mongooseInstance, entryPath, shouldLogModels, logger);
             continue;
         }
 
-        // Skip files that don't match the current DB_TYPE suffix
-        if (dbType === "mysql" && !entry.name.endsWith('Mysql.js')) continue;
-        if (dbType === "mongo" && !entry.name.endsWith('Mongo.js')) continue;
+        if (!isValidDatabaseFile(dbType, entry.name)) continue;
 
-        const fileUrl: string = pathToFileURL(entryPath).href; // Convert the file path to a file:// URL
-
-        try {
-            const modelModule = await import(fileUrl); // Dynamically import the model
-
-            // Check if the module has a default export (the model function)
-            if (modelModule.default) {
-                if (dbType === "mysql") {
-                    const model = modelModule.default(sequelize); // Initialize the Sequelize model
-                    if (model?.name && typeof model === 'function') {
-                        if (shouldLogModels) {
-                            logger.info(`Valid Sequelize model: ${entryPath}`);
-                        }
-                        sequelize.models[model.name] = model; // Add the model to Sequelize
-                    } else {
-                        if (shouldLogModels) {
-                            logger.warn(`Skipping invalid Sequelize model in file ${entryPath}`);
-                        }
-                    }
-                } else if (dbType === "mongo") {
-                    const model = modelModule.default(mongooseInstance); // Initialize the Mongoose model
-                    if (model?.modelName) {
-                        if (shouldLogModels) {
-                            logger.info(`Valid Mongoose model: ${entryPath}`);
-                        }
-                        // Mongoose models are automatically registered
-                    } else {
-                        if (shouldLogModels) {
-                            logger.warn(`Skipping invalid Mongoose model in file ${entryPath}`);
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            logger.error(`Error loading model from file ${entryPath}:`, error);
-        }
+        await processModelFile(dbType, entryPath, {
+            sequelize,
+            mongooseInstance,
+            shouldLogModels,
+            logger
+        });
     }
 }
 
-export default loadModels;
+// Validation helpers
+function isValidDatabaseFile(dbType: string, fileName: string): boolean {
+    const suffixMap = {
+        mysql: 'Mysql.js',
+        mongo: 'Mongo.js'
+    };
+    return fileName.endsWith(suffixMap[dbType as keyof typeof suffixMap]);
+}
 
+// Processing functions
+async function processModelFile(
+    dbType: 'mysql' | 'mongo',
+    filePath: string,
+    context: {
+        sequelize: any,
+        mongooseInstance: MongooseType,
+        shouldLogModels: boolean,
+        logger: Logger
+    }
+) {
+    try {
+        const modelModule = await import(pathToFileURL(filePath).href);
+        if (!modelModule?.default) {
+            context.logger.warn(`File ${filePath} has no default export`);
+            return;
+        }
+
+        if (dbType === 'mysql') {
+            await handleSequelizeModel(modelModule.default, filePath, context);
+        } else {
+            await handleMongooseModel(modelModule.default, filePath, context);
+        }
+    } catch (error) {
+        context.logger.error(`Error loading model from ${filePath}:`, error);
+    }
+}
+
+async function handleSequelizeModel(
+    modelFactory: (sequelize: any) => any,
+    filePath: string,
+    context: {
+        sequelize: any,
+        logger: Logger,
+        shouldLogModels: boolean
+    }
+) {
+    const model = modelFactory(context.sequelize);
+    
+    if (isValidSequelizeModel(model)) {
+        context.sequelize.models[model.name] = model;
+        logModelValidation(true, 'Sequelize', filePath, context);
+    } else {
+        logModelValidation(false, 'Sequelize', filePath, context);
+    }
+}
+
+async function handleMongooseModel(
+    modelFactory: (mongoose: MongooseType) => any,
+    filePath: string,
+    context: {
+        mongooseInstance: MongooseType,
+        logger: Logger,
+        shouldLogModels: boolean
+    }
+) {
+    const model = modelFactory(context.mongooseInstance);
+    
+    if (isValidMongooseModel(model)) {
+        logModelValidation(true, 'Mongoose', filePath, context);
+    } else {
+        logModelValidation(false, 'Mongoose', filePath, context);
+    }
+}
+
+// Validation predicates
+function isValidSequelizeModel(model: any): model is { name: string } {
+    return typeof model?.name === 'string' && typeof model === 'function';
+}
+
+function isValidMongooseModel(model: any): model is { modelName: string } {
+    return typeof model?.modelName === 'string';
+}
+
+// Logging helpers
+function logModelValidation(
+    isValid: boolean,
+    dbType: 'Sequelize' | 'Mongoose',
+    filePath: string,
+    context: { logger: Logger, shouldLogModels: boolean }
+) {
+    if (!context.shouldLogModels) return;
+
+    const status = isValid ? 'Valid' : 'Invalid';
+    const message = `${status} ${dbType} model: ${filePath}`;
+    
+    isValid ? context.logger.info(message) : context.logger.warn(message);
+}
+
+export default loadModels;

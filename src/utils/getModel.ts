@@ -3,6 +3,8 @@ import { dirname, join } from 'path';
 import { promises as fs } from 'fs';
 import { pathToFileURL } from 'url';
 import sequelizeConfiguration from "../databaseSequelize.js";
+import { Model, MysqlModel, MongoModel } from '../types/models.js';
+import { DatabaseConfig } from '../types/database.js';
 
 // Recursively searches for a model file in a directory and its subdirectories
 async function findModelFile(startPath: string, targetNames: string[], recursive: boolean = true): Promise<string | null> {
@@ -26,7 +28,7 @@ async function findModelFile(startPath: string, targetNames: string[], recursive
 }
 
 // Dynamically imports models based on the controller name and DB configuration
-export async function getModel(fileUrl: string): Promise<any> {
+export async function getModel(fileUrl: string): Promise<Model> {
   try {
     // Extract filename from URL and remove extension
     const fileName = fileUrl.split('/').pop()!.replace('.js', '');
@@ -41,7 +43,7 @@ export async function getModel(fileUrl: string): Promise<any> {
     const modelsBasePath = join(dirname(fileURLToPath(import.meta.url)), '../models');
 
     // Determine database type from environment variable
-    const dbType = process.env.DB_TYPE!.toLowerCase();
+    const dbType = process.env.DB_TYPE!.toLowerCase() as 'mysql' | 'mongo';
 
     // Define current database-specific suffix
     const currentSuffix = dbType === 'mysql' ? 'Mysql' : 'Mongo';
@@ -57,7 +59,7 @@ export async function getModel(fileUrl: string): Promise<any> {
 
     let foundPath = await findModelFile(typeSpecificPath, typeSpecificFiles);
 
-    //  If not found, check root directory (non-recursive)
+    // If not found, check root directory (non-recursive)
     if (!foundPath) {
       const rootFiles = [
         `${firstWord}${currentSuffix}.js`,
@@ -69,7 +71,7 @@ export async function getModel(fileUrl: string): Promise<any> {
       foundPath = await findModelFile(modelsBasePath, rootFiles, false);
     }
 
-    //  Fallback check across all directories
+    // Fallback check across all directories
     if (!foundPath) {
       const allFiles = [
         `${firstWord}${currentSuffix}.js`,
@@ -90,11 +92,12 @@ export async function getModel(fileUrl: string): Promise<any> {
     // Convert found path to file URL and import the model
     const modelUrl = pathToFileURL(foundPath).href;
     const modelModule = await import(modelUrl);
-    let model = modelModule.default;
+    let model: Model = modelModule.default;
 
     // If it's a MySQL model, initialize it with Sequelize configuration
     if (dbType === 'mysql') {
-      model = model(sequelizeConfiguration);
+      // Cast model to MysqlModel and call it as a function
+      model = (model as MysqlModel)(sequelizeConfiguration);
     }
 
     return model;
@@ -104,4 +107,3 @@ export async function getModel(fileUrl: string): Promise<any> {
     throw new Error(`Failed to load model for ${fileUrl}`);
   }
 }
-

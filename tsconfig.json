@@ -25,7 +25,8 @@
     "inlineSources": true, // Embeds the source code in the source maps for better debugging
     "noImplicitAny": true, // Disallows variables and parameters with the `any` type
     "noUnusedLocals": true, // Disallows unused local variables
-    "noUnusedParameters": true // Disallows unused function parameters
+    "noUnusedParameters": true, // Disallows unused function parameters,
+    "noImplicitThis": true,
   },
   "include": ["src/**/*", "dbconfig/databaseSequelize.js", "swagger.js", "loadModels.js"], // Includes all source files and specific JavaScript files
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"] // Excludes node_modules, build output, and test files
