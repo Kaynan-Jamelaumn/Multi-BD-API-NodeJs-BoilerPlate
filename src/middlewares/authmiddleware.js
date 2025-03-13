@@ -1,6 +1,6 @@
 // middlewares/authMiddleware.js
 import jwt from 'jsonwebtoken';
-import { logger } from '../../app.js';
+import { logger } from '../app.js';
 import "dotenv/config";
 import dotenvExpand from "dotenv-expand";
 dotenvExpand.expand(process.env);

@@ -1,30 +1,31 @@
-const path = require('path'); // CommonJS
-const { extensions } = require('sequelize/types/utils/validator-extras');
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+export default {
   mode: 'production',
-  entry: './src/index.ts',
+  entry: './src/client/index.ts', // Update to your client entry
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist', 'assets', 'js'),
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, 'dist', 'public'),
+    publicPath: '/assets/'
   },
-
   module: {
-    rules: [{
-      exclude: /node_modules/,
-      test: /\.js$/,
-      use: {
-        loader: 'ts-loader',
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
         exclude: /node_modules/,
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       }
-    }, {
-      test: /\.css$/,
-      use: ['style-loader', 'css-loader']
-    }]
+    ]
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.ts', '.tsx', '.js'],
   },
   devtool: 'source-map'
 };

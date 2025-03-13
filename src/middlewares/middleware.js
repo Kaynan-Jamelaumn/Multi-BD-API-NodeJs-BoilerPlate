@@ -1,4 +1,4 @@
-import { logger } from '../../app.js';
+import { logger } from '../app.js';
 
 export const middleWareGlobal = (req, res, next) => {
   logger.info("Global middleware");

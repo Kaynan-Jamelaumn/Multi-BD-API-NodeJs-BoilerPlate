@@ -1,4 +1,4 @@
-import { logger } from "../../app.js";
+import { logger } from "../app.js";
 import { getModel } from "../utils/getModel.js";
 import AddressValidator from "../utils/AddressValidators.js";
 import { getDBManager } from "../manager/dbManagerFactory.js";

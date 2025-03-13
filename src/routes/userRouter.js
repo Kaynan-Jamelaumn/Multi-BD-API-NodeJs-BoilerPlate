@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import UserController from '../controllers/userController.js';
 const router = new Router();
-import { authMiddleware, adminMiddleware } from '../middlewares/authMiddleware.js';
-import uploadMiddlware from '../utils/fileupload.js';
+import { authMiddleware, adminMiddleware } from '../middlewares/authMiddleware';
+import uploadMiddlware from '../utils/fileupload';
 /**
  * @swagger
  * /users/create:

@@ -5,7 +5,7 @@ import fs from "fs";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-import { logger } from "../../app.js";
+import { logger } from "../app.js";
 import IDValidator from "../utils/IDValidator.js";
 import { getDBManager } from "../manager/dbManagerFactory.js";
 import { getModel } from "../utils/getModel.js";

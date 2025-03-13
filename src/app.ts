@@ -1,26 +1,27 @@
 // Load environment variables from a .env file and expand any references to other variables
-import "dotenv/config";
-import dotenvExpand from "dotenv-expand";
-dotenvExpand.expand(process.env);
+import dotenv from 'dotenv';
+import dotenvExpand from 'dotenv-expand';
+
+const envConfig = dotenv.config();
+dotenvExpand.expand(envConfig);
 
 // Import necessary modules for application setup
 import path from "path"; // To handle file and directory paths
-import {
-    fileURLToPath
-} from "url"; // To work with URLs in ES modules
+
 
 // Import third-party libraries for various functionalities
 
 // Database
-import express from "express"; // Web framework for routing and handling HTTP requests
+import express, { Express, Request, Response, NextFunction } from 'express';
+//import express from "express"; // Web framework for routing and handling HTTP requests
 import mongoose from "mongoose"; // MongoDB object modeling tool
 import MongoStore from "connect-mongo"; // Session store for MongoDB
 //import { Sequelize } from "sequelize";
 import connectSessionSequelize from "connect-session-sequelize";
 
-// Session
+// Session // Correct import
+
 import session from "express-session"; // Middleware for session management
-//import flash from "connect-flash"; // Flash messages for session-based notifications
 
 // Security
 import helmet from "helmet"; // Security headers middleware
@@ -39,12 +40,12 @@ import crypto from "crypto"; // Built-in module for cryptographic functionalitie
 import winston from "winston";
 
 // Import custom routes and middleware functions
-import mainRouter from "./src/routes/routes.js";
+import mainRouter from "./routes/routes.js";
 import {
     middleWareGlobal,
     checkCSRFError,
     databaseMiddleware,
-} from "./src/middlewares/middleware.js";
+} from "./middlewares/middleware.js";
 
 // Import Node.js built-in modules
 import http from "http"; // HTTP server module
@@ -56,26 +57,42 @@ import fs from "fs"; // File system module
 import { Server } from "socket.io"; // WebSocket library for real-time communication
 
 // Resolve the current file and directory paths (for setting views and static files)
-const __filename = fileURLToPath(import.meta.url); // Get the full path of the current module
-const __dirname = path.dirname(__filename); // Get the directory name of the current module
 
-// import { loadEnv } from "./config/env.js";
-// import { connectToDatabase } from "./config/database.js";
-// import { setupSessionAndFlash } from "./config/session.js";
-// import { setupCSRFProtection } from "./config/csrf.js";
-// import { setupGlobalMiddlewaresAndRoutes } from "./config/middlewares.js";
 
-import loadModels from './loadModels.js'; // models loader from sequelize
+import loadModels from './loadModels.js';// models loader from sequelize
 
-import sequelizeConfiguration from "./dbconfig/databaseSequelize.js";
+import sequelizeConfiguration from "./databaseSequelize.js";
 
 // Import the Swagger configuration
 import swaggerConfig from './swagger.js';
 
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+
+// Extend the Session interface to include `csrfSecret`
+declare module "express-session" {
+    interface Session {
+        csrfSecret: string;
+    }
+}
+
 class App {
+    public app: Express;
+    public DB_TYPE: string;
+    public mongoConnectionString: string;
+    public sequelize: any;
+    public mongoose: typeof mongoose;
+    public logger: winston.Logger;
+    public port: number | null;
+    public https: boolean;
+    public host: string | null;
+    public modelsPath: string;
+
+    private server: http.Server | https.Server | null = null;
+    private io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, unknown> | null = null
+
     constructor() {
         this.app = express();
-        this.DB_TYPE = process.env.DB_TYPE || "mongo";
+        this.DB_TYPE = (process.env.DB_TYPE || "mongo") as string;
         this.mongoConnectionString =
             process.env.MONGO_DB_CONNECTION_STRING || "mongodb://localhost:27017/test"; // Attempt to connect to the database
         this.sequelize = sequelizeConfiguration;
@@ -95,18 +112,19 @@ class App {
             ],
         });
         this.port = null;
-        this.https = null;
+        this.https = false;
         this.host = null;
         this.modelsPath = path.resolve(process.env.MODELS_PATH || './src/models');
         this.server = null; // Store the server instance for graceful shutdown
     }
 
-    async connectToDatabase() {
+
+    async connectToDatabase(): Promise<void> {
         const maxRetries = 5; // Define the maximum number of retries for a connection attempt.
         let retries = 0; // Initialize the retry counter.
 
         // Helper function to attempt connection with retry logic.
-        const connectWithRetry = async (connectFunction, loggerInfo, loggerError, errorMessage) => {
+        const connectWithRetry = async (connectFunction: () => Promise<any>, loggerInfo: string, loggerError: string, errorMessage: string) => {
             while (retries < maxRetries) { // Loop until the maximum retries are reached.
                 try {
                     this.logger.info(loggerInfo);
@@ -146,9 +164,9 @@ class App {
         }
     }
 
-    async syncModels() {
+    async syncModels(): Promise<void> {
         try {
-            await loadModels(this.DB_TYPE, this.sequelize, this.mongoose, this.modelsPath);
+            await loadModels(this.DB_TYPE, this.sequelize, this.mongoose, this.modelsPath, true, this.logger);
             if (this.DB_TYPE === "mysql") {
                 await this.sequelize.sync({
                     alter: true
@@ -163,7 +181,7 @@ class App {
         }
     }
 
-    async setupSessionAndFlash() {
+    async setupSessionAndFlash(): Promise<void> {
         let store;
 
         // Create a session store using MongoDB or MySQL
@@ -188,7 +206,7 @@ class App {
             resave: false, // Don't resave session if not modified
             saveUninitialized: false, // Don't save empty sessions
             cookie: {
-                maxAge: parseInt(process.env.SESSION_COOKIE_MAX_AGE) || 1000 * 60 * 60 * 24 * 31, // Cookie expiration (31 days)
+                maxAge: process.env.SESSION_COOKIE_MAX_AGE ? parseInt(process.env.SESSION_COOKIE_MAX_AGE) : 1000 * 60 * 60 * 24 * 31, // Cookie expiration (31 days)
                 httpOnly: true, // Prevent access to cookie via JavaScript
                 secure: process.env.NODE_ENV === "production", // Set secure flag in production
             },
@@ -204,18 +222,27 @@ class App {
             generateToken,
             doubleCsrfProtection
         } = doubleCsrf({
-            getSecret: (req) => req.session.csrfSecret, // Retrieve CSRF secret from session
+            getSecret: (req?: Request) => {    
+                // Handle the case where `req` or `req.session` is undefined
+                if (!req || !req.session) {
+                    throw new Error('Session is not initialized');
+                }
+                // Ensure `csrfSecret` exists in the session
+                if (!req.session.csrfSecret) {
+                    req.session.csrfSecret = crypto.randomBytes(32).toString('hex');
+                }
+                return req.session.csrfSecret;}, // Retrieve CSRF secret from session
             cookieName: process.env.CSRF_COOKIE_NAME || "csrf-token", // Name of the CSRF token cookie
             cookieOptions: {
                 httpOnly: true, // Ensure cookie is not accessible via JavaScript
-                sameSite: process.env.CSRF_COOKIE_SAMESITE || "strict", // Enforce SameSite cookie policy
+                sameSite: (process.env.CSRF_COOKIE_SAMESITE as "strict" | "lax" | "none") || "strict", // Enforce SameSite cookie policy 
                 secure: process.env.NODE_ENV === "production", // Set secure flag in production
             },
             size: 64, // Size of the CSRF token
             ignoredMethods: ["GET", "HEAD", "OPTIONS"], // Exclude safe HTTP methods from CSRF protection
         });
 
-        this.app.use((req, res, next) => {
+        this.app.use((req: Request, res: Response, next: NextFunction) => {
             if (!req.session.csrfSecret) {
                 req.session.csrfSecret = crypto.randomBytes(32).toString("hex"); // Generate a random secret
                 req.session.save((err) => {
@@ -234,17 +261,17 @@ class App {
         });
 
         // Apply CSRF protection only to non-static routes
-        this.app.use((req, res, next) => {
+        this.app.use((req: Request, res: Response, next: NextFunction) => {
             if (req.path.startsWith('/uploads')) {
                 // Skip CSRF protection for /uploads
                 return next();
             }
             // Apply CSRF protection to all other routes
-            doubleCsrfProtection(req, res, next);
+            doubleCsrfProtection(req as any, res as any, next as any);
         });
 
         // Generate CSRF token for views
-        this.app.use((req, res, next) => {
+        this.app.use((req: Request, res: Response, next: NextFunction) => {
             if (!req.path.startsWith('/uploads')) {
                 res.locals.csrfToken = generateToken(req, res);
             }
@@ -264,13 +291,13 @@ class App {
 
         // Setup rate limiter to prevent abuse (limit to 100 requests per 15 minutes)
         const limiter = rateLimit({
-            windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes window
-            max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // Max 100 requests per window
+            windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes window  15 * 60 * 1000
+            max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),  // Max 100 requests per window
         });
         this.app.use(limiter); // Apply rate limiter globally
 
         // Determine the protocol (http or https) based on HTTPS_ENABLED
-        const protocol = process.env.HTTPS_ENABLED === 'true' ? 'https' : 'http' || 'http';
+        const protocol = process.env.HTTPS_ENABLED === 'true' ? 'https' : 'http';
 
         // Setup CORS to allow cross-origin requests (mainly for the frontend)
         const corsEnabled = process.env.ENABLE_CORS === 'true' || true;
@@ -282,6 +309,12 @@ class App {
                 })
             );
         }
+
+        //const __filename = fileURLToPath(import.meta.url); // Get the full path of the current module
+//const __dirname = path.dirname(__filename); // Get the directory name of the current module
+//const __dirname = path.dirname(__filename);
+
+
 
         // Configure view engine to use EJS for dynamic views
         // this.app.set("views", path.resolve(__dirname, "src", "views")); // Set the views directory
@@ -297,7 +330,7 @@ class App {
         // });
 
         // Setup Swagger documentation
-        swaggerConfig(this.app);
+        (swaggerConfig as (app: Express) => void)(this.app);
 
         // Function to setup global middlewares and routes
         this.app.use(middleWareGlobal); // Use global middleware (e.g., logging, error handling)
@@ -313,9 +346,9 @@ class App {
         this.app.use(checkCSRFError); // Check for CSRF errors
     }
 
-    async start(https, host, port) {
+    async start(httpsEnabled: boolean, host: string, port: number): Promise<void> {
         this.port = port;
-        this.https = https;
+        this.https = httpsEnabled;
         this.host = host;
         try {
             await this.connectToDatabase(); // Connect to MongoDB
@@ -338,12 +371,19 @@ class App {
 
             // Determine if HTTPS is enabled
             const isHttpsEnabled = this.https;
+            
+            // Ensure HTTPS key and cert paths are defined
+            const httpsKeyPath = process.env.HTTPS_KEY_PATH;
+            const httpsCertPath = process.env.HTTPS_CERT_PATH;
 
+            if (isHttpsEnabled && (!httpsKeyPath || !httpsCertPath)) {
+                throw new Error('HTTPS key or certificate path is not defined in environment variables.');
+            }
             // Determine the server type and create the appropriate server
             this.server = isHttpsEnabled ?
                 https.createServer({
-                        key: fs.readFileSync(process.env.HTTPS_KEY_PATH, 'utf8'),
-                        cert: fs.readFileSync(process.env.HTTPS_CERT_PATH, 'utf8'),
+                        key: fs.readFileSync(httpsKeyPath!, 'utf8'),
+                        cert: fs.readFileSync(httpsCertPath!, 'utf8'),
                     },
                     this.app
                 ) :
@@ -356,10 +396,10 @@ class App {
                 // Initialize socket.io
                 this.io = new Server(this.server, {
                     cors: {
-                        origin: process.env.FRONTEND_URL || `${isHttpsEnabled ? 'https' : 'http'}://${this.host}:${this.port}`,
-                        methods: ["GET", "POST"],
+                      origin: process.env.FRONTEND_URL || `${isHttpsEnabled ? 'https' : 'http'}://${this.host}:${this.port}`,
+                      methods: ["GET", "POST"],
                     },
-                });
+                  });
 
                 // Socket.io connection handler
                 this.io.on("connection", (socket) => {
@@ -369,7 +409,7 @@ class App {
                     socket.on("customEvent", (data) => {
                         this.logger.info(`Received customEvent: ${JSON.stringify(data)}`);
                         // Broadcast the event to all connected clients
-                        this.io.emit("customEventResponse", { message: "Hello from server!" });
+                        this.io?.emit("customEventResponse", { message: "Hello from server!" });
                     });
 
                     // Handle disconnection
@@ -429,6 +469,11 @@ class App {
             });
         } catch (error) {
             this.logger.error("Failed to initialize:", error); // Log error if initialization fails
+            console.log(error)
+            if (error instanceof Error) {
+                this.logger.error(error.stack); // Mostra o stack trace completo
+              }
+              process.exit(1); // Força saída com erro
         }
     }
 }

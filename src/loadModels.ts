@@ -1,17 +1,28 @@
 import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
-import { logger } from './app.js';
+import { Logger } from 'winston';
+import mongoose from 'mongoose';
 
-async function loadModels(dbType, sequelize, mongoose, modelsPath, shouldLogModels = false) {
-    const entries = fs.readdirSync(modelsPath, { withFileTypes: true }); // Get entries as Dirent objects
+// Define a type alias for Mongoose to avoid circular reference issues
+type MongooseType = typeof mongoose;
+
+async function loadModels(
+    dbType: string,
+    sequelize: any,
+    mongooseInstance: MongooseType,
+    modelsPath: string,
+    shouldLogModels: boolean = false,
+    logger: Logger
+): Promise<void> {
+    const entries: fs.Dirent[] = fs.readdirSync(modelsPath, { withFileTypes: true }); // Get entries as Dirent objects
 
     for (const entry of entries) {
-        const entryPath = path.join(modelsPath, entry.name);
+        const entryPath: string = path.join(modelsPath, entry.name);
 
         if (entry.isDirectory()) {
             // Recursively process directories
-            await loadModels(dbType, sequelize, mongoose, entryPath, shouldLogModels);
+            await loadModels(dbType, sequelize, mongooseInstance, entryPath, shouldLogModels, logger);
             continue;
         }
 
@@ -19,7 +30,7 @@ async function loadModels(dbType, sequelize, mongoose, modelsPath, shouldLogMode
         if (dbType === "mysql" && !entry.name.endsWith('Mysql.js')) continue;
         if (dbType === "mongo" && !entry.name.endsWith('Mongo.js')) continue;
 
-        const fileUrl = pathToFileURL(entryPath).href; // Convert the file path to a file:// URL
+        const fileUrl: string = pathToFileURL(entryPath).href; // Convert the file path to a file:// URL
 
         try {
             const modelModule = await import(fileUrl); // Dynamically import the model
@@ -39,7 +50,7 @@ async function loadModels(dbType, sequelize, mongoose, modelsPath, shouldLogMode
                         }
                     }
                 } else if (dbType === "mongo") {
-                    const model = modelModule.default(mongoose); // Initialize the Mongoose model
+                    const model = modelModule.default(mongooseInstance); // Initialize the Mongoose model
                     if (model?.modelName) {
                         if (shouldLogModels) {
                             logger.info(`Valid Mongoose model: ${entryPath}`);
@@ -59,3 +70,4 @@ async function loadModels(dbType, sequelize, mongoose, modelsPath, shouldLogMode
 }
 
 export default loadModels;
+

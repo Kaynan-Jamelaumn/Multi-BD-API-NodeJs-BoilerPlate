@@ -2,10 +2,10 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { promises as fs } from 'fs';
 import { pathToFileURL } from 'url';
-import sequelizeConfiguration from "../../dbconfig/databaseSequelize.js";
+import sequelizeConfiguration from "../databaseSequelize.js";
 
 // Recursively searches for a model file in a directory and its subdirectories
-async function findModelFile(startPath, targetNames, recursive = true) {
+async function findModelFile(startPath: string, targetNames: string[], recursive: boolean = true): Promise<string | null> {
   const entries = await fs.readdir(startPath, { withFileTypes: true });
 
   for (const entry of entries) {
@@ -26,10 +26,10 @@ async function findModelFile(startPath, targetNames, recursive = true) {
 }
 
 // Dynamically imports models based on the controller name and DB configuration
-export async function getModel(fileUrl) {
+export async function getModel(fileUrl: string): Promise<any> {
   try {
     // Extract filename from URL and remove extension
-    const fileName = fileUrl.split('/').pop().replace('.js', '');
+    const fileName = fileUrl.split('/').pop()!.replace('.js', '');
 
     // Extract base model name by removing 'Controller' suffix
     const firstWord = fileName.replace(/Controller$/, '');
@@ -41,7 +41,7 @@ export async function getModel(fileUrl) {
     const modelsBasePath = join(dirname(fileURLToPath(import.meta.url)), '../models');
 
     // Determine database type from environment variable
-    const dbType = process.env.DB_TYPE.toLowerCase();
+    const dbType = process.env.DB_TYPE!.toLowerCase();
 
     // Define current database-specific suffix
     const currentSuffix = dbType === 'mysql' ? 'Mysql' : 'Mongo';
@@ -104,3 +104,4 @@ export async function getModel(fileUrl) {
     throw new Error(`Failed to load model for ${fileUrl}`);
   }
 }
+
