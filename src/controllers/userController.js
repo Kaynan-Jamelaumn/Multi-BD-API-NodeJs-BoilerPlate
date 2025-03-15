@@ -340,7 +340,7 @@ class UserController {
   
 
   failedValidationAndDeletePhoto = (req, res, validationError, pathToDelete) => {
-    if (validationError) {
+    if (validationError && validationError.valid == false) {
       if (pathToDelete && fs.existsSync(pathToDelete)) {
         fs.unlinkSync(pathToDelete);
       }
