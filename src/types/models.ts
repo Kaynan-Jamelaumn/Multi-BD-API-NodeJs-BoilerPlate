@@ -1,26 +1,22 @@
-// types/models.ts
-import { Sequelize, Model, ModelStatic } from 'sequelize';
+import { Model as SequelizeModel, ModelStatic } from 'sequelize';
 import { Document, Model as MongooseModel } from 'mongoose';
+import { BaseModel } from './database.js';
 
-export interface BaseModel {
-  id?: number | string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-// Sequelize types
-export interface MysqlModel extends Model {
+export interface MysqlModel extends SequelizeModel, BaseModel {
+  id?: number; 
   isActive?: boolean;
 }
 
 export type MysqlModelStatic = ModelStatic<MysqlModel> & {
-  associate?: (models: Record<string, ModelStatic<Model>>) => void;
+  associate?: (models: Record<string, ModelStatic<SequelizeModel>>) => void;
 };
 
-// Mongoose types
-export interface MongoModel extends Document {
+export interface MongoModel extends Document, BaseModel {
+  id: string;
   isActive?: boolean;
-  save: () => Promise<this>;
 }
 
 export type MongoModelType = MongooseModel<MongoModel>;
+
+// Union type for generic model handling
+export type Model = MysqlModelStatic | MongoModelType;

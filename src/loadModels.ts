@@ -3,14 +3,18 @@ import path from 'path';
 import { pathToFileURL } from 'url';
 import { Logger } from 'winston';
 import mongoose from 'mongoose';
-import {DatabaseConfig} from './types/database.js'
+import { Sequelize, ModelStatic, Model } from 'sequelize';
 
 // Define a type alias for Mongoose to avoid circular reference issues
 type MongooseType = typeof mongoose;
 
+// Define types for model factories
+type SequelizeModelFactory = (sequelize: Sequelize) => ModelStatic<Model>;
+type MongooseModelFactory = (mongoose: MongooseType) => mongoose.Model<any>;
+
 async function loadModels(
     dbType: 'mysql' | 'mongo',
-    sequelize: any,
+    sequelize: Sequelize,
     mongooseInstance: MongooseType,
     modelsPath: string,
     shouldLogModels: boolean = false,
@@ -19,7 +23,7 @@ async function loadModels(
     const entries = fs.readdirSync(modelsPath, { withFileTypes: true });
 
     for (const entry of entries) {
-        const entryPath = path.join(modelsPath, entry.name);
+        const entryPath: string = path.join(modelsPath, entry.name);
 
         if (entry.isDirectory()) {
             await loadModels(dbType, sequelize, mongooseInstance, entryPath, shouldLogModels, logger);
@@ -39,7 +43,7 @@ async function loadModels(
 
 // Validation helpers
 function isValidDatabaseFile(dbType: string, fileName: string): boolean {
-    const suffixMap = {
+    const suffixMap: Record<'mysql' | 'mongo', string> = {
         mysql: 'Mysql.js',
         mongo: 'Mongo.js'
     };
@@ -51,12 +55,12 @@ async function processModelFile(
     dbType: 'mysql' | 'mongo',
     filePath: string,
     context: {
-        sequelize: any,
+        sequelize: Sequelize,
         mongooseInstance: MongooseType,
         shouldLogModels: boolean,
         logger: Logger
     }
-) {
+): Promise<void> {
     try {
         const modelModule = await import(pathToFileURL(filePath).href);
         if (!modelModule?.default) {
@@ -75,14 +79,14 @@ async function processModelFile(
 }
 
 async function handleSequelizeModel(
-    modelFactory: (sequelize: any) => any,
+    modelFactory: SequelizeModelFactory,
     filePath: string,
     context: {
-        sequelize: any,
+        sequelize: Sequelize,
         logger: Logger,
         shouldLogModels: boolean
     }
-) {
+): Promise<void> {
     const model = modelFactory(context.sequelize);
     
     if (isValidSequelizeModel(model)) {
@@ -94,14 +98,14 @@ async function handleSequelizeModel(
 }
 
 async function handleMongooseModel(
-    modelFactory: (mongoose: MongooseType) => any,
+    modelFactory: MongooseModelFactory,
     filePath: string,
     context: {
         mongooseInstance: MongooseType,
         logger: Logger,
         shouldLogModels: boolean
     }
-) {
+): Promise<void> {
     const model = modelFactory(context.mongooseInstance);
     
     if (isValidMongooseModel(model)) {
@@ -112,11 +116,11 @@ async function handleMongooseModel(
 }
 
 // Validation predicates
-function isValidSequelizeModel(model: any): model is { name: string } {
+function isValidSequelizeModel(model: any): model is ModelStatic<Model> {
     return typeof model?.name === 'string' && typeof model === 'function';
 }
 
-function isValidMongooseModel(model: any): model is { modelName: string } {
+function isValidMongooseModel(model: any): model is mongoose.Model<any> {
     return typeof model?.modelName === 'string';
 }
 
@@ -126,7 +130,7 @@ function logModelValidation(
     dbType: 'Sequelize' | 'Mongoose',
     filePath: string,
     context: { logger: Logger, shouldLogModels: boolean }
-) {
+): void {
     if (!context.shouldLogModels) return;
 
     const status = isValid ? 'Valid' : 'Invalid';

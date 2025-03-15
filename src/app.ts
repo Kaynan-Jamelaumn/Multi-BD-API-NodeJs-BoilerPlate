@@ -68,14 +68,6 @@ import swaggerConfig from './swagger.js';
 
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
-// Extend the Session interface to include `csrfSecret`
-declare module "express-session" {
-    interface Session {
-        csrfSecret: string;
-    }
-}
-
-
 class App {
     public app: Express;
     public DB_TYPE: 'mysql' | 'mongo' ;
@@ -285,7 +277,7 @@ class App {
 
     setupGlobalMiddlewaresAndRoutes() {
 
-        this.app.use(databaseMiddleware(this.mongoose, this.sequelize, this.DB_TYPE));
+        this.app.use(databaseMiddleware(this.mongoose.connection, this.sequelize, this.DB_TYPE));
 
         
         this.app.use(helmet());
@@ -347,7 +339,7 @@ class App {
             res.status(404).send("404 Not Found");
         });
         // Handle CSRF errors
-        this.app.use(checkCSRFError); // Check for CSRF errors
+        this.app.use(checkCSRFError as express.ErrorRequestHandler); // Check for CSRF errors
     }
 
     async start(httpsEnabled: boolean, host: string, port: number): Promise<void> {

@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 import "dotenv/config";
 
-const sequelize = new Sequelize(
+const sequelize: Sequelize = new Sequelize(
     process.env.DB_NAME || "database", // Database name, with fallback to "database".
     process.env.DB_USER || "root", // Database user, with fallback to "root".
     process.env.DB_PASSWORD || "", // Database password, with fallback to empty string.

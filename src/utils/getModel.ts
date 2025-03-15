@@ -3,7 +3,7 @@ import { dirname, join } from 'path';
 import { promises as fs } from 'fs';
 import { pathToFileURL } from 'url';
 import sequelizeConfiguration from "../databaseSequelize.js";
-import { Model, MysqlModel, MongoModel } from '../types/models.js';
+import {  Model, MysqlModelStatic, MongoModelType  } from '../types/models.js';
 import { DatabaseConfig } from '../types/database.js';
 
 // Recursively searches for a model file in a directory and its subdirectories
@@ -96,10 +96,11 @@ export async function getModel(fileUrl: string): Promise<Model> {
 
     // If it's a MySQL model, initialize it with Sequelize configuration
     if (dbType === 'mysql') {
-      // Cast model to MysqlModel and call it as a function
-      model = (model as MysqlModel)(sequelizeConfiguration);
+      const modelInit = modelModule.default as (sequelize: typeof sequelizeConfiguration) => MysqlModelStatic;
+      return modelInit(sequelizeConfiguration);
+    } else {
+      return modelModule.default as MongoModelType;
     }
-
     return model;
   } catch (error) {
     // Log and rethrow error with additional context

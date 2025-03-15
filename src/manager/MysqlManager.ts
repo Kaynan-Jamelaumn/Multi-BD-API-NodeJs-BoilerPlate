@@ -1,13 +1,7 @@
 import { Model, ModelStatic, WhereOptions, Op, FindAttributeOptions } from 'sequelize';
 import { DBManager } from './DBManager.js';
 import { MysqlModel } from '../types/models.js';
-
-interface FindOptions {
-  exclude?: string[];
-  sort?: [string, 'ASC' | 'DESC'][];
-  offset?: number;
-  limit?: number;
-}
+import { SequelizeFindOptions } from '../types/find-options.js';
 
 export class MySQLManager<T extends MysqlModel> extends DBManager<T> {
   private Op: typeof Op;
@@ -29,7 +23,7 @@ export class MySQLManager<T extends MysqlModel> extends DBManager<T> {
     );
   }
 
-  async find(query: WhereOptions<T>, options: FindOptions = {}): Promise<T[]> {
+  async find(query: WhereOptions<T>, options: SequelizeFindOptions = {}): Promise<T[]> {
     const attributes: FindAttributeOptions | undefined = options.exclude
       ? { exclude: options.exclude }
       : undefined;
@@ -43,7 +37,7 @@ export class MySQLManager<T extends MysqlModel> extends DBManager<T> {
     });
   }
 
-  async findOne(query: WhereOptions<T>, options: FindOptions = {}): Promise<T | null> {
+  async findOne(query: WhereOptions<T>, options: SequelizeFindOptions = {}): Promise<T | null> {
     const attributes: FindAttributeOptions | undefined = options.exclude
       ? { exclude: options.exclude }
       : undefined;
@@ -54,7 +48,7 @@ export class MySQLManager<T extends MysqlModel> extends DBManager<T> {
     });
   }
 
-  async findById(id: string | number, options: FindOptions = {}): Promise<T | null> {
+  async findById(id: string | number, options: SequelizeFindOptions = {}): Promise<T | null> {
     const attributes: FindAttributeOptions | undefined = options.exclude
       ? { exclude: options.exclude }
       : undefined;
@@ -64,7 +58,7 @@ export class MySQLManager<T extends MysqlModel> extends DBManager<T> {
     });
   }
 
-  async findAndCount(query: WhereOptions<T>, options: Omit<FindOptions, 'exclude'> = {}): Promise<{ count: number; rows: T[] }> {
+  async findAndCount(query: WhereOptions<T>, options: Omit<SequelizeFindOptions, 'exclude'> = {}): Promise<{ count: number; rows: T[] }> {
     return (this.model as ModelStatic<T>).findAndCountAll({
       where: query,
       ...options,
