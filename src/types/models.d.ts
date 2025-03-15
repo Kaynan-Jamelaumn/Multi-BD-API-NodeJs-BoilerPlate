@@ -1,4 +1,4 @@
-// types/models.ts
+// src/types/models.d.ts
 import { Model as SequelizeModel, ModelStatic } from 'sequelize';
 import { Document, Model as MongooseModel } from 'mongoose';
 import { BaseModel } from './database.js';

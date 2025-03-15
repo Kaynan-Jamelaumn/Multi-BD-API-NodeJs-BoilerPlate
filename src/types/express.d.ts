@@ -1,3 +1,5 @@
+
+// src/types/express.d.ts
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { Sequelize } from 'sequelize';
 import mongoose from 'mongoose';

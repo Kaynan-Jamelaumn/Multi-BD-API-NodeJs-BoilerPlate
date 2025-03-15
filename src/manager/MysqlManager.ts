@@ -1,3 +1,5 @@
+// src/manager/MysqlManager.ts
+
 import { Model, ModelStatic, WhereOptions, Op, FindAttributeOptions } from 'sequelize';
 import { DBManager } from './DBManager.js';
 import { MysqlModel } from '../types/models.js';

@@ -1,3 +1,5 @@
+// src/server.ts
+
 import app from './app.js';
 import path from 'path';
 import "dotenv/config";

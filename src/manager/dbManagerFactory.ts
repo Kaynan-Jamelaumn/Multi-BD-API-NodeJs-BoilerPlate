@@ -1,3 +1,5 @@
+// src/manager/db<amagerFactory.ts
+
 import { MongoDBManager } from './MongoDBManager.js';
 import { MySQLManager } from './MysqlManager.js';
 import { ModelStatic } from 'sequelize';

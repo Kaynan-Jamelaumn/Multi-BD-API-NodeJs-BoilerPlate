@@ -1,3 +1,5 @@
+// src/models/Mysql/User/UserMysql.ts
+
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import bcrypt from 'bcrypt';
 import { MysqlModel, MysqlModelStatic  } from '../../../types/models.js';

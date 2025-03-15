@@ -1,3 +1,5 @@
+// src/manager/DBManager.ts
+
 import { ModelStatic } from 'sequelize';
 import { Model as MongooseModel, Document } from 'mongoose';
 

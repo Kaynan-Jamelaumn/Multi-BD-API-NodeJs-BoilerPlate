@@ -1,3 +1,5 @@
+// src/manager/MongoDBManager.ts
+
 import { Model, Document } from 'mongoose';
 import { DBManager } from './DBManager.js';
 import { MongoModel } from '../types/models.js';

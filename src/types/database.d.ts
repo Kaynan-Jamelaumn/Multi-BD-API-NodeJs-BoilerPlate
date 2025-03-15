@@ -1,3 +1,5 @@
+// src/types/database.d.ts
+
 import { Sequelize } from "sequelize";
 import { Mongoose } from "mongoose";
 

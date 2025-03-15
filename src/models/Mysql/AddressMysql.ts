@@ -1,3 +1,5 @@
+  // src/models/Mysql/AddressMysql.ts
+
   import { DataTypes, Model, Sequelize } from 'sequelize';
   import { MysqlModel, MysqlModelStatic   } from '../../types/models.js';
 

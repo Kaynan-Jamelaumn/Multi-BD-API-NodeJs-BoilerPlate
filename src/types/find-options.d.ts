@@ -1,3 +1,5 @@
+// src/types/find-options.d.ts
+
 export interface SequelizeFindOptions {
     exclude?: string[];
     sort?: [string, 'ASC' | 'DESC'][];

@@ -1,3 +1,5 @@
+// src/types/global.d.ts
+
 declare module 'connect-session-sequelize' {
     import { Sequelize } from 'sequelize';
     import session from 'express-session';
