@@ -26,12 +26,11 @@ async function findModelFile(startPath: string, targetNames: string[], recursive
   }
   return null;
 }
-
 // Dynamically imports models based on the controller name and DB configuration
 export async function getModel(fileUrl: string): Promise<Model> {
   try {
     // Extract filename from URL and remove extension
-    const fileName = fileUrl.split('/').pop()!.replace('.js', '');
+    const fileName = fileUrl.split('/').pop()!.replace(/\.(js|ts)$/, '');
 
     // Extract base model name by removing 'Controller' suffix
     const firstWord = fileName.replace(/Controller$/, '');
@@ -48,38 +47,41 @@ export async function getModel(fileUrl: string): Promise<Model> {
     // Define current database-specific suffix
     const currentSuffix = dbType === 'mysql' ? 'Mysql' : 'Mongo';
 
+    // Define possible file extensions to search for
+    const extensions = ['.ts', '.js'];
+
     // 1. Search priority: type-specific directory first (recursive)
     const typeSpecificPath = join(modelsBasePath, dbType);
-    const typeSpecificFiles = [
-      `${firstWord}${currentSuffix}.js`,       // e.g., userMysql.js
-      `${capitalizedFirstWord}${currentSuffix}.js`, // e.g., UserMysql.js
-      `${firstWord}.js`,               // e.g., user.js
-      `${capitalizedFirstWord}.js`     // e.g., User.js
-    ];
+    const typeSpecificFiles = extensions.flatMap(ext => [
+      `${firstWord}${currentSuffix}${ext}`,       // e.g., userMysql.ts or userMysql.js
+      `${capitalizedFirstWord}${currentSuffix}${ext}`, // e.g., UserMysql.ts or UserMysql.js
+      `${firstWord}${ext}`,               // e.g., user.ts or user.js
+      `${capitalizedFirstWord}${ext}`     // e.g., User.ts or User.js
+    ]);
 
     let foundPath = await findModelFile(typeSpecificPath, typeSpecificFiles);
 
     // If not found, check root directory (non-recursive)
     if (!foundPath) {
-      const rootFiles = [
-        `${firstWord}${currentSuffix}.js`,
-        `${capitalizedFirstWord}${currentSuffix}.js`,
-        `${firstWord}.js`,
-        `${capitalizedFirstWord}.js`
-      ];
+      const rootFiles = extensions.flatMap(ext => [
+        `${firstWord}${currentSuffix}${ext}`,
+        `${capitalizedFirstWord}${currentSuffix}${ext}`,
+        `${firstWord}${ext}`,
+        `${capitalizedFirstWord}${ext}`
+      ]);
 
       foundPath = await findModelFile(modelsBasePath, rootFiles, false);
     }
 
     // Fallback check across all directories
     if (!foundPath) {
-      const allFiles = [
-        `${firstWord}${currentSuffix}.js`,
-        `${capitalizedFirstWord}${currentSuffix}.js`,
-        `${firstWord}${dbType === 'mysql' ? 'Mongo' : 'Mysql'}.js`,
-        `${firstWord}.js`,
-        `${capitalizedFirstWord}.js`
-      ];
+      const allFiles = extensions.flatMap(ext => [
+        `${firstWord}${currentSuffix}${ext}`,
+        `${capitalizedFirstWord}${currentSuffix}${ext}`,
+        `${firstWord}${dbType === 'mysql' ? 'Mongo' : 'Mysql'}${ext}`,
+        `${firstWord}${ext}`,
+        `${capitalizedFirstWord}${ext}`
+      ]);
 
       foundPath = await findModelFile(modelsBasePath, allFiles, true);
     }
@@ -101,7 +103,6 @@ export async function getModel(fileUrl: string): Promise<Model> {
     } else {
       return modelModule.default as MongoModelType;
     }
-    return model;
   } catch (error) {
     // Log and rethrow error with additional context
     console.error(`Error loading model for ${fileUrl}:`, error);

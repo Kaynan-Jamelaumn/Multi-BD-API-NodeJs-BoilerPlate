@@ -1,8 +1,9 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import bcrypt from 'bcrypt';
+import { MysqlModel, MysqlModelStatic  } from '../../../types/models.js';
 
-const UserMysql = (sequelize) => {
-  const User = sequelize.define(
+const UserMysql = (sequelize: Sequelize): MysqlModelStatic => {
+    const User = sequelize.define<MysqlModel>(
     "User",
     {
       id: {
@@ -35,7 +36,7 @@ const UserMysql = (sequelize) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true, 
+        unique: true,
         validate: {
           isEmail: true,
         },
@@ -50,24 +51,26 @@ const UserMysql = (sequelize) => {
       },
       lastLogin: {
         type: DataTypes.DATE,
-        defaultValue: null, 
+        allowNull: true,
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          len: [8, Infinity], // Minimum password length
+          len: [8, Infinity],
         },
       },
       bio: {
         type: DataTypes.TEXT,
+        allowNull: true,
       },
       profilePicture: {
         type: DataTypes.STRING,
-        defaultValue: "default-profile.jpg", // Default profile picture
+        defaultValue: "default-profile.jpg",
       },
       birthDate: {
         type: DataTypes.DATE,
+        allowNull: true,
       },
       isActive: {
         type: DataTypes.BOOLEAN,
@@ -80,13 +83,12 @@ const UserMysql = (sequelize) => {
     },
     {
       hooks: {
-        // Hash password before creating or updating a user
         beforeCreate: async (user) => {
           if (user.password) {
             user.password = await bcrypt.hash(user.password, 10);
           }
         },
-        beforeUpdate: async (user) => {
+        beforeUpdate: async (user: MysqlModel) => {
           if (user.changed("password")) {
             user.password = await bcrypt.hash(user.password, 10);
           }
@@ -94,7 +96,6 @@ const UserMysql = (sequelize) => {
       },
     }
   );
-
 
   return User;
 };
