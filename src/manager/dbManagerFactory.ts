@@ -23,11 +23,23 @@ export function getDBManager(model: MysqlModelStatic | MongoModelType): DBManage
 
 // Implementation signature
 export function getDBManager(model: any): DBManager<any> {
-  if (isMongoModel(model)) {
-    return new MongoDBManager(model); // Return MongoDBManager for Mongoose models
-  } else if (isMysqlModel(model)) {
-    return new MySQLManager(model); // Return MySQLManager for Sequelize models
-  } else {
-    throw new Error("Unsupported model type");
+  switch (process.env.DB_TYPE) {
+    case "mongo":
+      return new MongoDBManager(model);
+    case "mysql":
+      return new MySQLManager(model);
+    default:
+      throw new Error("Invalid DB_TYPE");
   }
 }
+
+
+// export function getDBManager(model: any): DBManager<any> {
+//   if (isMongoModel(model)) {
+//     return new MongoDBManager(model); // Return MongoDBManager for Mongoose models
+//   } else if (isMysqlModel(model)) {
+//     return new MySQLManager(model); // Return MySQLManager for Sequelize models
+//   } else {
+//     throw new Error("Unsupported model type");
+//   }
+// }
