@@ -4,7 +4,7 @@ import PassportValidator from "./PassportValidator.js";
 export type ValidationResult = {
     valid: boolean
     error: string | null
-    status?: number 
+    status: number 
   }
 
   type ValidationOptions = {
@@ -24,12 +24,12 @@ class IDValidator {
         if (required) {
             const requiredFields: string[] = ['username', 'name', 'surname', 'email', 'password'];
             const missingFields: string[] = requiredFields.filter(field => !userData[field as keyof User]);
-            
+
             if (missingFields.length > 0) {
                 return {
                     valid: false,
                     error: `Missing required fields: ${missingFields.join(', ')}`,
-                    status: 400
+                    status: 400, // Status is always defined
                 };
             }
         }
@@ -39,21 +39,21 @@ class IDValidator {
             return {
                 valid: false,
                 error: 'Name must be at least 2 characters long.',
-                status: 400
+                status: 400,
             };
         }
         if (surname && surname.length < 2) {
             return {
                 valid: false,
                 error: 'Surname must be at least 2 characters long.',
-                status: 400
+                status: 400,
             };
         }
         if (username && username.length < 2) {
             return {
                 valid: false,
                 error: 'Username must be at least 2 characters long.',
-                status: 400
+                status: 400,
             };
         }
 
@@ -64,7 +64,7 @@ class IDValidator {
                 return {
                     valid: false,
                     error: 'Invalid email format.',
-                    status: 400
+                    status: 400,
                 };
             }
         }
@@ -86,14 +86,16 @@ class IDValidator {
             return {
                 valid: false,
                 error: 'Invalid role. Allowed values are "User" or "Admin".',
-                status: 400
+                status: 400,
             };
         }
 
+        // If all validations pass
         return {
             valid: true,
             error: null,
-          }; // No validation errors
+            status: 200, // Status is always defined
+        };
     }
     static validatePassport(passportNumber: string, countryCode: string) {
         PassportValidator.validatePassport(passportNumber, countryCode)

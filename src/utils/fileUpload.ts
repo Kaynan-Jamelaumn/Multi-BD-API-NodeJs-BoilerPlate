@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import crypto from "crypto";
 import { Request } from "express";
+import { File } from "../types/multer.js";
 
 // Define the upload directory path (default to "public/uploads")
 const uploadDir: string = process.env.UPLOAD_DIR || path.resolve("public/uploads");
