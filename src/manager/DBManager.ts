@@ -15,7 +15,7 @@ export abstract class DBManager<T extends { id?: string | number; isActive?: boo
   abstract findOne(query: object, options?: any): Promise<T | null>;
   abstract findById(id: string | number, options?: any): Promise<T | null>;
   abstract findAndCount(query: object, options?: any): Promise<{ count: number; rows: T[] }>;
-  abstract update(id: string | number, data: Partial<T>): Promise<T | null>;
+  abstract update(id: string | number | object, data: Partial<T>): Promise<T | null>; // Allow id or query
   abstract delete(id: string | number): Promise<void>;
   abstract softDelete(id: string | number): Promise<T | null>;
   abstract reactivate(id: string | number): Promise<T | null>;

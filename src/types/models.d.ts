@@ -24,3 +24,13 @@ export type MongoModelType = MongooseModel<MongoModel>;
 
 // Union type for generic model handling
 export type Model = MysqlModelStatic | MongoModelType;
+
+// Type guard to check if the model is a MongoModelType
+export function isMongoModel(model: any): model is MongoModelType {
+  return (model as MongoModelType).schema !== undefined; // Check for a Mongoose-specific property
+}
+
+// Type guard to check if the model is a MysqlModelStatic
+export function isMysqlModel(model: any): model is MysqlModelStatic {
+  return (model as MysqlModelStatic).tableName !== undefined; // Check for a Sequelize-specific property
+}

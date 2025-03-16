@@ -4,8 +4,9 @@ import { MongoDBManager } from './MongoDBManager.js';
 import { MySQLManager } from './MysqlManager.js';
 import { ModelStatic } from 'sequelize';
 import { Model } from 'mongoose';
-import { MysqlModel, MongoModel } from '../types/models.js';
+import { MysqlModel, MongoModel, isMysqlModel, isMongoModel, MysqlModelStatic, MongoModelType } from '../types/models.js';
 import { DBManager } from './DBManager.js';
+
 
 // Overload for MongoDB: when the model is a Mongoose model of MongoModel
 export function getDBManager<T extends MongoModel>(
@@ -17,14 +18,16 @@ export function getDBManager<T extends MysqlModel>(
   model: ModelStatic<T>
 ): MySQLManager<T>;
 
+// Overload for the union type (MysqlModelStatic | MongoModelType)
+export function getDBManager(model: MysqlModelStatic | MongoModelType): DBManager<any>;
+
 // Implementation signature
 export function getDBManager(model: any): DBManager<any> {
-  switch (process.env.DB_TYPE) {
-    case "mongo":
-      return new MongoDBManager(model);
-    case "mysql":
-      return new MySQLManager(model);
-    default:
-      throw new Error("Invalid DB_TYPE");
+  if (isMongoModel(model)) {
+    return new MongoDBManager(model); // Return MongoDBManager for Mongoose models
+  } else if (isMysqlModel(model)) {
+    return new MySQLManager(model); // Return MySQLManager for Sequelize models
+  } else {
+    throw new Error("Unsupported model type");
   }
 }

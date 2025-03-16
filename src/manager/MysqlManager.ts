@@ -66,11 +66,30 @@ export class MySQLManager<T extends MysqlModel> extends DBManager<T> {
       ...options,
     });
   }
-
-  async update(id: string | number, data: Partial<T>): Promise<T | null> {
-    const record = await (this.model as ModelStatic<T>).findByPk(id);
-    if (!record) return null;
-    return record.update(data);
+  async update(id: string | number | object, data: Partial<T>): Promise<T | null> {
+    if (typeof id === 'object') {
+      // Handle query-based update
+      const records = await this.find(id as WhereOptions<T>); 
+      if (records.length === 0) {
+        return null; // No records found
+      }
+  
+      await (this.model as ModelStatic<T>).update(data, {
+        where: id as WhereOptions<T>, 
+      });
+  
+      // Return the first updated record (if needed)
+      return records[0];
+    } else {
+      // Handle id-based update
+      const record = await this.findById(id);
+      if (!record) {
+        return null; // Record not found
+      }
+  
+      await record.update(data); // Update the record directly
+      return record;
+    }
   }
 
   async delete(id: string | number): Promise<void> {

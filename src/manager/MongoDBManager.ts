@@ -51,8 +51,27 @@ export class MongoDBManager<T extends MongoModel> extends DBManager<T> {
     return { count, rows };
   }
 
-  async update(id: string | number, data: Partial<T>): Promise<T | null> {
-    return (this.model as Model<T>).findByIdAndUpdate(id, data, { new: true }).exec();
+  async update(id: string | number | object, data: Partial<T>): Promise<T | null> {
+    if (typeof id === 'object') {
+      // Handle query-based update
+      const records = await this.find(id);
+      if (records.length === 0) {
+        return null; // No records found
+      }
+  
+      await (this.model as Model<T>).updateMany(id, data).exec();
+  
+      // Return the first updated record (if needed)
+      return records[0];
+    } else {
+      // Handle id-based update
+      const record = await this.findById(id);
+      if (!record) {
+        return null; // Record not found
+      }
+  
+      return (this.model as Model<T>).findByIdAndUpdate(id, data, { new: true }).exec();
+    }
   }
 
   async delete(id: string | number): Promise<void> {

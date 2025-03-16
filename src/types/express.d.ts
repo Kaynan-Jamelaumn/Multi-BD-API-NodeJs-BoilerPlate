@@ -20,6 +20,7 @@ declare global {
           sequelize: any;
           DB_TYPE: string;
         };
+        user?: User;
       } 
     }
   }

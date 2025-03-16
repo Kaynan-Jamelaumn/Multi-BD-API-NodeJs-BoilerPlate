@@ -1,5 +1,4 @@
-import path from 'path';
-import HomeModel from '../models/HomeModel.js';
+import { Request, Response } from 'express'; // Importing types for req and res
 
 // HomeModel.create(
 //   {
@@ -12,9 +11,8 @@ import HomeModel from '../models/HomeModel.js';
 //   .catch(err => {
 //     console.log('erro ao inserir', err);
 //   });
-export const paginaInicial = (req, res) => {
-  console.log("Global Route Called")
+
+export const paginaInicial = (req: Request, res: Response): void => {
   res.json({ message: 'Hello from the backend!' });
-  //res.render('index', { coisa: 'teste', numeros: [0, 1, 2, 3, 4, 5] });
   return;
 };

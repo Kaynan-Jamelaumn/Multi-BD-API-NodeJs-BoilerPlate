@@ -10,11 +10,6 @@ import dotenvExpand from 'dotenv-expand';
 const envConfig = dotenv.config();
 dotenvExpand.expand(envConfig);
 
-// Define a custom interface for the user object
-interface User {
-  role: string;
-  [key: string]: any; // Allow additional properties
-}
 
 // Extend the Request interface to include the user property
 declare module 'express' {
