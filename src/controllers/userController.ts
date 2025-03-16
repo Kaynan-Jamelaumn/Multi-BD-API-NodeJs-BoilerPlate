@@ -1,3 +1,5 @@
+// src/controllers/userController.ts
+
 import "dotenv/config";
 import dotenvExpand from "dotenv-expand";
 import path from 'path';
@@ -62,7 +64,7 @@ class UserController {
     return userJson;
   }
 
-  public create = async (req: RequestWithFile, res: Response): Promise<Response> => {
+  public create = async (req: RequestWithFile, res: Response): Promise<any> => {
     try {
       const { profilePicture, profilePictureTruePath } = this.getProfilePicturePaths(req);
       const { username, name, surname, email, password, bio, birthDate, role } = req.body;
@@ -100,7 +102,7 @@ class UserController {
     }
   }
 
-  private fetchUsers = async (query: object | null, res: Response): Promise<Response> => {
+  private fetchUsers = async (query: object | null, res: Response): Promise<any> => {
     try {
       const users = await dbManager.find(query || {}, { 
         exclude: ['password'],
@@ -120,16 +122,16 @@ class UserController {
     }
   }
 
-  public getUsers = async (req: Request, res: Response): Promise<Response> => 
+  public getUsers = async (req: Request, res: Response): Promise<any> => 
     this.fetchUsers(null, res);
 
-  public getInactiveUsers = async (req: Request, res: Response): Promise<Response> => 
+  public getInactiveUsers = async (req: Request, res: Response): Promise<any> => 
     this.fetchUsers({ isActive: false }, res); // Fetch inactive users
 
-  public getActiveUsers = async (req: Request, res: Response): Promise<Response> => 
+  public getActiveUsers = async (req: Request, res: Response): Promise<any> => 
     this.fetchUsers({ isActive: true }, res); // Fetch active users
 
-  public self = async (req: Request, res: Response): Promise<Response> => {
+  public self = async (req: Request, res: Response): Promise<any> => {
     try {
       const id = req.params.userId || req.body.userId;
       const user = await dbManager.findById(id, { exclude: ['password'] });
@@ -142,7 +144,7 @@ class UserController {
     }
   }
 
-  public update = async (req: RequestWithFile, res: Response): Promise<Response> => {
+  public update = async (req: RequestWithFile, res: Response): Promise<any> => {
     try {
       const id: string = req.user && req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user && req.user.id;
       const { username, name, surname, email, password, bio, birthDate, role } = req.body;
@@ -182,7 +184,7 @@ class UserController {
     }
   }
 
-  public delete = async (req: Request, res: Response): Promise<Response> => {
+  public delete = async (req: Request, res: Response): Promise<any> => {
     try {
       // Use the logged-in user's ID if they are not an admin
       const id = req.user && req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user && req.user.id;  
@@ -201,7 +203,7 @@ class UserController {
     }
   }
 
-  public reactivate = async (req: Request, res: Response): Promise<Response> => {
+  public reactivate = async (req: Request, res: Response): Promise<any> => {
     try {
       const id = req.params.userId || req.body.userId;
       const user = await dbManager.reactivate(id);
@@ -219,7 +221,7 @@ class UserController {
     }
   }
 
-  public logout = async (req: Request, res: Response): Promise<Response> => {
+  public logout = async (req: Request, res: Response): Promise<any> => {
     try {
       if (process.env.TYPEAUTH === 'session') {
         req.session.destroy((err) => {
@@ -239,7 +241,7 @@ class UserController {
     }
   }
 
-  public login = async (req: Request, res: Response): Promise<Response> => {
+  public login = async (req: Request, res: Response): Promise<any> => {
     try {
       const { email, password } = req.body;
   
@@ -295,7 +297,7 @@ class UserController {
       return res.status(500).json({ error: 'Internal server error.' });
     }
   }
-  public searchUsers = async (req: Request, res: Response): Promise<Response> => {
+  public searchUsers = async (req: Request, res: Response): Promise<any> => {
     try {
       // Extract query parameters with default values
       const { page = 1, limit = 10, search, role, sortBy = 'createdAt', order = 'desc' } = req.query;

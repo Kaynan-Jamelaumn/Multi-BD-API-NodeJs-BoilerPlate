@@ -1,3 +1,5 @@
+// src/controllers/addressController.ts
+
 import { logger } from "../app.js";
 import { getModel } from "../utils/getModel.js";
 import AddressValidator from "../utils/AddressValidators.js";
@@ -21,7 +23,7 @@ const dbManager: DBManager<any> = getDBManager(addressModel);
 
 class AddressController {
 
-  create = async (req: Request, res: Response): Promise<void> => {
+  create = async (req: Request, res: Response): Promise<any> => {
     try {
       const { userId, street, number, complement, neighborhood, city, state, zipCode, country } = req.body;
 
@@ -30,8 +32,7 @@ class AddressController {
         { required: true }
       );
       if (validationError) {
-        res.status(validationError.status).json({ error: validationError.error });
-        return;
+        return res.status(validationError.status).json({ error: validationError.error });
       }
       const newAddress:  {
         userId: string | number;
@@ -45,67 +46,56 @@ class AddressController {
         country: string;
       } = { userId, street, number, complement, neighborhood, city, state, zipCode, country };
       const createdAddress = await dbManager.create(newAddress);
-      res.status(201).json(createdAddress);
-      return;
+      return res.status(201).json(createdAddress);
     } catch (error: any) {
       logger.error("Error creating address:", error);
-      res.status(400).json({ error: error.message });
-      return;
+      return res.status(400).json({ error: error.message });
     }
   }
 
-  getByUserId = async (req: Request, res: Response): Promise<void> => {
+  getByUserId = async (req: Request, res: Response): Promise<any> => {
     try {
       if (!req.user) {
-        res.status(401).json({ error: "Unauthorized: User not authenticated." });
-        return;
+        return res.status(401).json({ error: "Unauthorized: User not authenticated." });
       }
 
       const userId: string | number = req.user.role === 'Admin' ? req.params.userId || req.body.userId : req.user.id;
       const addresses = await dbManager.find({ userId });
       if (!addresses.length) {
-        res.status(404).json({ message: "No addresses found for this user." });
-        return;
+        return res.status(404).json({ message: "No addresses found for this user." });
       }
-      res.status(200).json(addresses);
-      return;
+      return res.status(200).json(addresses);
     } catch (error: any) {
       logger.error("Error fetching addresses:", error);
-      res.status(500).json({ error: "Internal server error." });
-      return;
+      return res.status(500).json({ error: "Internal server error." });
     }
   }
 
-  getUserAddresses = async (req: Request, res: Response): Promise<void> => {
+  getUserAddresses = async (req: Request, res: Response): Promise<any> => {
     try {
       const addresses = await dbManager.find({}); // Pass an empty object as the query
-      res.status(200).json(addresses);
-      return; 
+      return res.status(200).json(addresses);
     } catch (error: any) {
       logger.error("Error fetching all user addresses:", error);
-      res.status(500).json({ error: "Internal server error." });
-      return;
+      return res.status(500).json({ error: "Internal server error." });
     }
   }
 
-  getAddressById = async (req: Request, res: Response): Promise<void> => {
+  getAddressById = async (req: Request, res: Response): Promise<any> => {
     try {
       const id: string = req.params.addressId || req.body.addressId;
       const address = await dbManager.findById(id);
       if (!address) {
-        res.status(404).json({ error: "Address not found." });
-        return;
+        return res.status(404).json({ error: "Address not found." });
       }
-      res.status(200).json(address);
-      return;
+      return res.status(200).json(address);
     } catch (error: any) {
       logger.error("Error fetching address by ID:", error);
-      res.status(500).json({ error: "Internal server error." });
-      return;
+      return res.status(500).json({ error: "Internal server error." });
     }
   }
 
-  setPrimaryAddress = async (req: Request, res: Response): Promise<void> => {
+  setPrimaryAddress = async (req: Request, res: Response): Promise<any> => {
     try {
       const userId: string = req.params.userId || req.body.userId;
       const addressId: string = req.params.addressId || req.body.addressId;
@@ -116,76 +106,64 @@ class AddressController {
       // Update the specific address to set isPrimary to true
       await dbManager.update(addressId, { isPrimary: true });
   
-      res.status(200).json({ message: "Primary address updated successfully." });
-      return;
+      return res.status(200).json({ message: "Primary address updated successfully." });
     } catch (error: any) {
       logger.error("Error setting primary address:", error);
-      res.status(500).json({ error: "Internal server error." });
-      return;
+      return res.status(500).json({ error: "Internal server error." });
     }
   }
 
-  getPrimaryAddress = async (req: Request, res: Response): Promise<void> => {
+  getPrimaryAddress = async (req: Request, res: Response): Promise<any> => {
     try {
       const userId: string = req.params.userId || req.body.userId;
       const address = await dbManager.findOne({ userId, isPrimary: true });
       if (!address) {
-        res.status(404).json({ error: "Primary address not found." });
-        return
+        return res.status(404).json({ error: "Primary address not found." });
       }
-      res.status(200).json(address);
-      return;
+      return res.status(200).json(address);
     } catch (error: any) {
       logger.error("Error fetching primary address:", error);
-      res.status(500).json({ error: "Internal server error." });
-      return;
+      return res.status(500).json({ error: "Internal server error." });
     }
   }
 
-  update = async (req: Request, res: Response): Promise<void> => {
+  update = async (req: Request, res: Response): Promise<any> => {
     try {
       const id: string = req.params.addressId || req.body.addressId;
       const updatedData = req.body;
 
       const validationError = AddressValidator.validateAddressFields(updatedData, { required: false });
       if (validationError) {
-        res.status(validationError.status).json({ error: validationError.error });
-        return;
+        return res.status(validationError.status).json({ error: validationError.error });
       }
 
       const address = await dbManager.findById(id);
       if (!address) {
-        res.status(404).json({ error: "Address not found." });
-        return;
+        return res.status(404).json({ error: "Address not found." });
       }
 
       // Update the address with validated data
       const updatedAddress = await dbManager.update(id, updatedData);
-      res.status(200).json(updatedAddress);
-      return;
+      return res.status(200).json(updatedAddress);
     } catch (error: any) {
       logger.error("Error updating address:", error);
-      res.status(400).json({ error: error.message });
-      return;
+      return res.status(400).json({ error: error.message });
     }
   }
 
-  delete = async (req: Request, res: Response): Promise<void> => {
+  delete = async (req: Request, res: Response): Promise<any> => {
     try {
       const id: string = req.params.addressId || req.body.addressId;
       const address = await dbManager.findById(id);
       if (!address) {
-        res.status(404).json({ error: "Address not found." });
-        return;
+        return res.status(404).json({ error: "Address not found." });
       }
 
       await dbManager.delete(id);
-      res.status(200).json({ message: "Address deleted successfully." });
-      return;
+      return res.status(200).json({ message: "Address deleted successfully." });
     } catch (error: any) {
       logger.error("Error deleting address:", error);
-      res.status(500).json({ error: "Internal server error." });
-      return;
+      return res.status(500).json({ error: "Internal server error." });
     }
   }
 }

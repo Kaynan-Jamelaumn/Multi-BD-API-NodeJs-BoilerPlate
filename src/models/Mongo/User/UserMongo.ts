@@ -1,3 +1,5 @@
+// src/models/Mongo/User/UserMongo.ts
+
 import mongoose, { Document, Model, Schema } from "mongoose";
 import { MongoModel, MongoModelType } from "../../../types/models.js";
 import bcrypt from "bcrypt";

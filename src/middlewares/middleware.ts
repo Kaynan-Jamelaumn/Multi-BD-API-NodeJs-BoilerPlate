@@ -7,18 +7,21 @@ import { Sequelize } from 'sequelize';
 
 // Database Middleware: Attaches database instances to the request object
 export const databaseMiddleware = (
-  mongoose: mongoose.Connection, 
+  mongooseConnection: mongoose.Connection, 
   sequelize: Sequelize,
   DB_TYPE: string
 ) => (req: Request, res: Response, next: NextFunction) => {
   req.db = {
-    mongoose,
-    sequelize,
-    DB_TYPE
+    DB_TYPE,
+    mongoose: {
+      connection: mongooseConnection  // Match the type structure from declaration
+    },
+    sequelize: {
+      authenticate: () => sequelize.authenticate()  // Wrap sequelize method
+    }
   };
   next();
 };
-
 
 // Global Middleware: Logs incoming requests
 export const middleWareGlobal = (req: Request, res: Response, next: NextFunction) => {

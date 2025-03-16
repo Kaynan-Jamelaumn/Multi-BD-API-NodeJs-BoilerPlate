@@ -1,3 +1,5 @@
+// src/controllers/homeController.ts
+
 import { Request, Response } from 'express'; // Importing types for req and res
 
 // HomeModel.create(

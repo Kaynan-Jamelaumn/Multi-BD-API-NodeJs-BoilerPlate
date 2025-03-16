@@ -9,19 +9,26 @@ import mongoose from 'mongoose';
 declare module "express-session" {
     interface Session {
         csrfSecret: string;
+        nome?: string; // Add 'nome' property for testMiddleware
+
     }
 }
 
 declare global {
     namespace Express {
       interface Request {
-        db?: {
-          mongoose: mongoose.Connection;
-          sequelize: any;
+        db: {
           DB_TYPE: string;
+          mongoose?: {
+            connection: {
+              readyState: number;
+            };
+          };
+          sequelize?: {
+            authenticate: () => Promise<void>;
+          };
         };
-        user?: User;
-      } 
+      }
     }
   }
   
