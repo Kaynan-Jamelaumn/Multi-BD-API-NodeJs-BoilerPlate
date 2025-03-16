@@ -2,7 +2,7 @@ import { Router } from 'express';
 import AddressController from '../controllers/addressController.js';
 import { authMiddleware } from '../middlewares/authMiddleware.js';
 
-const router = new Router();
+const router = Router();
 
 // Create a new address (requires authentication)
 
