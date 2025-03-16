@@ -4,6 +4,8 @@ import AddressValidator from "../utils/AddressValidators.js";
 import { getDBManager } from "../manager/dbManagerFactory.js";
 import { Request, Response } from "express"; // Importing types for req and res
 import { Model } from "../types/models.js";
+import { DBManager } from '../manager/DBManager.js';
+
 
 // Dynamically import the Address model based on the filename
 let addressModel: Model;
@@ -15,7 +17,7 @@ try {
   throw new Error('Failed to load address model');
 }
 
-const dbManager = getDBManager(addressModel);
+const dbManager: DBManager<any> = getDBManager(addressModel);
 
 class AddressController {
 
@@ -30,7 +32,17 @@ class AddressController {
       if (validationError) {
         return res.status(validationError.status).json({ error: validationError.error });
       }
-      const newAddress = { userId, street, number, complement, neighborhood, city, state, zipCode, country };
+      const newAddress:  {
+        userId: string | number;
+        street: string;
+        number: string;
+        complement?: string;
+        neighborhood: string;
+        city: string;
+        state: string;
+        zipCode: string;
+        country: string;
+      } = { userId, street, number, complement, neighborhood, city, state, zipCode, country };
       const createdAddress = await dbManager.create(newAddress);
       return res.status(201).json(createdAddress);
     } catch (error: any) {
@@ -69,7 +81,7 @@ class AddressController {
 
   getAddressById = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const id = req.params.addressId || req.body.addressId;
+      const id: string = req.params.addressId || req.body.addressId;
       const address = await dbManager.findById(id);
       if (!address) {
         return res.status(404).json({ error: "Address not found." });
@@ -83,8 +95,8 @@ class AddressController {
 
   setPrimaryAddress = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const userId = req.params.userId || req.body.userId;
-      const addressId = req.params.addressId || req.body.addressId;
+      const userId: string = req.params.userId || req.body.userId;
+      const addressId: string = req.params.addressId || req.body.addressId;
   
       // Update all addresses for the user to set isPrimary to false
       await dbManager.update({ userId }, { isPrimary: false });
@@ -101,7 +113,7 @@ class AddressController {
 
   getPrimaryAddress = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const userId = req.params.userId || req.body.userId;
+      const userId: string = req.params.userId || req.body.userId;
       const address = await dbManager.findOne({ userId, isPrimary: true });
       if (!address) {
         return res.status(404).json({ error: "Primary address not found." });
@@ -115,7 +127,7 @@ class AddressController {
 
   update = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const id = req.params.addressId || req.body.addressId;
+      const id: string = req.params.addressId || req.body.addressId;
       const updatedData = req.body;
 
       const validationError = AddressValidator.validateAddressFields(updatedData, { required: false });
@@ -139,7 +151,7 @@ class AddressController {
 
   delete = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const id = req.params.addressId || req.body.addressId;
+      const id: string = req.params.addressId || req.body.addressId;
       const address = await dbManager.findById(id);
       if (!address) {
         return res.status(404).json({ error: "Address not found." });
