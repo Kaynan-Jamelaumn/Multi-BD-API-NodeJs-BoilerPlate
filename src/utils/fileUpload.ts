@@ -23,10 +23,10 @@ const generateFileName = (originalName: string): string => {
 
 // Define the Multer storage configuration
 const storage: StorageEngine = multer.diskStorage({
-  destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
+  destination: (req: Request, file: File, cb: (error: Error | null, destination: string) => void) => {
     cb(null, uploadDir); // Save files to the uploads directory
   },
-  filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
+  filename: (req: Request, file: File, cb: (error: Error | null, filename: string) => void) => {
     cb(null, generateFileName(file.originalname)); // Secure and unique filename
   },
 });
@@ -37,7 +37,7 @@ const allowedMimeTypes: string[] = ["image/jpeg", "image/png", "image/gif"];
 // File filter to allow only images
 const fileFilter = (
   req: Request,
-  file: Express.Multer.File,
+  file: File,
   cb: FileFilterCallback
 ): void => {
   if (allowedMimeTypes.includes(file.mimetype)) {
@@ -50,7 +50,7 @@ const fileFilter = (
 // Define Multer configuration options
 interface MulterConfig {
   storage: StorageEngine;
-  fileFilter: (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => void;
+  fileFilter: (req: Request, file: File, cb: FileFilterCallback) => void;
   limits: {
     fileSize: number; // File size limit in bytes
   };
