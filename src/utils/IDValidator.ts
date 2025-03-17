@@ -97,10 +97,16 @@ class IDValidator {
             status: 200, // Status is always defined
         };
     }
-    static validatePassport(passportNumber: string, countryCode: string) {
-        PassportValidator.validatePassport(passportNumber, countryCode)
-    }
+    static validatePassport(passportNumber: string, countryCode: string): ValidationResult {
+        const result = PassportValidator.validatePassport(passportNumber, countryCode);
 
+        // Map PassportValidator's result to ValidationResult
+        return {
+            valid: result.valid,
+            error: result.message, // Map 'message' to 'error'
+            status: result.valid ? 200 : 400, // Add status based on validity
+        };
+    }
     // Validator for CPF (Cadastro de Pessoas Físicas) - Brazil
     static validateCPF(cpfNumber: string): DocumentValidationResult {
         // CPF is 11 digits long and has a specific validation algorithm
