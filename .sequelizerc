@@ -1,6 +1,6 @@
 export default {
   "config": "./dbconfig/databaseSequelize.js",
-  "models-path": process.env.MODELS_PATH || path.resolve('./src/models'),
+  "models-path":  path.resolve(process.env.MODELS_PATH || './src/models'),
   "seeders-path": "./seeders",
   "migrations-path": "./migrations"
 };
