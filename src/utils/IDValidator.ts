@@ -4,7 +4,7 @@ import PassportValidator from "./PassportValidator.js";
 export type ValidationResult = {
     valid: boolean
     error: string | null
-    status?: number 
+    status: number 
   }
 
   type ValidationOptions = {
@@ -100,11 +100,10 @@ class IDValidator {
     static validatePassport(passportNumber: string, countryCode: string): ValidationResult {
         const result = PassportValidator.validatePassport(passportNumber, countryCode);
 
-        // Map PassportValidator's result to ValidationResult
         return {
             valid: result.valid,
-            error: result.message, // Map 'message' to 'error'
-            status: result.valid ? 200 : 400, // Add status based on validity
+            error: result.error? result.error: null,
+            status: result.valid ? 200 : 400, 
         };
     }
     // Validator for CPF (Cadastro de Pessoas Físicas) - Brazil
@@ -112,7 +111,7 @@ class IDValidator {
         // CPF is 11 digits long and has a specific validation algorithm
         const cpfRegex: RegExp = /^\d{11}$/;
         // Check if the input matches the CPF format (11 digits)
-        if (!cpfRegex.test(cpfNumber)) return { valid: false, error: 'Invalid CPF format' };
+        if (!cpfRegex.test(cpfNumber)) return { valid: false, error: 'Invalid CPF format', status: 400 };
 
         let sum: number = 0;
         let remainder: number;
@@ -127,7 +126,7 @@ class IDValidator {
         // If the remainder is 10 or 11, set it to 0
         if (remainder === 10 || remainder === 11) remainder = 0;
         // Check if the calculated remainder matches the 10th digit of the CPF
-        if (remainder !== parseInt(cpfNumber.charAt(9))) return { valid: false, error: 'Invalid CPF checksum' };
+        if (remainder !== parseInt(cpfNumber.charAt(9))) return { valid: false, error: 'Invalid CPF checksum', status: 400 };
 
         sum = 0;
         // Second digit validation
@@ -140,18 +139,19 @@ class IDValidator {
         // If the remainder is 10 or 11, set it to 0
         if (remainder === 10 || remainder === 11) remainder = 0;
         // Check if the calculated remainder matches the 11th digit of the CPF
-        if (remainder !== parseInt(cpfNumber.charAt(10))) return { valid: false, error: 'Invalid CPF checksum' };
+        if (remainder !== parseInt(cpfNumber.charAt(10))) return { valid: false, error: 'Invalid CPF checksum', status: 400 };
 
         // If both checks pass, the CPF is valid
-        return { valid: true, error: null };
+        return { valid: true, error: null, status: 200 };
     }
     // Validator for RG (Registro Geral) - Brazil
     static validateRG(rgNumber: string) {
         // RG format varies by state, allowing optional dots and dash
         const rgRegex: RegExp = /^\d{2}\.?\d{3}\.?\d{3}-?[0-9Xx]?$/;
         if (typeof rgNumber !== 'string') return { valid: false, error: 'Invalid input type' };
+        const isValid: boolean =  rgRegex.test(rgNumber.trim())
         // Check if the RG matches the allowed format (digits with optional dots and dashes)
-        return { valid: rgRegex.test(rgNumber.trim()), error: rgRegex.test(rgNumber.trim()) ? null : 'Invalid RG format' };
+        return { valid: isValid, error: isValid ? null : 'Invalid RG format', status: isValid ? 200 : 400 };
     
     }
 
@@ -159,7 +159,7 @@ class IDValidator {
     static validateSUS(susNumber: string): DocumentValidationResult {
         // SUS number must be exactly 15 digits
         const susRegex: RegExp = /^\d{15}$/;
-        if (!susRegex.test(susNumber)) return { valid: false, error: 'Invalid SUS format' };
+        if (!susRegex.test(susNumber)) return { valid: false, error: 'Invalid SUS format', status: 400 };
 
         // Checksum validation: Calculate a weighted sum of the digits, using weights decreasing from 15 to 1
         let sum: number = 0;
@@ -168,14 +168,14 @@ class IDValidator {
         }
         // If the sum is divisible by 11, the SUS number is valid
         const isValid: boolean = sum % 11 === 0;
-        return { valid: isValid, error: isValid ? null : 'Invalid SUS checksum' };
+        return { valid: isValid, error: isValid ? null : 'Invalid SUS checksum', status: isValid ? 200 : 400};
     }
 
     // Validator for CNH (Carteira Nacional de Habilitação) - Brazil
     static validateCNH(cnhNumber: string): DocumentValidationResult {
         // CNH must be exactly 11 digits
         const cnhRegex: RegExp = /^\d{11}$/;
-        if (!cnhRegex.test(cnhNumber)) return { valid: false, error: 'Invalid CNH format' };
+        if (!cnhRegex.test(cnhNumber)) return { valid: false, error: 'Invalid CNH format', status: 400 };
 
         // First digit checksum: Calculate a weighted sum using weights decreasing from 9 to 1
         let sum1: number = 0;
@@ -197,7 +197,7 @@ class IDValidator {
 
         // Validate that both calculated check digits match the last two digits of the CNH
         const isValid: boolean = dv1 === parseInt(cnhNumber.charAt(9)) && dv2 === parseInt(cnhNumber.charAt(10));
-        return { valid: isValid, error: isValid ? null : 'Invalid CNH checksum' };
+        return { valid: isValid, error: isValid ? null : 'Invalid CNH checksum', status: 400 };
     }
     
 
@@ -205,7 +205,7 @@ class IDValidator {
     static validateCTPS(ctpsNumber: string): DocumentValidationResult {
         // CTPS format: 7-8 digits followed by 1-2 check digits, with optional dashes or spaces
         const ctpsRegex: RegExp = /^[0-9]{7,8}[-\s]?[0-9]{1,2}$/;
-        if (!ctpsRegex.test(ctpsNumber)) return { valid: false, error: 'Invalid CTPS format' };
+        if (!ctpsRegex.test(ctpsNumber)) return { valid: false, error: 'Invalid CTPS format', status: 400 };
 
         // Normalize the input: Remove dashes or spaces and pad to 9 digits if necessary
         const ctpsDigits: string = ctpsNumber.replace(/[-\s]/g, '').padStart(9, '0');
@@ -222,19 +222,20 @@ class IDValidator {
 
         // Validate that the calculated check digit matches the provided check digit
         const isValid: boolean = dv === parseInt(checkDigits);
-        return { valid: isValid, error: isValid ? null : 'Invalid CTPS checksum' };
+        return { valid: isValid, error: isValid ? null : 'Invalid CTPS checksum', status: isValid ? 200 : 400 };
     }
 
     // Shared Validator for Professional Registrations
     static validateProfessionalRegistration(registrationNumber: string, type: 'CRM' | 'OAB' | 'CREA' ): DocumentValidationResult  {
         // Define the regex for the common format
         const commonRegex: RegExp = /^\d{4,6}\/[A-Z]{2}$/;
-        if (typeof registrationNumber !== 'string') return { valid: false, error: 'Invalid input type' };
+        if (typeof registrationNumber !== 'string') return { valid: false, error: 'Invalid input type', status: 400 };
         // Validate using the common format
         const isValid: boolean = commonRegex.test(registrationNumber.trim());
         return {
             valid: isValid,
-            error: isValid ? null : `Invalid ${type} format`
+            error: isValid ? null : `Invalid ${type} format`, 
+            status: isValid ? 200 : 400
         };
     }
 
@@ -257,7 +258,7 @@ class IDValidator {
     static validatePIS(pisNumber: string): DocumentValidationResult  {
         // Ensure the input is exactly 11 digits
         if (!/^\d{11}$/.test(pisNumber)) {
-            return { valid: false, error: "Invalid PIS/PASEP format" };
+            return { valid: false, error: "Invalid PIS/PASEP format", status: 400 };
         }
 
         // Weighting factors for the first 10 digits
@@ -273,17 +274,20 @@ class IDValidator {
         let remainder: number = sum % 11;
         let checkDigit: number = remainder < 2 ? 0 : 11 - remainder;
 
+
+        const isValid: boolean =  checkDigit === parseInt(pisNumber[10]);
         // Validate the check digit against the last digit of the PIS/PASEP number
         return {
-            valid: checkDigit === parseInt(pisNumber[10]),
-            error: checkDigit === parseInt(pisNumber[10]) ? null : "Invalid PIS/PASEP number"
+            valid: isValid,
+            error: isValid ? null : "Invalid PIS/PASEP number",
+             status: isValid ? 200 : 400
         };
     }
     //Validates a Brazilian CNPJ (Cadastro Nacional da Pessoa Jurídica).
     static validateCNPJ(cnpj: string): DocumentValidationResult  {
         // Ensure the input is exactly 14 digits
         if (!/^\d{14}$/.test(cnpj)) {
-            return { valid: false, error: "Invalid CNPJ format" };
+            return { valid: false, error: "Invalid CNPJ format", status: 400 };
         }
 
         
@@ -305,10 +309,12 @@ class IDValidator {
         const firstDigit: number = calculateCheckDigit(cnpj, firstWeights);
         const secondDigit: number = calculateCheckDigit(cnpj, secondWeights);
 
+        const isValid: boolean = firstDigit === parseInt(cnpj[12]) && secondDigit === parseInt(cnpj[13]);
         // Validate check digits against the last two digits of the CNPJ number
         return {
-            valid: firstDigit === parseInt(cnpj[12]) && secondDigit === parseInt(cnpj[13]),
-            error: firstDigit === parseInt(cnpj[12]) && secondDigit === parseInt(cnpj[13]) ? null : "Invalid CNPJ number"
+            valid: isValid,
+            error: isValid? null : "Invalid CNPJ number", 
+            status: isValid ? 200 : 400
         };
     }
 
@@ -316,86 +322,117 @@ class IDValidator {
     // Validate US Driver's License (General Format - State-Specific Checks Recommended)
     static validateUSDriversLicense(licenseNumber: string): DocumentValidationResult  {
         const licenseRegex: RegExp = /^[A-Z0-9]{4,16}$/; // Extended to cover some state variations
-        return { valid: licenseRegex.test(licenseNumber), error: licenseRegex.test(licenseNumber) ? null : "Invalid US Driver's License format" };
+        const isValid: boolean = licenseRegex.test(licenseNumber);
+
+
+        return { valid: isValid, error:isValid ? null : "Invalid US Driver's License format", status: isValid ? 200 : 400 };
     }
 
     // Validate US Social Security Number (SSN)
     static validateUSSSN(ssn: string): DocumentValidationResult  {
         const ssnRegex: RegExp = /^(?!000|666|9\d{2})\d{3}-(?!00)\d{2}-(?!0000)\d{4}$/;
-        return { valid: ssnRegex.test(ssn), error: ssnRegex.test(ssn) ? null : "Invalid SSN format" };
+        const isValid: boolean = ssnRegex.test(ssn);
+
+        return { valid: isValid, error: isValid ? null : "Invalid SSN format", status: isValid ? 200 : 400 };
     }
 
     // Validate US Military ID (CAC)
     static validateUSMilitaryID(militaryID: string): DocumentValidationResult  {
         const militaryIDRegex: RegExp = /^[A-Z0-9]{10,12}$/;
-        return { valid: militaryIDRegex.test(militaryID), error: militaryIDRegex.test(militaryID) ? null : "Invalid US Military ID format" };
+        const isValid: boolean = militaryIDRegex.test(militaryID);
+
+        return { valid: isValid, error: isValid ? null : "Invalid US Military ID format", status: isValid ? 200 : 400 };
     }
 
     // Validate US Permanent Resident Card (Green Card)
     static validateUSGreenCard(greenCardNumber: string): DocumentValidationResult  {
         const greenCardRegex: RegExp = /^([A-Z]{3}\d{10}|[A-Z]\d{8,9})$/;
-        return { valid: greenCardRegex.test(greenCardNumber), error: greenCardRegex.test(greenCardNumber) ? null : "Invalid Green Card format" };
+        const isValid: boolean = greenCardRegex.test(greenCardNumber);
+
+        return { valid: isValid, error: isValid ? null : "Invalid Green Card format", status: isValid ? 200 : 400 };
     }
 
     // Validate US Employment Authorization Document (EAD)
     static validateUSEAD(eadNumber: string): DocumentValidationResult  {
         const eadRegex: RegExp = /^[A-Z]{3}\d{10}$/;
-        return { valid: eadRegex.test(eadNumber), error: eadRegex.test(eadNumber) ? null : "Invalid EAD format" };
+        const isValid: boolean = eadRegex.test(eadNumber);
+
+        return { valid: eadRegex.test(eadNumber), error: eadRegex.test(eadNumber) ? null : "Invalid EAD format", status: 400 };
     }
 
     // Validate US Birth Certificate (General Format)
     static validateUSBirthCertificate(birthCertNumber: string): DocumentValidationResult  {
         const birthCertRegex: RegExp = /^[A-Z]{2}\d{6,8}$/;
-        return { valid: birthCertRegex.test(birthCertNumber), error: birthCertRegex.test(birthCertNumber) ? null : "Invalid US Birth Certificate format" };
+        const isValid: boolean = birthCertRegex.test(birthCertNumber);
+
+        return { valid: isValid, error: isValid ? null : "Invalid US Birth Certificate format", status: isValid ? 200 : 400 };
     }
 
     // Validate US Medicare/Medicaid Card (MBI Format)
     static validateUSMedicareMedicaid(medicareNumber: string): DocumentValidationResult  {
         const medicareRegex: RegExp = /^[1-9][A-Z]\d{2}-[A-Z]\d{4}-[A-Z]\d{2}$/;
-        return { valid: medicareRegex.test(medicareNumber), error: medicareRegex.test(medicareNumber) ? null : "Invalid Medicare/Medicaid format" };
+        const isValid: boolean = medicareRegex.test(medicareNumber);
+
+        return { valid: isValid, error: isValid ? null : "Invalid Medicare/Medicaid format", status: isValid ? 200 : 400 };
     }
 
     // Validate US Veteran ID Card (VIC)
     static validateUSVeteranID(vicNumber: string): DocumentValidationResult  {
         const vicRegex: RegExp = /^[A-Z0-9]{8,12}$/;
-        return { valid: vicRegex.test(vicNumber), error: vicRegex.test(vicNumber) ? null : "Invalid Veteran ID format" };
+        const isValid: boolean = vicRegex.test(vicNumber);
+
+
+        return { valid: isValid, error: isValid ? null : "Invalid Veteran ID format", status: isValid ? 200 : 400 };
     }
 
     // Validate UK Driving Licence (DVLA Format)
     static validateUKDrivingLicence(licenceNumber: string): DocumentValidationResult  {
         const licenceRegex: RegExp = /^[A-Z]{5}\d{6}[A-Z]{2}\d{2}$/;
-        return { valid: licenceRegex.test(licenceNumber), error: licenceRegex.test(licenceNumber) ? null : "Invalid UK Driving Licence format" };
+        const isValid: boolean = licenceRegex.test(licenceNumber);
+
+        return { valid: isValid, error: isValid ? null : "Invalid UK Driving Licence format", status: isValid ? 200 : 400 };
     }
 
     // Validate UK Birth Certificate
     static validateUKBirthCertificate(birthCertNumber: string): DocumentValidationResult  {
         const birthCertRegex: RegExp = /^[A-Z]{2}\d{6,8}$/;
-        return { valid: birthCertRegex.test(birthCertNumber), error: birthCertRegex.test(birthCertNumber) ? null : "Invalid UK Birth Certificate format" };
+        const isValid: boolean = birthCertRegex.test(birthCertNumber);
+
+        return { valid: isValid, error: isValid ? null : "Invalid UK Birth Certificate format", status: isValid ? 200 : 400 };
     }
 
     // Validate UK Armed Forces ID
     static validateUKArmedForcesID(armedForcesID: string): DocumentValidationResult  {
         const armedForcesRegex: RegExp = /^[A-Z]{2}\d{6}$/;
-        return { valid: armedForcesRegex.test(armedForcesID), error: armedForcesRegex.test(armedForcesID) ? null : "Invalid UK Armed Forces ID format" };
+        const isValid: boolean = armedForcesRegex.test(armedForcesID);
+
+
+        return { valid: isValid, error: isValid ? null : "Invalid UK Armed Forces ID format", status: isValid ? 200 : 400 };
     }
 
     // Validate UK National Insurance Number (NI Number)
     static validateUKNINumber(niNumber: string): DocumentValidationResult  {
         const niRegex: RegExp = /^(?!BG|GB|NK|KN|TN|NT|ZZ)[A-Z]{2}\d{6}[ABCD]$/;
-        return { valid: niRegex.test(niNumber), error: niRegex.test(niNumber) ? null : "Invalid UK NI Number format" };
+        const isValid: boolean = niRegex.test(niNumber);
+
+
+        return { valid: isValid, error: isValid ? null : "Invalid UK NI Number format", status: isValid ? 200 : 400 };
     }
 
     // Validate UK Biometric Residence Permit (BRP)
     static validateUKResidenceCard(residenceCardNumber: string): DocumentValidationResult  {
         const residenceCardRegex: RegExp = /^[A-Z0-9]{12}$/;
-        return { valid: residenceCardRegex.test(residenceCardNumber), error: residenceCardRegex.test(residenceCardNumber) ? null : "Invalid UK Residence Card format" };
+        const isValid: boolean = residenceCardRegex.test(residenceCardNumber);
+
+
+        return { valid: isValid, error: isValid ? null : "Invalid UK Residence Card format", status: isValid ? 200 : 400 };
     }
 
     //Canadian SIN (Social Insurance Number)
     static validateCanadianSIN(sin: string): DocumentValidationResult  {
         // Ensure the input is exactly 9 digits
         if (!/^\d{9}$/.test(sin)) {
-            return { valid: false, error: "Invalid SIN format" };
+            return { valid: false, error: "Invalid SIN format", status: 400 };
         }
     
         // Luhn algorithm for SIN validation
@@ -421,10 +458,13 @@ class IDValidator {
             return sum % 10 === 0;
         };
     
-         // Return validation result along with an error message if invalid
+        const isValid: boolean =  luhnCheck(sin);
+
+         // Return validation result along with an error error if invalid
         return {
-            valid: luhnCheck(sin),
-            error: luhnCheck(sin) ? null : "Invalid SIN number"
+            valid: isValid,
+            error: isValid ? null : "Invalid SIN number", 
+            status: isValid ? 200 : 400
         };
     }
 
@@ -433,7 +473,7 @@ class IDValidator {
         // CURP format: 18 alphanumeric characters
         const curpRegex: RegExp = /^[A-Z]{4}\d{6}[HM][A-Z]{5}\d{2}$/;
         if (!curpRegex.test(curp)) {
-            return { valid: false, error: "Invalid CURP format" };
+            return { valid: false, error: "Invalid CURP format", status: 400 };
         }
     
         // Checksum validation
@@ -461,10 +501,13 @@ class IDValidator {
             return checksumDigit === parseInt(curp[17]);
         };
     
+        const isValid: boolean =  checksum(curp);
+
         // Return the validation result
         return {
-            valid: checksum(curp),
-            error: checksum(curp) ? null : "Invalid CURP checksum"
+            valid: isValid,
+            error: isValid ? null : "Invalid CURP checksum", 
+            status: isValid ? 200 : 400
         };
     }
     
@@ -473,7 +516,7 @@ class IDValidator {
         // Ensure the input is a 13-digit string
         // The RRN must be exactly 13 digits long and consist only of numbers.
         if (!/^\d{13}$/.test(rrn)) {
-            return { valid: false, error: "Invalid RRN format" };
+            return { valid: false, error: "Invalid RRN format", status: 400 };
         }
     
         // Validate gender digit (7th digit: 1-4)
@@ -482,7 +525,7 @@ class IDValidator {
         // 3 or 4: Male or female born in the 2000s
         const genderDigit: number = parseInt(rrn[6]);
         if (genderDigit < 1 || genderDigit > 4) {
-            return { valid: false, error: "Invalid gender digit in RRN" };
+            return { valid: false, error: "Invalid gender digit in RRN", status: 400 };
         }
     
         // Validate birthdate (first 6 digits: YYMMDD)
@@ -502,7 +545,7 @@ class IDValidator {
         }else {
             // This block is technically unreachable due to the earlier genderDigit validation,
             // but it ensures TypeScript that `fullYear` is always assigned.
-            return { valid: false, error: 'Invalid gender digit in RRN' }
+            return { valid: false, error: 'Invalid gender digit in RRN', status: 400 }
         }
 
     
@@ -512,7 +555,8 @@ class IDValidator {
         const date: Date = new Date(fullYear, month - 1, day);
         // Check if the date is valid by verifying if the Date object's time is NaN.
         if (isNaN(date.getTime())) {
-            return { valid: false, error: "Invalid birthdate in RRN" };
+            return { valid: false, error: "Invalid birthdate in RRN", 
+                status: 400 };
         }
     
         // Check digit validation
@@ -526,10 +570,12 @@ class IDValidator {
         // Compare the calculated remainder with the 13th digit (check digit).
         const isValid: boolean = remainder === parseInt(rrn[12]);
     
+        
+
         // Return the validation result
         return {
             valid: isValid,
-            error: isValid ? null : "Invalid RRN number"
+            error: isValid ? null : "Invalid RRN number", status: isValid ? 200 : 400
         };
     }
 
@@ -537,7 +583,7 @@ class IDValidator {
         // The German Personalausweis number must be exactly 10 digits long.
         // This regex checks if the input consists of exactly 10 digits.
         if (!/^\d{10}$/.test(id)) {
-            return { valid: false, error: "Invalid format: Must be exactly 10 digits" };
+            return { valid: false, error: "Invalid format: Must be exactly 10 digits", status: 400 };
         }
     
         // The official weighting factors for the checksum calculation are [7, 3, 1].
@@ -556,7 +602,7 @@ class IDValidator {
     
             // If the character is not a valid digit, return an error.
             if (isNaN(digit)) {
-                return { valid: false, error: "Invalid character detected" };
+                return { valid: false, error: "Invalid character detected", status: 400 };
             }
     
             // Multiply the digit by its corresponding weight and add it to the checksum.
@@ -572,11 +618,11 @@ class IDValidator {
         // If the actual check digit is not a number or does not match the expected check digit,
         // the input is invalid.
         if (isNaN(actualCheckDigit) || expectedCheckDigit !== actualCheckDigit) {
-            return { valid: false, error: "Invalid checksum" };
+            return { valid: false, error: "Invalid checksum", status: 400 };
         }
     
         // If all checks pass, the input is valid.
-        return { valid: true, error: null };
+        return { valid: true, error: null, status: 200 };
     }
 
 

@@ -1,6 +1,7 @@
 interface ValidationResult {
     valid: boolean;
-    message: string;
+    error?: string;
+    status: number;
 }
 
 // Define all valid country codes as a union type
@@ -74,13 +75,16 @@ class PassportValidator {
         if (typeof passportNumber !== 'string' || passportNumber.trim().length === 0) {
             return {
                 valid: false,
-                message: "Passport number is required and must be a non-empty string."
+                error: "Passport number is required and must be a non-empty string.",
+                status: 400,
             };
         }
         if (typeof countryCode !== 'string' || countryCode.trim().length !== 2) {
             return {
                 valid: false,
-                message: "Country code must be a 2-character string."
+                error: "Country code must be a 2-character string.",
+                status: 400,
+
             };
         }
 
@@ -92,7 +96,9 @@ class PassportValidator {
         if (!/^[A-Z0-9]+$/.test(normalizedPassport)) {
             return {
                 valid: false,
-                message: "Passport number contains invalid characters."
+                error: "Passport number contains invalid characters.",
+                status: 400,
+
             };
         }
 
@@ -100,7 +106,9 @@ class PassportValidator {
         if (!(normalizedCountry in PassportValidator.passportPatterns)) {
             return {
                 valid: false,
-                message: "Invalid or unsupported country code."
+                error: "Invalid or unsupported country code.",
+                status: 400,
+
             };
         }
 
@@ -108,7 +116,9 @@ class PassportValidator {
         if (!PassportValidator.passportPatterns[normalizedCountry].test(normalizedPassport)) {
             return {
                 valid: false,
-                message: "Passport number does not match the country's format."
+                error: "Passport number does not match the country's format.",
+                status: 400,
+
             };
         }
 
@@ -118,14 +128,18 @@ class PassportValidator {
                 if (!this.validateMod11Checksum(normalizedPassport)) {
                     return {
                         valid: false,
-                        message: "Invalid Mod-11 checksum."
+                        error: "Invalid Mod-11 checksum.",
+                        status: 400,
+
                     };
                 }
             } else {
                 if (!this.validateICAOChecksum(normalizedPassport)) {
                     return {
                         valid: false,
-                        message: "Invalid ICAO checksum."
+                        error: "Invalid ICAO checksum.",
+                        status: 400,
+
                     };
                 }
             }
@@ -133,7 +147,9 @@ class PassportValidator {
 
         return {
             valid: true,
-            message: "Passport number is valid for the specified country."
+            error: undefined,
+            status: 200,
+
         };
     }
 

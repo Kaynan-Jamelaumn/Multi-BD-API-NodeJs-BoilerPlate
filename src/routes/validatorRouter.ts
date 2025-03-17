@@ -1,10 +1,9 @@
-import { Router } from 'express';
-import IDValidator from '../utils/IDValidator.js';
+import {
+    Router
+} from 'express';
+import ValidationController from '../controllers/IDValidatorController.js';
 
-const router = new Router();
-
-// Helper function to extract data from req.body or req.params
-const getData = (req, field) => req.body[field] || req.params[field];
+const router = Router();
 
 // route to validate user fields
 /**
@@ -38,24 +37,9 @@ const getData = (req, field) => req.body[field] || req.params[field];
  *       400:
  *         description: Invalid fields
  */
-router.get('/validate-fields', (req, res) => {
-    const userData = {
-        username: getData(req, 'username'),
-        name: getData(req, 'name'),
-        surname: getData(req, 'surname'),
-        email: getData(req, 'email'),
-        password: getData(req, 'password'),
-        role: getData(req, 'role'),
-    };
+router.get('/validate-cnh/:cnhNumber?', ValidationController.validateFields);
 
-    const validationResult = IDValidator.validateFields(userData);
 
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'All fields are valid.' });
-});
 
 // route to validate passport
 /**
@@ -83,22 +67,9 @@ router.get('/validate-fields', (req, res) => {
  *       400:
  *         description: Invalid passport or missing parameters
  */
-router.get('/validate-passport/:passportNumber?/:countryCode?', (req, res) => {
-    const passportNumber = getData(req, 'passportNumber');
-    const countryCode = getData(req, 'countryCode');
+router.get('/validate-cnh/:cnhNumber?', ValidationController.validatePassport);
 
-    if (!passportNumber || !countryCode) {
-        return res.status(400).json({ error: 'Passport number and country code are required.' });
-    }
 
-    const validationResult = IDValidator.validatePassport(passportNumber, countryCode);
-
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'Passport is valid.' });
-});
 
 // route to validate CPF
 /**
@@ -120,21 +91,8 @@ router.get('/validate-passport/:passportNumber?/:countryCode?', (req, res) => {
  *       400:
  *         description: Invalid CPF or missing parameter
  */
-router.get('/validate-cpf/:cpfNumber?', (req, res) => {
-    const cpfNumber = getData(req, 'cpfNumber');
+router.get('/validate-cnh/:cnhNumber?', ValidationController.validateCPF);
 
-    if (!cpfNumber) {
-        return res.status(400).json({ error: 'CPF number is required.' });
-    }
-
-    const validationResult = IDValidator.validateCPF(cpfNumber);
-
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'CPF is valid.' });
-});
 
 // route to validate RG
 /**
@@ -156,21 +114,9 @@ router.get('/validate-cpf/:cpfNumber?', (req, res) => {
  *       400:
  *         description: Invalid RG or missing parameter
  */
-router.get('/validate-rg/:rgNumber?', (req, res) => {
-    const rgNumber = getData(req, 'rgNumber');
+router.get('/validate-cnh/:cnhNumber?', ValidationController.validateRG);
 
-    if (!rgNumber) {
-        return res.status(400).json({ error: 'RG number is required.' });
-    }
 
-    const validationResult = IDValidator.validateRG(rgNumber);
-
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'RG is valid.' });
-});
 
 // route to validate SUS
 /**
@@ -192,21 +138,10 @@ router.get('/validate-rg/:rgNumber?', (req, res) => {
  *       400:
  *         description: Invalid SUS number or missing parameter
  */
-router.get('/validate-sus/:susNumber?', (req, res) => {
-    const susNumber = getData(req, 'susNumber');
+router.get('/validate-cnh/:cnhNumber?', ValidationController.validateSUS);
 
-    if (!susNumber) {
-        return res.status(400).json({ error: 'SUS number is required.' });
-    }
 
-    const validationResult = IDValidator.validateSUS(susNumber);
 
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'SUS number is valid.' });
-});
 
 // route to validate CNH
 /**
@@ -228,21 +163,7 @@ router.get('/validate-sus/:susNumber?', (req, res) => {
  *       400:
  *         description: Invalid CNH or missing parameter
  */
-router.get('/validate-cnh/:cnhNumber?', (req, res) => {
-    const cnhNumber = getData(req, 'cnhNumber');
-
-    if (!cnhNumber) {
-        return res.status(400).json({ error: 'CNH number is required.' });
-    }
-
-    const validationResult = IDValidator.validateCNH(cnhNumber);
-
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'CNH is valid.' });
-});
+router.get('/validate-cnh/:cnhNumber?', ValidationController.validateCNH);
 
 // route to validate CTPS
 /**
@@ -264,21 +185,8 @@ router.get('/validate-cnh/:cnhNumber?', (req, res) => {
  *       400:
  *         description: Invalid CTPS or missing parameter
  */
-router.get('/validate-ctps/:ctpsNumber?', (req, res) => {
-    const ctpsNumber = getData(req, 'ctpsNumber');
+router.get('/validate-ctps/:ctpsNumber?', ValidationController.validateCTPS);
 
-    if (!ctpsNumber) {
-        return res.status(400).json({ error: 'CTPS number is required.' });
-    }
-
-    const validationResult = IDValidator.validateCTPS(ctpsNumber);
-
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'CTPS is valid.' });
-});
 
 // route to validate CRM
 /**
@@ -300,21 +208,8 @@ router.get('/validate-ctps/:ctpsNumber?', (req, res) => {
  *       400:
  *         description: Invalid CRM or missing parameter
  */
-router.get('/validate-crm/:crmNumber?', (req, res) => {
-    const crmNumber = getData(req, 'crmNumber');
+router.get('/validate-crm/:crmNumber?', ValidationController.validateCRM);
 
-    if (!crmNumber) {
-        return res.status(400).json({ error: 'CRM number is required.' });
-    }
-
-    const validationResult = IDValidator.validateCRM(crmNumber);
-
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'CRM is valid.' });
-});
 
 // route to validate OAB
 /**
@@ -336,21 +231,7 @@ router.get('/validate-crm/:crmNumber?', (req, res) => {
  *       400:
  *         description: Invalid OAB or missing parameter
  */
-router.get('/validate-oab/:oabNumber?', (req, res) => {
-    const oabNumber = getData(req, 'oabNumber');
-
-    if (!oabNumber) {
-        return res.status(400).json({ error: 'OAB number is required.' });
-    }
-
-    const validationResult = IDValidator.validateOAB(oabNumber);
-
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'OAB is valid.' });
-});
+router.get('/validate-oab/:oabNumber?', ValidationController.validateOAB);
 
 // route to validate CREA
 /**
@@ -372,21 +253,7 @@ router.get('/validate-oab/:oabNumber?', (req, res) => {
  *       400:
  *         description: Invalid CREA or missing parameter
  */
-router.get('/validate-crea/:creaNumber?', (req, res) => {
-    const creaNumber = getData(req, 'creaNumber');
-
-    if (!creaNumber) {
-        return res.status(400).json({ error: 'CREA number is required.' });
-    }
-
-    const validationResult = IDValidator.validateCREA(creaNumber);
-
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'CREA is valid.' });
-});
+router.get('/validate-crea/:creaNumber?', ValidationController.validateCREA);
 
 // route to validate PIS/PASEP 
 /**
@@ -408,22 +275,7 @@ router.get('/validate-crea/:creaNumber?', (req, res) => {
  *       400:
  *         description: Invalid PIS/PASEP or missing parameter
  */
-router.get('/validate-pis-pasep/:pis?', (req, res) => {
-    const creaNumber = getData(req, 'pis');
-
-    if (!creaNumber) {
-        return res.status(400).json({ error: 'PIS number is required.' });
-    }
-
-    const validationResult = IDValidator.validatePIS(creaNumber);
-
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'PIS-PASEP is valid.' });
-});
-
+router.get('/validate-pis-pasep/:pis?', ValidationController.validatePIS);
 
 // route to validate CNPJ
 /**
@@ -445,22 +297,7 @@ router.get('/validate-pis-pasep/:pis?', (req, res) => {
  *       400:
  *         description: Invalid CNPJ or missing parameter
  */
-router.get('/validate-cnpj/:cnpj?', (req, res) => {
-    const creaNumber = getData(req, 'cnpj');
-
-    if (!creaNumber) {
-        return res.status(400).json({ error: 'CNPJ number is required.' });
-    }
-
-    const validationResult = IDValidator.validateCNPJ(creaNumber);
-
-    if (!validationResult.valid) {
-        return res.status(validationResult.status || 400).json({ error: validationResult.error });
-    }
-
-    res.status(200).json({ message: 'CNPJ is valid.' });
-});
-
+router.get('/validate-cnpj/:cnpj?', ValidationController.validateCNPJ);
 
 
 // Route to validate US Driver's License
@@ -483,13 +320,7 @@ router.get('/validate-cnpj/:cnpj?', (req, res) => {
  *       400:
  *         description: Invalid US Driver's License or missing parameter
  */
-router.get('/validate-us-license/:licenseNumber?', (req, res) => {
-    const licenseNumber = getData(req, 'licenseNumber');
-    if (!licenseNumber) return res.status(400).json({ error: 'License number is required.' });
-    const validationResult = IDValidator.validateUSDriversLicense(licenseNumber);
-    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
-    res.status(200).json({ message: 'US Driver\'s License is valid.' });
-});
+router.get('/validate-us-license/:licenseNumber?', ValidationController.validateUSDriversLicense);
 
 // Route to validate US SSN
 /**
@@ -511,13 +342,8 @@ router.get('/validate-us-license/:licenseNumber?', (req, res) => {
  *       400:
  *         description: Invalid US SSN or missing parameter
  */
-router.get('/validate-us-ssn/:ssn?', (req, res) => {
-    const ssn = getData(req, 'ssn');
-    if (!ssn) return res.status(400).json({ error: 'SSN is required.' });
-    const validationResult = IDValidator.validateUSSSN(ssn);
-    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
-    res.status(200).json({ message: 'SSN is valid.' });
-});
+router.get('/validate-us-ssn/:ssn?', ValidationController.validateUSSSN);
+
 
 // Route to validate US Military ID
 /**
@@ -539,13 +365,8 @@ router.get('/validate-us-ssn/:ssn?', (req, res) => {
  *       400:
  *         description: Invalid US Military ID or missing parameter
  */
-router.get('/validate-us-military-id/:militaryID?', (req, res) => {
-    const militaryID = getData(req, 'militaryID');
-    if (!militaryID) return res.status(400).json({ error: 'Military ID is required.' });
-    const validationResult = IDValidator.validateUSMilitaryID(militaryID);
-    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
-    res.status(200).json({ message: 'US Military ID is valid.' });
-});
+router.get('/validate-us-military-id/:militaryID?', ValidationController.validateUSMilitaryID);
+
 
 // Route to validate UK National Insurance Number
 /**
@@ -567,13 +388,8 @@ router.get('/validate-us-military-id/:militaryID?', (req, res) => {
  *       400:
  *         description: Invalid UK NI Number or missing parameter
  */
-router.get('/validate-uk-ni/:niNumber?', (req, res) => {
-    const niNumber = getData(req, 'niNumber');
-    if (!niNumber) return res.status(400).json({ error: 'NI Number is required.' });
-    const validationResult = IDValidator.validateUKNINumber(niNumber);
-    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
-    res.status(200).json({ message: 'UK NI Number is valid.' });
-});
+router.get('/validate-uk-ni/:niNumber?', ValidationController.validateUKNINumber);
+
 
 // Route to validate Canadian SIN (Social Insurance Number)
 /**
@@ -595,16 +411,7 @@ router.get('/validate-uk-ni/:niNumber?', (req, res) => {
  *       400:
  *         description: Invalid SIN format/Invalid SIN number
  */
-router.get('/validate-ca-sin/:sinNumber?', (req, res) => {
-    const niNumber = getData(req, 'sinNumber');
-    if (!niNumber) return res.status(400).json({ error: 'SIN Number is required.' });
-    const validationResult = IDValidator.validateCanadianSIN(niNumber);
-    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
-    res.status(200).json({ message: 'Canadian SIN Number is valid.' });
-});
-
-
-
+router.get('/validate-ca-sin/:sinNumber?', ValidationController.validateCanadianSIN);
 // Route to validate Mexican CURP (Clave Única de Registro de Población)
 /**
  * @swagger
@@ -625,14 +432,7 @@ router.get('/validate-ca-sin/:sinNumber?', (req, res) => {
  *       400:
  *         description: Invalid CURP format/Invalid CURP checksum
  */
-router.get('/validate-mx-curp/:curpNumber?', (req, res) => {
-    const niNumber = getData(req, 'curpNumber');
-    if (!niNumber) return res.status(400).json({ error: 'CURP Number is required.' });
-    const validationResult = IDValidator.validateCanadianSIN(curpNumber);
-    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
-    res.status(200).json({ message: 'Mexican CURP Number is valid.' });
-});
-
+router.get('/validate-mx-curp/:curpNumber?', ValidationController.validateMexicanCURP);
 
 // Route to validate South Korean RRN (Resident Registration Number)
 /**
@@ -654,15 +454,7 @@ router.get('/validate-mx-curp/:curpNumber?', (req, res) => {
  *       400:
  *         description: Invalid RRN format/Invalid RRN checksum
  */
-router.get('/validate-kr-rrn/:rrnNumber?', (req, res) => {
-    const rrnNumber = getData(req, 'rrnNumber');
-    if (!rrnNumber) return res.status(400).json({ error: 'RRN Number is required.' });
-    const validationResult = IDValidator.validateSouthKoreanRRN(rrnNumber);
-
-    if (!validationResult.valid) return res.status(400).json({ error: validationResult.error });
-    res.status(200).json({ message: 'South Korean RRN is valid.' });
-});
-
+router.get('/validate-kr-rrn/:rrnNumber?', ValidationController.validateSouthKoreanRRN);
 /**
  * @swagger
  * /validate/validate-de-personalausweis/{idNumber}:
@@ -682,17 +474,9 @@ router.get('/validate-kr-rrn/:rrnNumber?', (req, res) => {
  *       400:
  *         description: Invalid ID format/Invalid checksum
  */
-router.get('/validate-de-personalausweis/:idNumber?', (req, res) => {
-    const idNumber = req.params.idNumber;
-    if (!idNumber) return res.status(400).json({ error: 'ID Number is required.' });
+router.get('/validate-de-personalausweis/:idNumber?', ValidationController.validateGermanPersonalausweis);
 
-    const validationResult = IDValidator.validateGermanPersonalausweis(idNumber);
 
-    if (!validationResult.valid) {
-        return res.status(400).json({ error: validationResult.error });
-    }
 
-    res.status(200).json({ message: 'German Personalausweis is valid.' });
-});
 
 export default router;

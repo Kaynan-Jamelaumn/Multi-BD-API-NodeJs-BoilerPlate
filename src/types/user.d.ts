@@ -2,7 +2,6 @@
 type Role = 'User' | 'Admin';
 
 interface User {
-    role: Role;
     [key: string]: any; // Allow additional properties
   }
   
