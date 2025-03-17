@@ -4,7 +4,7 @@ import PassportValidator from "./PassportValidator.js";
 export type ValidationResult = {
     valid: boolean
     error: string | null
-    status: number 
+    status?: number 
   }
 
   type ValidationOptions = {
@@ -12,7 +12,7 @@ export type ValidationResult = {
     strictPassword?: boolean
   }
   
-  export type DocumentValidationResult = Omit<ValidationResult, 'status'>
+  export type DocumentValidationResult = ValidationResult//Omit<ValidationResult, 'status'>
   export type UserValidationResult = ValidationResult
 
 class IDValidator {
