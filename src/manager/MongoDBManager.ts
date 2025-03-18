@@ -1,8 +1,8 @@
 // src/manager/MongoDBManager.ts
 
 import { Model } from 'mongoose';
-import { DBManager } from './DBManager.js';
-import { MongoModel } from '../types/models.js';
+import { DBManager } from './DBManager';
+import { MongoModel } from '../types/models';
 
 interface FindOptions {
   exclude?: string[];

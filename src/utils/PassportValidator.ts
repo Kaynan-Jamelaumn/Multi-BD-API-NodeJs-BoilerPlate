@@ -1,6 +1,6 @@
-'/src/utils/PassportValidator.ts'
+///src/utils/PassportValidator.t
 
-import { ValidationResult } from "../types/validation.js";
+import { ValidationResult } from "../types/validation";
 
 
 // Define all valid country codes as a union type

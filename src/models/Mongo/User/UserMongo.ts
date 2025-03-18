@@ -1,7 +1,7 @@
-// src/models/Mongo/User/UserMongo.ts
+// src/models/Mongo/User/UserMongo
 
 import mongoose, { Document, Model, Schema } from "mongoose";
-import { MongoModel, MongoModelType } from "../../../types/models.js";
+import { MongoModel, MongoModelType } from "../../../types/models";
 import bcrypt from "bcrypt";
 
 // Define the interface for the User document

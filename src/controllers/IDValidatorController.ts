@@ -1,7 +1,7 @@
 // src/controllers/ValidationController.ts
 import {Request, Response} from 'express';
-import IDValidator from '../utils/IDValidator.js';
-import { UserDataToBeValidated, Role, User } from '../types/user.js';
+import IDValidator from '../utils/IDValidator';
+import { UserDataToBeValidated, Role, User } from '../types/user';
 
 
 

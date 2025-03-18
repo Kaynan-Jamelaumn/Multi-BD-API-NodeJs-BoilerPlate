@@ -1,6 +1,6 @@
-// src/server.ts
+// src/server
 
-import app from './app.js';
+import app from './app';
 import "dotenv/config";
 
 

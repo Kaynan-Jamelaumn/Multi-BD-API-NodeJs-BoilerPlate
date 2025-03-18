@@ -1,8 +1,8 @@
 // src/routes/addressRouter.ts
 
 import { Router } from 'express';
-import AddressController from '../controllers/addressController.js';
-import { authMiddleware } from '../middlewares/authmiddleware.js';
+import AddressController from '../controllers/addressController';
+import { authMiddleware } from '../middlewares/authmiddleware';
 
 const router = Router();
 

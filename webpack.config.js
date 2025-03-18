@@ -1,15 +1,19 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
+import webpack from 'webpack';
+import nodeExternals from 'webpack-node-externals';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default {
   mode: 'production',
-  entry: './src/client/index.ts', // Update to your client entry
+  target: 'node',
+  entry: './src/server.ts',
+  externals: [nodeExternals()], // Exclude node_modules from bundle
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist', 'public'),
-    publicPath: '/assets/'
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: './',
   },
   module: {
     rules: [
@@ -19,13 +23,35 @@ export default {
         exclude: /node_modules/,
       },
       {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
-      }
-    ]
+        test: /\.node$/,
+        use: 'node-loader',
+      },
+      {
+        test: /\.(html|cs)$/,
+        use: 'raw-loader',
+      },
+    ],
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.js', '.tsx', '.json', '.mjs'],
+    alias: {
+      // Add any path aliases you're using in tsconfig.json
+      '@': path.resolve(__dirname, 'src'),
+    }
   },
-  devtool: 'source-map'
+  plugins: [
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^pg-native$|^\.\/locale$/,
+    }),
+    new webpack.DefinePlugin({
+      __dirname: JSON.stringify(__dirname), // Preserve __dirname
+    }),
+  ],
+  stats: {
+    errorDetails: true,
+  },
+  node: {
+    __dirname: false, // Preserve Node.js __dirname behavior
+    __filename: false, // Preserve Node.js __filename behavior
+  },
 };

@@ -1,4 +1,4 @@
-// src/swagger.ts
+// src/swagger
 
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -50,7 +50,7 @@ const options: SwaggerOptions = {
       },
     ],
   },
-  apis: ['./src/routes/*.ts'], // Path to the API routes
+  apis: ['./src/routes/*'], // Path to the API routes
 };
 
 // Generate Swagger specs

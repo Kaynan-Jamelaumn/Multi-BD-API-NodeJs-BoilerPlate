@@ -1,11 +1,11 @@
 // src/manager/db<amagerFactory.ts
 
-import { MongoDBManager } from './MongoDBManager.js';
-import { MySQLManager } from './MysqlManager.js';
+import { MongoDBManager } from './MongoDBManager';
+import { MySQLManager } from './MysqlManager';
 import { ModelStatic } from 'sequelize';
 import { Model } from 'mongoose';
-import { MysqlModel, MongoModel, MysqlModelStatic, MongoModelType } from '../types/models.js';
-import { DBManager } from './DBManager.js';
+import { MysqlModel, MongoModel, MysqlModelStatic, MongoModelType } from '../types/models';
+import { DBManager } from './DBManager';
 
 
 // Overload for MongoDB: when the model is a Mongoose model of MongoModel

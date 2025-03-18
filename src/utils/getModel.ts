@@ -4,8 +4,8 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { promises as fs } from 'fs';
 import { pathToFileURL } from 'url';
-import sequelizeConfiguration from "../databaseSequelize.js";
-import {  Model, MysqlModelStatic, MongoModelType  } from '../types/models.js';
+import sequelizeConfiguration from "../databaseSequelize";
+import {  Model, MysqlModelStatic, MongoModelType  } from '../types/models';
 
 // Recursively searches for a model file in a directory and its subdirectories
 async function findModelFile(startPath: string, targetNames: string[], recursive: boolean = true): Promise<string | null> {

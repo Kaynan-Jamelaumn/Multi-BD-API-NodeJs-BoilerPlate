@@ -1,7 +1,7 @@
 // src/middleware/middleware.ts
 
 import { Request, Response, NextFunction } from 'express';
-import { logger } from '../app.js';
+import { logger } from '../app';
 import mongoose from 'mongoose';
 import { Sequelize } from 'sequelize';
 

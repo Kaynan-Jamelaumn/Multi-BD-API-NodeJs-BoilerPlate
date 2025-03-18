@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
     "target": "ESNext", 
-    "module": "nodenext",  // Defines the module system. "nodenext" allows support for ES Modules in Node.js with native module resolution.
-    "moduleResolution": "nodenext", // Resolves modules in the way Node.js does (ES Modules and CommonJS)
+    "module": "esnext",
+    "moduleResolution": "bundler",
+
+
+   // "module": "nodenext",  // Defines the module system. "nodenext" allows support for ES Modules in Node.js with native module resolution.
+    //"moduleResolution": "nodenext", // Resolves modules in the way Node.js does (ES Modules and CommonJS)
     "outDir": "./dist", // Directory where compiled JavaScript files will be output
     "rootDir": "./src", // Root directory for TypeScript source files
     "esModuleInterop": true, // Allows default imports from modules with no default export (like CommonJS modules)
@@ -16,6 +20,8 @@
     "paths": {
       "*": ["src/types/*"] // Maps custom paths for module resolution (e.g., `import x from 'types/x'`)
     },
+    //"allowImportingTsExtensions": true,
+    //"noEmit": true,
     "types": ["node"], // Include Node.js type definitions
     "sourceMap": true, // Generates source maps for debugging
     "declaration": true, // Generates .d.ts declaration files for TypeScript types
@@ -24,9 +30,9 @@
     "incremental": true, // Enables incremental compilation for faster builds after the initial compilation
     "inlineSources": true, // Embeds the source code in the source maps for better debugging
     "noImplicitAny": true, // Disallows variables and parameters with the `any` type
-    "noUnusedLocals": true, // Disallows unused local variables
-    "noUnusedParameters": true, // Disallows unused function parameters,
-    "noImplicitThis": true,
+    "noUnusedLocals": false, // Disallows unused local variables
+    "noUnusedParameters": false, // Disallows unused function parameters,
+    "noImplicitThis": true
   },
   "include": ["src/**/*", "dbconfig/databaseSequelize.js", "swagger.js", "loadModels.js"], // Includes all source files and specific JavaScript files
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"] // Excludes node_modules, build output, and test files

@@ -1,4 +1,4 @@
-// src/databaseSequelize.ts
+// src/databaseSequelize
 
 import { Sequelize } from 'sequelize';
 import 'dotenv/config';

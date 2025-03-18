@@ -1,10 +1,10 @@
-// src/utils/fileUpload.ts
+// src/utils/fileUpload
 import multer, { StorageEngine, FileFilterCallback } from "multer";
 import path from "path";
 import fs from "fs";
 import crypto from "crypto";
 import { Request } from "express";
-import { File } from "../types/multer.js";
+import { File } from "../types/multer";
 
 // Define the upload directory path (default to "public/uploads")
 const uploadDir: string = process.env.UPLOAD_DIR || path.resolve("public/uploads");

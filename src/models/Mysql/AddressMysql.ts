@@ -1,7 +1,7 @@
   // src/models/Mysql/AddressMysql.ts
 
   import { DataTypes, Model, Sequelize } from 'sequelize';
-  import { MysqlModel, MysqlModelStatic   } from '../../types/models.js';
+  import { MysqlModel, MysqlModelStatic   } from '../../types/models';
 
   const AddressMysql = (sequelize: Sequelize): MysqlModelStatic => {
     const Address = sequelize.define<MysqlModel>(

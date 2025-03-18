@@ -2,7 +2,7 @@
 
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import bcrypt from 'bcrypt';
-import { MysqlModel, MysqlModelStatic  } from '../../../types/models.js';
+import { MysqlModel, MysqlModelStatic  } from '../../../types/models';
 
 const UserMysql = (sequelize: Sequelize): MysqlModelStatic => {
     const User = sequelize.define<MysqlModel>(

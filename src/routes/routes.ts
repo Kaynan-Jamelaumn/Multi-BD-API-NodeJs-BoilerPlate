@@ -1,14 +1,14 @@
-// src/routes/routes.ts
+// src/routes/routes
 
 import path from 'path';
 import express, { Request, Response, NextFunction, Router } from 'express';
 import multer from 'multer'; // Import multer for file upload error handling
-import userRouter from './userRouter.js'; // Example user router
-import addressesRouter from './addressRouter.js';
-import validatorRouter from './validatorRouter.js';
+import userRouter from './userRouter'; // Example user router
+import addressesRouter from './addressRouter';
+import validatorRouter from './validatorRouter';
 
-import { paginaInicial } from '../controllers/homeController.js';
-import { testMiddleware } from '../middlewares/middleware.js';
+import { paginaInicial } from '../controllers/homeController';
+import { testMiddleware } from '../middlewares/middleware';
 
 // Extend the Express Request type to include the `db` property
 declare module 'express' {

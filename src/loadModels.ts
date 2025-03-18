@@ -1,4 +1,4 @@
-// src/loadModels.ts
+// src/loadModels
 
 import fs from 'fs';
 import path from 'path';
@@ -46,8 +46,8 @@ async function loadModels(
 // Validation helpers
 function isValidDatabaseFile(dbType: string, fileName: string): boolean {
     const suffixMap: Record<'mysql' | 'mongo', string> = {
-        mysql: 'Mysql.js',
-        mongo: 'Mongo.js'
+        mysql: 'Mysql',
+        mongo: 'Mongo'
     };
     return fileName.endsWith(suffixMap[dbType as keyof typeof suffixMap]);
 }

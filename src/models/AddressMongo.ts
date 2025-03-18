@@ -1,7 +1,7 @@
 // src/models/AddressMongo.ts
 
 import mongoose, { Document, Model, Schema } from "mongoose";
-import { MongoModel, MongoModelType } from "../types/models.js";
+import { MongoModel, MongoModelType } from "../types/models";
 
 // Define the interface for the Address document
 export interface IAddress extends MongoModel {

@@ -1,4 +1,4 @@
-// src/controllers/userController.ts
+// src/controllers/userController
 
 import "dotenv/config";
 import dotenvExpand from "dotenv-expand";
@@ -7,16 +7,16 @@ import fs from "fs";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import {Request, Response} from 'express';
-import {File} from '../types/multer.js';
+import {File} from '../types/multer';
 
-import {logger} from "../app.js";
-import IDValidator from "../utils/IDValidator.js";
-import {getDBManager} from "../manager/dbManagerFactory.js";
-import {getModel} from "../utils/getModel.js";
+import {logger} from "../app";
+import IDValidator from "../utils/IDValidator";
+import {getDBManager} from "../manager/dbManagerFactory";
+import {getModel} from "../utils/getModel";
 
-import {Model} from "../types/models.js";
-import {DBManager} from '../manager/DBManager.js';
-import { User } from "../types/user.js";
+import {Model} from "../types/models";
+import {DBManager} from '../manager/DBManager';
+import { User } from "../types/user";
 
 import {Op} from 'sequelize';
 import {StringValue} from 'ms';

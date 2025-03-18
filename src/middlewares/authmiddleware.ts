@@ -1,12 +1,12 @@
-// src/middleware/authMiddleware.ts
+// src/middleware/authMiddleware
 
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { logger } from '../app.js';
+import { logger } from '../app';
 import "dotenv/config";
 import dotenv from 'dotenv';
 import dotenvExpand from 'dotenv-expand';
-import { User } from '../types/user.js';
+import { User } from '../types/user';
 
 
 const envConfig = dotenv.config();

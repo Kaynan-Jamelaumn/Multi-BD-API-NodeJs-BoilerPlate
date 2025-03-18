@@ -1,4 +1,4 @@
-// src/app.ts
+// src/app
 
 // Load environment variables from a .env file and expand any references to other variables
 import dotenv from 'dotenv';
@@ -42,14 +42,14 @@ import crypto from "crypto"; // Built-in module for cryptographic functionalitie
 import winston from "winston";
 
 // Import custom routes and middleware functions
-import mainRouter from "./routes/routes.js";
+import mainRouter from "./routes/routes";
 import {
     middleWareGlobal,
     checkCSRFError,
     databaseMiddleware,
-} from "./middlewares/middleware.js";
+} from "./middlewares/middleware";
 
-// Import Node.js built-in modules
+// Import Node built-in modules
 import http from "http"; // HTTP server module
 import https from "https"; // HTTPS server module
 import fs from "fs"; // File system module
@@ -61,12 +61,12 @@ import { Server } from "socket.io"; // WebSocket library for real-time communica
 // Resolve the current file and directory paths (for setting views and static files)
 
 
-import loadModels from './loadModels.js';// models loader from sequelize
+import loadModels from './loadModels';// models loader from sequelize
 
-import sequelizeConfiguration from "./databaseSequelize.js";
+import sequelizeConfiguration from "./databaseSequelize";
 
 // Import the Swagger configuration
-import swaggerConfig from './swagger.js';
+import swaggerConfig from './swagger';
 
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 

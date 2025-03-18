@@ -1,9 +1,9 @@
-// src/manager/MysqlManager.ts
+// src/manager/MysqlManager
 
 import { ModelStatic, WhereOptions, Op, FindAttributeOptions } from 'sequelize';
-import { DBManager } from './DBManager.js';
-import { MysqlModel } from '../types/models.js';
-import { SequelizeFindOptions } from '../types/find-options.js';
+import { DBManager } from './DBManager';
+import { MysqlModel } from '../types/models';
+import { SequelizeFindOptions } from '../types/find-options';
 
 export class MySQLManager<T extends MysqlModel> extends DBManager<T> {
   private Op: typeof Op;

@@ -1,7 +1,7 @@
-'/src/utils/IDValidators.ts'
-import PassportValidator from "./PassportValidator.js";
-import { User, UserDataToBeValidated, isUser } from "../types/user.js";
-import { ValidationResult } from "../types/validation.js";
+///src/utils/IDValidators
+import PassportValidator from "./PassportValidator";
+import { User, UserDataToBeValidated, isUser } from "../types/user";
+import { ValidationResult } from "../types/validation";
 
 type ValidationOptions = {
 required?: boolean // Whether fields are mandatory

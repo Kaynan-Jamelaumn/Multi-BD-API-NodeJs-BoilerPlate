@@ -1,7 +1,7 @@
 import {
     Router
 } from 'express';
-import ValidationController from '../controllers/IDValidatorController.js';
+import ValidationController from '../controllers/IDValidatorController';
 
 const router = Router();
 

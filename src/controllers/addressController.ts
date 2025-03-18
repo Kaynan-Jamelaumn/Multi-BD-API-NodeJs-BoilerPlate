@@ -1,12 +1,12 @@
-// src/controllers/addressController.ts
+// src/controllers/addressController
 
-import {logger} from "../app.js";
-import {getModel} from "../utils/getModel.js";
-import AddressValidator from "../utils/AddressValidators.js";
-import {getDBManager} from "../manager/dbManagerFactory.js";
+import {logger} from "../app";
+import {getModel} from "../utils/getModel";
+import AddressValidator from "../utils/AddressValidators";
+import {getDBManager} from "../manager/dbManagerFactory";
 import {Request,Response} from "express"; // Importing types for req and res
-import {Model} from "../types/models.js";
-import {DBManager} from '../manager/DBManager.js';
+import {Model} from "../types/models";
+import {DBManager} from '../manager/DBManager';
 
 
 // Dynamically import the Address model based on the filename
