@@ -7,9 +7,9 @@ export interface SequelizeFindOptions {
     limit?: number;
   }
   
-  export interface MongooseFindOptions {
-    exclude?: string[];
-    sort?: Record<string, 1 | -1>;
-    skip?: number;
-    limit?: number;
-  }
+export interface MongooseFindOptions {
+  exclude?: string[];
+  sort?: Record<string, 1 | -1>;
+  skip?: number;
+  limit?: number;
+}

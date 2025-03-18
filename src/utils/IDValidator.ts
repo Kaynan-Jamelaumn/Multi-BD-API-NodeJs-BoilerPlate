@@ -1,30 +1,26 @@
+'/src/utils/IDValidators.ts'
 import PassportValidator from "./PassportValidator.js";
+import { User, UserDataToBeValidated, isUser } from "../types/user.js";
+import { ValidationResult } from "../types/validation.js";
 
-
-export type ValidationResult = {
-    valid: boolean
-    error: string | null
-    status: number 
-  }
-
-  type ValidationOptions = {
-    required?: boolean // Whether fields are mandatory
-    strictPassword?: boolean
-  }
+type ValidationOptions = {
+required?: boolean // Whether fields are mandatory
+strictPassword?: boolean
+}
   
-  export type DocumentValidationResult = ValidationResult//Omit<ValidationResult, 'status'>
-  export type UserValidationResult = ValidationResult
+type DocumentValidationResult = ValidationResult//Omit<ValidationResult, 'status'>
 
 class IDValidator {
-    static validateFields(userData: User, options: ValidationOptions = { required: true }): ValidationResult {
+    static validateFields(userData: User , options: ValidationOptions = { required: true }): ValidationResult {
         const { username, name, surname, email, password, role } = userData;
         const { required } = options;
 
         // Validate required fields
         if (required) {
             const requiredFields: string[] = ['username', 'name', 'surname', 'email', 'password'];
-            const missingFields: string[] = requiredFields.filter(field => !userData[field as keyof User]);
-
+            let missingFields: string[] = []; 
+                missingFields = requiredFields.filter(field => !userData[field as keyof User]);
+    
             if (missingFields.length > 0) {
                 return {
                     valid: false,
@@ -357,7 +353,7 @@ class IDValidator {
         const eadRegex: RegExp = /^[A-Z]{3}\d{10}$/;
         const isValid: boolean = eadRegex.test(eadNumber);
 
-        return { valid: eadRegex.test(eadNumber), error: eadRegex.test(eadNumber) ? null : "Invalid EAD format", status: 400 };
+        return { valid: isValid, error: isValid ? null : "Invalid EAD format", status: isValid ? 200 : 400 };
     }
 
     // Validate US Birth Certificate (General Format)

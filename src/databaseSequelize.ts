@@ -1,6 +1,6 @@
 // src/databaseSequelize.ts
 
-import { Sequelize, Options } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import 'dotenv/config';
 
 // Define an interface for the database configuration

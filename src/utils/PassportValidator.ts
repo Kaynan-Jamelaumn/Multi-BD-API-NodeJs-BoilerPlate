@@ -1,8 +1,7 @@
-interface ValidationResult {
-    valid: boolean;
-    error?: string;
-    status: number;
-}
+'/src/utils/PassportValidator.ts'
+
+import { ValidationResult } from "../types/validation.js";
+
 
 // Define all valid country codes as a union type
 type CountryCode = keyof typeof PassportValidator.passportPatterns;
@@ -147,7 +146,7 @@ class PassportValidator {
 
         return {
             valid: true,
-            error: undefined,
+            error: null,
             status: 200,
 
         };

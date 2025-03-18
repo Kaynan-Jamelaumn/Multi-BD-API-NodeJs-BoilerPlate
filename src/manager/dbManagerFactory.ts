@@ -4,7 +4,7 @@ import { MongoDBManager } from './MongoDBManager.js';
 import { MySQLManager } from './MysqlManager.js';
 import { ModelStatic } from 'sequelize';
 import { Model } from 'mongoose';
-import { MysqlModel, MongoModel, isMysqlModel, isMongoModel, MysqlModelStatic, MongoModelType } from '../types/models.js';
+import { MysqlModel, MongoModel, MysqlModelStatic, MongoModelType } from '../types/models.js';
 import { DBManager } from './DBManager.js';
 
 

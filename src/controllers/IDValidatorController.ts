@@ -1,7 +1,7 @@
 // src/controllers/ValidationController.ts
 import {Request, Response} from 'express';
 import IDValidator from '../utils/IDValidator.js';
-
+import { UserDataToBeValidated, Role, User } from '../types/user.js';
 
 
 
@@ -30,7 +30,7 @@ export default class ValidationController {
             surname: this.getData(req, 'surname'),
             email: this.getData(req, 'email'),
             password: this.getData(req, 'password'),
-            role: this.getData(req, 'role'),
+            role: this.getData(req, 'role') as Role,
         };
 
         const validationResult = IDValidator.validateFields(userData);

@@ -13,6 +13,7 @@ declare module "express-session" {
   interface Session {
       csrfSecret: string;
       nome ? : string; // Add 'nome' property for testMiddleware
+      user?: User;
 
   }
 }
@@ -31,6 +32,7 @@ declare global {
                   authenticate: () => Promise < void > ;
               };
           };
+          user?: User;
       }
   }
 }

@@ -7,7 +7,7 @@ import fs from "fs";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import {Request, Response} from 'express';
-import {File} from '../types/multer.js'; // Assuming you have a Multer type definition
+import {File} from '../types/multer.js';
 
 import {logger} from "../app.js";
 import IDValidator from "../utils/IDValidator.js";
@@ -16,7 +16,7 @@ import {getModel} from "../utils/getModel.js";
 
 import {Model} from "../types/models.js";
 import {DBManager} from '../manager/DBManager.js';
-
+import { User } from "../types/user.js";
 
 import {Op} from 'sequelize';
 import {StringValue} from 'ms';

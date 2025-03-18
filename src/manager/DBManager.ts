@@ -1,7 +1,7 @@
 // src/manager/DBManager.ts
 
 import { ModelStatic } from 'sequelize';
-import { Model as MongooseModel, Document } from 'mongoose';
+import { Model as MongooseModel } from 'mongoose';
 
 export abstract class DBManager<T extends { id?: string | number; isActive?: boolean }> {
   constructor(protected model: ModelStatic<any> | MongooseModel<any>) {

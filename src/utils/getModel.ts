@@ -6,7 +6,6 @@ import { promises as fs } from 'fs';
 import { pathToFileURL } from 'url';
 import sequelizeConfiguration from "../databaseSequelize.js";
 import {  Model, MysqlModelStatic, MongoModelType  } from '../types/models.js';
-import { DatabaseConfig } from '../types/database.js';
 
 // Recursively searches for a model file in a directory and its subdirectories
 async function findModelFile(startPath: string, targetNames: string[], recursive: boolean = true): Promise<string | null> {
@@ -96,8 +95,6 @@ export async function getModel(fileUrl: string): Promise<Model> {
     // Convert found path to file URL and import the model
     const modelUrl = pathToFileURL(foundPath).href;
     const modelModule = await import(modelUrl);
-    let model: Model = modelModule.default;
-
     // If it's a MySQL model, initialize it with Sequelize configuration
     if (dbType === 'mysql') {
       const modelInit = modelModule.default as (sequelize: typeof sequelizeConfiguration) => MysqlModelStatic;

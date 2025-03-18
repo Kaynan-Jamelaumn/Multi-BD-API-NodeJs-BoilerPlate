@@ -4,7 +4,7 @@ import { Router } from 'express';
 import UserController from '../controllers/userController.js';
 
 
-import { authMiddleware, adminMiddleware } from '../middlewares/authMiddleware.js';
+import { authMiddleware, adminMiddleware } from '../middlewares/authmiddleware.js';
 import uploadMiddlware from '../utils/fileUpload.js';
 
 const router =  Router();
