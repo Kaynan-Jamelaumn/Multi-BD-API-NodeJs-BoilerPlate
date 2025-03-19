@@ -69,6 +69,7 @@ import sequelizeConfiguration from "./databaseSequelize";
 import swaggerConfig from './swagger';
 
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import { MongoClient } from 'mongodb';
 
 class App {
     public app: Express;
@@ -184,8 +185,9 @@ class App {
 
         // Create a session store using MongoDB or MySQL
         if (this.DB_TYPE === "mongo") {
+            const mongoClient = new MongoClient(this.mongoConnectionString);
             store = MongoStore.create({
-                client: mongoose.connection.getClient(), // Use the MongoDB client from mongoose
+                client: mongoClient,//mongoose.connection.getClient(), // Use the MongoDB client from mongoose
                 dbName: mongoose.connection.name, // Optional: specify the database name
                 collectionName: "sessions", // Optional: specify the collection name
             });
