@@ -1,0 +1,10 @@
+{
+    "extends": "./tsconfig.json", // Herda as configurações do tsconfig.json principal
+    "compilerOptions": {
+      "moduleResolution": "node", // Altere para "node" ou "nodenext"
+      "outDir": "./dist-test", // Diretório de saída diferente para evitar conflitos
+      "isolatedModules": true // Garante que cada arquivo possa ser compilado independentemente
+    },
+    "include": ["src/**/*", "__tests__/**/*"], // Inclui os arquivos de teste
+    "exclude": ["node_modules", "dist"] // Exclui pastas desnecessárias
+  }

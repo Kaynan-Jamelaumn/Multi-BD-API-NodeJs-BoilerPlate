@@ -37,7 +37,7 @@ const router = Router();
  *       400:
  *         description: Invalid fields
  */
-router.get('/validate-cnh/:cnhNumber?', ValidationController.validateFields);
+router.get('/validate-fields/', ValidationController.validateFields);
 
 
 
@@ -67,8 +67,7 @@ router.get('/validate-cnh/:cnhNumber?', ValidationController.validateFields);
  *       400:
  *         description: Invalid passport or missing parameters
  */
-router.get('/validate-cnh/:cnhNumber?', ValidationController.validatePassport);
-
+router.get('/validate-passport/:passportNumber/:countryCode?', ValidationController.validatePassport);
 
 
 // route to validate CPF
@@ -91,7 +90,7 @@ router.get('/validate-cnh/:cnhNumber?', ValidationController.validatePassport);
  *       400:
  *         description: Invalid CPF or missing parameter
  */
-router.get('/validate-cnh/:cnhNumber?', ValidationController.validateCPF);
+router.get('/validate-cpf/:cpfNumber?', ValidationController.validateCPF);
 
 
 // route to validate RG
@@ -114,7 +113,7 @@ router.get('/validate-cnh/:cnhNumber?', ValidationController.validateCPF);
  *       400:
  *         description: Invalid RG or missing parameter
  */
-router.get('/validate-cnh/:cnhNumber?', ValidationController.validateRG);
+router.get('/validate-rg/:rgNumber?', ValidationController.validateRG);
 
 
 
@@ -138,7 +137,7 @@ router.get('/validate-cnh/:cnhNumber?', ValidationController.validateRG);
  *       400:
  *         description: Invalid SUS number or missing parameter
  */
-router.get('/validate-cnh/:cnhNumber?', ValidationController.validateSUS);
+router.get('/validate-sus/:susNumber?', ValidationController.validateSUS);
 
 
 
