@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest",
+    "test": "cross-env TS_NODE_PROJECT=tsconfig.jest.json jest",
     "start": "node --enable-source-maps dist/server.js",
     "dev": "nodemon --inspect --exec tsx src/server.ts",
     "build": "webpack"
@@ -58,6 +58,7 @@
     "@types/swagger-ui-express": "^4.1.8",
     "@types/winston": "^2.4.4",
     "babel-loader": "^10.0.0",
+    "cross-env": "^7.0.3",
     "ignore-loader": "^0.1.2",
     "jest": "^29.7.0",
     "node-loader": "^2.1.0",

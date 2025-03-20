@@ -22,7 +22,7 @@
     },
     //"allowImportingTsExtensions": true,
     //"noEmit": true,
-    "types": ["node"], // Include Node.js type definitions
+    "types": ["node", "jest"], // Include Node.js type definitions
     "sourceMap": true, // Generates source maps for debugging
     "declaration": true, // Generates .d.ts declaration files for TypeScript types
     "removeComments": false, // Retains comments in the output JavaScript files
