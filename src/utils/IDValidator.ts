@@ -55,13 +55,13 @@ class IDValidator {
 
         // Validate email format
         if (email) {
-            const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const emailRegex: RegExp  = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$|^[a-zA-Z0-9._%+-]+@(\d{1,3}\.){3}\d{1,3}$/i;
             if (!emailRegex.test(email)) {
-                return {
-                    valid: false,
-                    error: 'Invalid email format.',
-                    status: 400,
-                };
+                return { 
+                        valid: false,
+                        error: 'Invalid email format.',
+                        status: 400
+                     };
             }
         }
 
