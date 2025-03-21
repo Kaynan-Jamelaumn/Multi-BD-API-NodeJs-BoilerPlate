@@ -5,32 +5,34 @@
   // Compiler options specific to Jest
   "compilerOptions": {
     // Output directory for compiled test files
-    "outDir": "./dist-test",
+  "outDir": "./dist",
 
-    // Include Node.js and Jest type definitions
-    "types": ["node", "jest"],
+  "rootDir": ".",
+    
+  // Include Node.js and Jest type definitions
+  "types": ["node", "jest"],
 
-    // Ensure each file can be transpiled independently
-    "isolatedModules": true,
+  // Ensure each file can be transpiled independently
+  "isolatedModules": true,
 
-    // Use Node.js-style module resolution
-    "moduleResolution": "node",
+  // Use Node.js-style module resolution
+  "moduleResolution": "node",
 
-    // Use CommonJS modules for Jest compatibility
-    "module": "commonjs",
+  // Use CommonJS modules for Jest compatibility
+  "module": "commonjs",
 
-    // Path mappings for module resolution
-    "paths": {
-      "*": [
-        "./src/*", // Map to the src directory
-        "./src/types/*", // Map to the types directory
-        "./*" // Map to the root directory
-      ]
-    }
+  // Path mappings for module resolution
+  "paths": {
+    "*": [
+      "./src/*", // Map to the src directory
+      "./src/types/*", // Map to the types directory
+    ]
+  }
   },
 
   // Include these files and directories in the TypeScript compilation
   "include": [
+    "**/*.ts",
     "src/**/*", // All files in the src directory
     "__tests__/**/*", // All files in the __tests__ directory
     "jest.config.ts" // Include the Jest config file

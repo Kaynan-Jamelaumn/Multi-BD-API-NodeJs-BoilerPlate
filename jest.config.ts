@@ -2,7 +2,10 @@ import type { Config } from 'jest';
 
 const config: Config = {
   // Use the default ESM preset for ts-jest to support ES Modules
-  preset: 'ts-jest/presets/default-esm',
+ // preset: 'ts-jest/presets/default-esm',
+  //preset: 'ts-jest/presets/default-esm',
+  preset: 'ts-jest',
+
 
   // Specify the test environment (Node.js in this case)
   testEnvironment: 'node',
@@ -19,7 +22,7 @@ const config: Config = {
       'ts-jest', // Use ts-jest for transforming TypeScript files
       {
         tsconfig: 'tsconfig.jest.json', // Use the Jest-specific TS config file
-        useESM: true, // Enable ES Module support
+      //  useESM: true, // Enable ES Module support
       },
     ],
   },
