@@ -105,38 +105,45 @@ class IDValidator {
     // Validator for CPF (Cadastro de Pessoas Físicas) - Brazil
     static validateCPF(cpfNumber: string): DocumentValidationResult {
         // CPF is 11 digits long and has a specific validation algorithm
+        cpfNumber = cpfNumber.replace(/\D/g, ''); // input cleaning and improved format validation
+
         const cpfRegex: RegExp = /^\d{11}$/;
         // Check if the input matches the CPF format (11 digits)
         if (!cpfRegex.test(cpfNumber)) return { valid: false, error: 'Invalid CPF format', status: 400 };
-
+    
+        // Check if all digits are the same (e.g., '11111111111')
+        if (/^(\d)\1{10}$/.test(cpfNumber)) return { valid: false, error: 'Invalid CPF checksum', status: 400 };
+         
         let sum: number = 0;
         let remainder: number;
-
+    
         // First digit validation
         // Calculate the sum of the first 9 digits multiplied by their respective weights (10 to 2)
-        for (let i = 1; i <= 9; i++) {
-            sum += parseInt(cpfNumber.charAt(i - 1)) * (11 - i);
+        for (let i = 0; i < 9; i++) {
+            sum += parseInt(cpfNumber.charAt(i)) * (10 - i);
         }
-        // Calculate the remainder of the division of the sum by 11, then multiply by 10 and get the remainder of the division by 11 again
-        remainder = (sum * 10) % 11;
-        // If the remainder is 10 or 11, set it to 0
-        if (remainder === 10 || remainder === 11) remainder = 0;
-        // Check if the calculated remainder matches the 10th digit of the CPF
-        if (remainder !== parseInt(cpfNumber.charAt(9))) return { valid: false, error: 'Invalid CPF checksum', status: 400 };
-
+        // Calculate the remainder of the division of the sum by 11
+        remainder = sum % 11;
+        const firstDigit: number = remainder < 2 ? 0 : 11 - remainder;
+        // Check if the calculated digit matches the 10th digit
+        if (firstDigit !== parseInt(cpfNumber.charAt(9))) {
+            return { valid: false, error: 'Invalid CPF checksum', status: 400 };
+}
         sum = 0;
         // Second digit validation
         // Calculate the sum of the first 10 digits multiplied by their respective weights (11 to 2)
-        for (let i = 1; i <= 10; i++) {
-            sum += parseInt(cpfNumber.charAt(i - 1)) * (12 - i);
+        for (let i = 0; i < 10; i++) {
+            sum += parseInt(cpfNumber.charAt(i)) * (11 - i);
         }
-        // Calculate the remainder of the division of the sum by 11, then multiply by 10 and get the remainder of the division by 11 again
-        remainder = (sum * 10) % 11;
-        // If the remainder is 10 or 11, set it to 0
-        if (remainder === 10 || remainder === 11) remainder = 0;
-        // Check if the calculated remainder matches the 11th digit of the CPF
-        if (remainder !== parseInt(cpfNumber.charAt(10))) return { valid: false, error: 'Invalid CPF checksum', status: 400 };
-
+        // Calculate the remainder of the division of the sum by 11
+        remainder = sum % 11;
+        const secondDigit: number = remainder < 2 ? 0 : 11 - remainder;
+        // Check if the calculated digit matches the 11th digit
+        if (secondDigit !== parseInt(cpfNumber.charAt(10))) {
+            return { valid: false, error: 'Invalid CPF checksum', status: 400 };
+        }
+            
+    
         // If both checks pass, the CPF is valid
         return { valid: true, error: null, status: 200 };
     }
@@ -193,7 +200,7 @@ class IDValidator {
 
         // Validate that both calculated check digits match the last two digits of the CNH
         const isValid: boolean = dv1 === parseInt(cnhNumber.charAt(9)) && dv2 === parseInt(cnhNumber.charAt(10));
-        return { valid: isValid, error: isValid ? null : 'Invalid CNH checksum', status: 400 };
+        return { valid: isValid, error: isValid ? null : 'Invalid CNH checksum', status: isValid ? 200 : 400  };
     }
     
 
