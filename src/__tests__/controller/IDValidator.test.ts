@@ -195,4 +195,29 @@ describe('ValidationController', () => {
 
 
 
+  
+  // CPF Validation Tests
+  describe('validateCPF', () => {
+    it('should return 200 for valid formatted CPF', () => {
+      mockRequest.params = { cpfNumber: '453.178.287-91' };
+      ValidationController.validateCPF(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+
+    it('should return 400 for non-numeric CPF', () => {
+      mockRequest.params = { cpfNumber: '453a7828791' };
+      ValidationController.validateCPF(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CPF format' });
+    });
+
+    it('should return 400 for CPF with leading zeros', () => {
+      mockRequest.params = { cpfNumber: '00000000000' };
+      ValidationController.validateCPF(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CPF checksum' });
+    });
+  });
+
+
 });
