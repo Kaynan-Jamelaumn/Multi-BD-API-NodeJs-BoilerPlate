@@ -149,6 +149,8 @@ class IDValidator {
     }
     // Validator for RG (Registro Geral) - Brazil
     static validateRG(rgNumber: string) {
+
+        
         // RG format varies by state, allowing optional dots and dash
         const rgRegex: RegExp = /^\d{2}\.?\d{3}\.?\d{3}-?[0-9Xx]?$/;
         if (typeof rgNumber !== 'string') return { valid: false, error: 'Invalid input type' };

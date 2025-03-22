@@ -220,4 +220,70 @@ describe('ValidationController', () => {
   });
 
 
+  describe('validateRG', () => {
+    // Valid RG Tests
+    it('should return 200 for valid formatted RG with check digit', () => {
+      mockRequest.params = { rgNumber: '12.345.678-9' };
+      ValidationController.validateRG(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid unformatted RG with check digit', () => {
+      mockRequest.params = { rgNumber: '123456789' };
+      ValidationController.validateRG(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid RG with "X" check digit', () => {
+      mockRequest.params = { rgNumber: '12.345.678-X' };
+      ValidationController.validateRG(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Invalid Format Tests
+    it('should return 400 for non-numeric characters in RG', () => {
+      mockRequest.params = { rgNumber: '12a3456789' };
+      ValidationController.validateRG(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RG format' });
+    });
+  
+    it('should return 400 for incorrect punctuation placement', () => {
+      mockRequest.params = { rgNumber: '123-45.6789' };
+      ValidationController.validateRG(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RG format' });
+    });
+  
+    it('should return 400 for RG with missing check digit', () => {
+      mockRequest.params = { rgNumber: '12345678' }; // Current code allows this, test will fail until regex is fixed
+      ValidationController.validateRG(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RG format' });
+    });
+  
+    // Check Digit Validity Tests (Requires checksum implementation)
+    it('should return 400 for invalid check digit', () => {
+      mockRequest.params = { rgNumber: '12.345.678-0' }; // Assuming 9 is correct
+      ValidationController.validateRG(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RG checksum' });
+    });
+  
+    // Special Case Tests
+    it('should return 400 for RG with all zeros', () => {
+      mockRequest.params = { rgNumber: '000.000.000-00' };
+      ValidationController.validateRG(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RG checksum' });
+    });
+  
+    it('should return 400 for RG with repeating digits', () => {
+      mockRequest.params = { rgNumber: '111111111' };
+      ValidationController.validateRG(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RG checksum' });
+    });
+  }); 
+
 });
