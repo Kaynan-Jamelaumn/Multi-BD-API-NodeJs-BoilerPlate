@@ -284,4 +284,63 @@ describe('ValidationController', () => {
     });
   }); 
 
+
+
+
+  describe('validateSUS', () => {
+    it('should return 400 if SUS number is not provided', () => {
+      mockRequest.params = {};
+      ValidationController.validateSUS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'SUS number is required.' });
+    });
+  
+    it('should return 200 for valid unformatted SUS number', () => {
+      mockRequest.params = { susNumber: '123456789012348' }; // valid (sum = 473 → 473 % 11 = 0)
+      ValidationController.validateSUS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 400 for non-numeric characters', () => {
+      mockRequest.params = { susNumber: '1234x6789012345' };
+      ValidationController.validateSUS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SUS format' });
+    });
+  
+    it('should return 400 for incorrect length (14 digits)', () => {
+      mockRequest.params = { susNumber: '12345678901234' };
+      ValidationController.validateSUS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SUS format' });
+    });
+  
+    it('should return 400 for formatted number', () => {
+      mockRequest.params = { susNumber: '123.4567.8901.2348' };
+      ValidationController.validateSUS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SUS format' });
+    });
+  
+    it('should return 400 for invalid checksum', () => {
+      mockRequest.params = { susNumber: '111111111111111' }; // sum = 120 → 120 % 11 = 10
+      ValidationController.validateSUS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SUS checksum' });
+    });
+  
+    it('should return 200 for zero-padded valid number', () => {
+      mockRequest.params = { susNumber: '000000000000000' }; // sum = 0 → 0 % 11 = 0
+      ValidationController.validateSUS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 400 for correct length but wrong checksum', () => {
+      mockRequest.params = { susNumber: '123456789012345' }; // Soma = 470 → 470 % 11 = 8
+      ValidationController.validateSUS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SUS checksum' });
+    });
+  });
+
 });
