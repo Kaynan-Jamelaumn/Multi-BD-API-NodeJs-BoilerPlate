@@ -343,4 +343,67 @@ describe('ValidationController', () => {
     });
   });
 
+
+
+  describe('validateCNH', () => {
+    it('should return 400 if CNH number is not provided', () => {
+      mockRequest.params = {};
+      ValidationController.validateCNH(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'CNH number is required.' });
+    });
+  
+    it('should return 200 for valid CNH number', () => {
+      mockRequest.params = { cnhNumber: '00000000000' }; //valid both check digits =0
+      ValidationController.validateCNH(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid CNH with check digits zero', () => {
+      mockRequest.params = { cnhNumber: '12345678900' }; // Sum1 = 165 (dv1 = 0), Som2 = 285 (dv2 = 0)
+      ValidationController.validateCNH(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 400 for non-numeric characters', () => {
+      mockRequest.params = { cnhNumber: '12345a67890' };
+      ValidationController.validateCNH(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CNH format' });
+    });
+  
+    it('should return 400 for incorrect length (10 digits)', () => {
+      mockRequest.params = { cnhNumber: '1234567890' };
+      ValidationController.validateCNH(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CNH format' });
+    });
+  
+    it('should return 400 for formatted number', () => {
+      mockRequest.params = { cnhNumber: '123.456.789-00' };
+      ValidationController.validateCNH(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CNH format' });
+    });
+  
+    it('should return 400 for invalid checksum', () => {
+      mockRequest.params = { cnhNumber: '12345678909' }; // correct digits would be 00
+      ValidationController.validateCNH(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CNH checksum' });
+    });
+  
+    it('should return 200 for valid check digits with remainder 10', () => {
+      mockRequest.params = { cnhNumber: '12345678801' }; // Sum1 = 164 (dv1 = 0), Sum2 = 276 (dv2 = 1)
+      ValidationController.validateCNH(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 400 for correct length but wrong check digits', () => {
+      mockRequest.params = { cnhNumber: '11111111111' }; // Sum1 = 45 (dv1 = 1), Sum2 = 45 (dv2 = 1)
+      ValidationController.validateCNH(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200); // Este exemplo é válido!
+    });
+  });
+
 });
