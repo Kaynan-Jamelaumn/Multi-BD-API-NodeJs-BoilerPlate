@@ -104,6 +104,11 @@ class IDValidator {
     }
     // Validator for CPF (Cadastro de Pessoas Físicas) - Brazil
     static validateCPF(cpfNumber: string): DocumentValidationResult {
+        if (typeof cpfNumber !== 'string') {
+            return { valid: false, error: 'Invalid input type expected string', status: 400 };
+        }
+
+
         // CPF is 11 digits long and has a specific validation algorithm
         cpfNumber = cpfNumber.replace(/\D/g, ''); // input cleaning and improved format validation
 
@@ -149,17 +154,75 @@ class IDValidator {
     }
     // Validator for RG (Registro Geral) - Brazil
     static validateRG(rgNumber: string) {
-
-        
-        // RG format varies by state, allowing optional dots and dash
-        const rgRegex: RegExp = /^\d{2}\.?\d{3}\.?\d{3}-?[0-9Xx]?$/;
-        if (typeof rgNumber !== 'string') return { valid: false, error: 'Invalid input type' };
-        const isValid: boolean =  rgRegex.test(rgNumber.trim())
-        // Check if the RG matches the allowed format (digits with optional dots and dashes)
-        return { valid: isValid, error: isValid ? null : 'Invalid RG format', status: isValid ? 200 : 400 };
+        if (typeof rgNumber !== 'string') {
+            return { valid: false, error: 'Invalid input type expected string', status: 400 };
+        }
     
+        // Remove any leading or trailing spaces from the RG number.
+        const trimmedRG: string = rgNumber.trim();
+    
+        // Validate the RG format using regex.
+        // Allow two formats:
+        // 1. Formatted: XX.XXX.XXX-X (dots and dash are optional)
+        // 2. Unformatted: 9 digits (XXXXXXXXX)
+        const rgRegex: RegExp = /^(\d{2}\.?\d{3}\.?\d{3}-?[0-9Xx]|\d{9})$/i;
+        if (!rgRegex.test(trimmedRG)) {
+            return { valid: false, error: 'Invalid RG format', status: 400 };
+        }
+    
+        // Remove dots and dashes, and convert to uppercase for consistency.
+        const cleaned: string = trimmedRG.replace(/[.-]/g, '').toUpperCase();
+    
+        // The cleaned RG must be exactly 9 characters long (8 digits + 1 check digit).
+        if (cleaned.length !== 9) {
+            return { valid: false, error: 'Invalid RG format', status: 400 };
+        }
+    
+        // Extract the first 8 characters as the digits part and the last character as the check digit.
+        const digitsPart: string = cleaned.slice(0, 8);
+        const checkDigit: string = cleaned.charAt(8);
+    
+        // Reject RGs where the digits part is all zeros.
+        if (digitsPart === '00000000') {
+            return { valid: false, error: 'Invalid RG checksum', status: 400 };
+        }
+    
+        // Reject RGs where all digits are the same (e.g., '11111111').
+        if (/^(\d)\1+$/.test(digitsPart)) {
+            return { valid: false, error: 'Invalid RG checksum', status: 400 };
+        }
+    
+        // Use weights [9, 8, 7, 6, 5, 4, 3, 2] for each digit in the digits part.
+        const weights: number[] = [9, 8, 7, 6, 5, 4, 3, 2];
+        let sum: number = 0;
+        for (let i = 0; i < 8; i++) {
+            sum += parseInt(digitsPart[i], 10) * weights[i];
+        }
+    
+        // Calculate the check digit as (11 - (sum % 11)).
+        const remainder: number = sum % 11;
+        const computedCheck: number = 11 - remainder;
+    
+        // Handle special cases for the computed check digit:
+        // If the computed check is 10, the check digit is 'X'.
+        // If the computed check is 11, the check digit is '0'.
+        let computedDigit: string;
+        if (computedCheck === 10) {
+            computedDigit = 'X';
+        } else if (computedCheck === 11) {
+            computedDigit = '0';
+        } else {
+            computedDigit = computedCheck.toString();
+        }
+    
+        // Compare the computed check digit with the provided check digit.
+        if (computedDigit !== checkDigit) {
+            return { valid: false, error: 'Invalid RG checksum', status: 400 };
+        }
+    
+        // If all checks pass, the RG is valid.
+        return { valid: true, error: null, status: 200 };
     }
-
     // Validator for SUS (Sistema Único de Saúde) - Brazil
     static validateSUS(susNumber: string): DocumentValidationResult {
         // SUS number must be exactly 15 digits
