@@ -271,25 +271,35 @@ class IDValidator {
 
     // Validator for CTPS (Carteira de Trabalho e Previdência Social) - Brazil
     static validateCTPS(ctpsNumber: string): DocumentValidationResult {
-        // CTPS format: 7-8 digits followed by 1-2 check digits, with optional dashes or spaces
-        const ctpsRegex: RegExp = /^[0-9]{7,8}[-\s]?[0-9]{1,2}$/;
-        if (!ctpsRegex.test(ctpsNumber)) return { valid: false, error: 'Invalid CTPS format', status: 400 };
-
-        // Normalize the input: Remove dashes or spaces and pad to 9 digits if necessary
-        const ctpsDigits: string = ctpsNumber.replace(/[-\s]/g, '').padStart(9, '0');
-        const numberPart: string = ctpsDigits.slice(0, -2); // First 7-8 digits
-        const checkDigits: string = ctpsDigits.slice(-2); // Last 1-2 digits
-
-        // Checksum validation: Calculate a weighted sum using weights decreasing from the length of the number part
-        let sum: number = 0;
-        for (let i = 0; i < numberPart.length; i++) {
-            sum += parseInt(numberPart.charAt(i)) * (numberPart.length + 1 - i);
+        const ctpsRegex: RegExp = /^[0-9]{7,8}(?:[-\s]?[0-9]{2})$/;
+        if (!ctpsRegex.test(ctpsNumber)) {
+            return { valid: false, error: 'Invalid CTPS format', status: 400 };
         }
-        // The check digit is calculated as (11 - (sum % 11)) % 10
-        let dv: number = (11 - (sum % 11)) % 10;
-
-        // Validate that the calculated check digit matches the provided check digit
-        const isValid: boolean = dv === parseInt(checkDigits);
+    
+        const normalized = ctpsNumber.replace(/[-\s]/g, '');
+        const mainPart = normalized.substring(0, normalized.length - 2);
+        const checkDigits = normalized.substring(normalized.length - 2);
+    
+        // Calculate DV1
+        let sum1 = 0;
+        for (let i = 0; i < mainPart.length; i++) {
+            const weight = mainPart.length + 1 - i;
+            sum1 += parseInt(mainPart.charAt(i)) * weight;
+        }
+        let dv1 = sum1 % 11;
+        dv1 = dv1 === 10 ? 0 : dv1;
+    
+        // Calculate DV2 (include DV1 in the calculation)
+        const mainPlusDv1 = mainPart + dv1.toString();
+        let sum2 = 0;
+        for (let i = 0; i < mainPlusDv1.length; i++) {
+            const weight = mainPlusDv1.length + 1 - i;
+            sum2 += parseInt(mainPlusDv1.charAt(i)) * weight;
+        }
+        let dv2 = sum2 % 11;
+        dv2 = dv2 === 10 ? 0 : dv2;
+    
+        const isValid = checkDigits === `${dv1}${dv2}`;
         return { valid: isValid, error: isValid ? null : 'Invalid CTPS checksum', status: isValid ? 200 : 400 };
     }
 

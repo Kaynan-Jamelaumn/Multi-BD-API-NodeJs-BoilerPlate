@@ -240,20 +240,20 @@ describe('BrazilianID Validation', () => {
     });
   
     it('should return 200 for valid CTPS with padding zeros', () => {
-      mockRequest.params = { ctpsNumber: '000000001' }; // Valid (dv calculated = 1)
+      mockRequest.params = { ctpsNumber: '000000000' }; //  DV1=0, DV2=0
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   
     it('should return 200 for formatted valid CTPS with dash', () => {
-      mockRequest.params = { ctpsNumber: '1234567-09' }; // Valid (dv calculated = 9)
+      mockRequest.params = { ctpsNumber: '1234567-21' }; // DV1=2, DV2=7
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   
     it('should return 200 for formatted valid CTPS with space', () => {
       // CTPS with a space separator, should still be valid
-      mockRequest.params = { ctpsNumber: '7654321 19' }; // Valid (dv calculated = 9)
+      mockRequest.params = { ctpsNumber: '7654321 34' }; // Valid DV1=3, DV2=4
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
@@ -284,7 +284,7 @@ describe('BrazilianID Validation', () => {
   
     it('should return 200 for valid 8-digit main number', () => {
       // Valid CTPS with 8 digits, correct checksum
-      mockRequest.params = { ctpsNumber: '8765432104' }; // Sum = 207 → dv = (11 - 9) = 2 → 04?
+      mockRequest.params = { ctpsNumber: '8765432198' }; // DV1=9, DV2=5
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
@@ -299,7 +299,7 @@ describe('BrazilianID Validation', () => {
   
     it('should return 200 for valid check digit with remainder 10', () => {
       // Valid CTPS where check digit calculation results in remainder 10
-      mockRequest.params = { ctpsNumber: '1111111021' }; // Sum = 64 → 64%11=9 → dv = (11-9)=2
+      mockRequest.params = { ctpsNumber: '111111122' }; //DV1=2, DV2=9
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
