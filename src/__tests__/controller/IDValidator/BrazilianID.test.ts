@@ -252,12 +252,14 @@ describe('BrazilianID Validation', () => {
     });
   
     it('should return 200 for formatted valid CTPS with space', () => {
+      // CTPS with a space separator, should still be valid
       mockRequest.params = { ctpsNumber: '7654321 19' }; // Valid (dv calculated = 9)
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   
     it('should return 400 for non-numeric characters', () => {
+      // CTPS contains alphabetic character, should be invalid
       mockRequest.params = { ctpsNumber: '12345a7-89' };
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
@@ -265,6 +267,7 @@ describe('BrazilianID Validation', () => {
     });
   
     it('should return 400 for invalid format with multiple separators', () => {
+      // More than one separator used, should be invalid
       mockRequest.params = { ctpsNumber: '123-4567-89' };
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
@@ -272,6 +275,7 @@ describe('BrazilianID Validation', () => {
     });
   
     it('should return 400 for incorrect checksum', () => {
+      // CTPS checksum digit is incorrect, should fail
       mockRequest.params = { ctpsNumber: '123456789' }; // dv expected 9, given digit 89
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
@@ -279,12 +283,14 @@ describe('BrazilianID Validation', () => {
     });
   
     it('should return 200 for valid 8-digit main number', () => {
+      // Valid CTPS with 8 digits, correct checksum
       mockRequest.params = { ctpsNumber: '8765432104' }; // Sum = 207 → dv = (11 - 9) = 2 → 04?
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   
     it('should return 400 for numbers exceeding max length', () => {
+      // Too many digits after normalization, should be invalid
       mockRequest.params = { ctpsNumber: '123456789012' }; // 12 digits after normalization
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
@@ -292,12 +298,97 @@ describe('BrazilianID Validation', () => {
     });
   
     it('should return 200 for valid check digit with remainder 10', () => {
+      // Valid CTPS where check digit calculation results in remainder 10
       mockRequest.params = { ctpsNumber: '1111111021' }; // Sum = 64 → 64%11=9 → dv = (11-9)=2
       ValidationController.validateCTPS(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   });
 
-
+  describe('validateCRM', () => {
+    it('should return 400 if CRM number is not provided', () => {
+      mockRequest.params = {};
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'CRM number is required.' });
+    });
   
+    it('should return 200 for valid CRM with 4 digits', () => {
+      // CRM with valid 4-digit number and state abbreviation
+      mockRequest.params = { crmNumber: '1234/SP' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid CRM with 6 digits', () => {
+      mockRequest.params = { crmNumber: '123456/RJ' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid CRM with trailing spaces', () => {
+      mockRequest.params = { crmNumber: ' 12345/MG ' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 400 for missing slash', () => {
+      // CRM missing the required slash separator
+      mockRequest.params = { crmNumber: '1234SP' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CRM format' });
+    });
+  
+    it('should return 400 for lowercase letters', () => {
+      mockRequest.params = { crmNumber: '12345/rs' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CRM format' });
+    });
+  
+    it('should return 400 for special characters', () => {
+      mockRequest.params = { crmNumber: '1234/@B' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CRM format' });
+    });
+  
+    it('should return 400 for too many digits', () => {
+      mockRequest.params = { crmNumber: '1234567/SP' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CRM format' });
+    });
+  
+    it('should return 400 for too few digits', () => {
+      mockRequest.params = { crmNumber: '123/SP' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CRM format' });
+    });
+  
+    it('should return 400 for invalid UF length', () => {
+      mockRequest.params = { crmNumber: '12345/ABC' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CRM format' });
+    });
+  
+    it('should return 400 for numeric UF', () => {
+      mockRequest.params = { crmNumber: '12345/12' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CRM format' });
+    });
+  
+    it('should return 200 for valid zero-padded number', () => {
+      mockRequest.params = { crmNumber: '0000/DF' };
+      ValidationController.validateCRM(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  });
+
+
+
 });
