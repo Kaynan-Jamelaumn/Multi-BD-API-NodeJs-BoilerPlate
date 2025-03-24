@@ -490,4 +490,108 @@ describe('BrazilianID Validation', () => {
   });
 
 
+
+
+
+
+  describe('validateCREA', () => {
+    // Basic validation
+    it('should return 400 if CREA number is not provided', () => {
+      mockRequest.params = {};
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'CREA number is required.' });
+    });
+  
+    // Valid formats
+    it('should return 200 for valid CREA with 4 digits', () => {
+      mockRequest.params = { creaNumber: '1234/SP' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid CREA with 6 digits', () => {
+      mockRequest.params = { creaNumber: '123456/RJ' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid CREA with trailing spaces', () => {
+      mockRequest.params = { creaNumber: ' 12345/MG ' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Format violations
+    it('should return 400 for missing slash', () => {
+      mockRequest.params = { creaNumber: '1234SP' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CREA format' });
+    });
+  
+    it('should return 400 for lowercase UF letters', () => {
+      mockRequest.params = { creaNumber: '12345/rs' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CREA format' });
+    });
+  
+    // Edge cases
+    it('should return 400 for too few digits (3)', () => {
+      mockRequest.params = { creaNumber: '123/SP' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CREA format' });
+    });
+  
+    it('should return 400 for too many digits (7)', () => {
+      mockRequest.params = { creaNumber: '1234567/SP' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CREA format' });
+    });
+  
+    // Special characters and invalid formats
+    it('should return 400 for special characters in number', () => {
+      mockRequest.params = { creaNumber: '12@45/SP' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CREA format' });
+    });
+  
+    it('should return 400 for numeric UF', () => {
+      mockRequest.params = { creaNumber: '12345/12' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CREA format' });
+    });
+  
+    // Zero-padded cases
+    it('should return 200 for valid zero-padded number', () => {
+      mockRequest.params = { creaNumber: '0000/DF' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Additional CREA-specific cases
+    it('should return 400 for space between digits', () => {
+      mockRequest.params = { creaNumber: '12 345/SP' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CREA format' });
+    });
+  
+    it('should return 400 for multiple slashes', () => {
+      mockRequest.params = { creaNumber: '1234//SP' };
+      ValidationController.validateCREA(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CREA format' });
+    });
+  
+
+  });
+
+
+  
 });
