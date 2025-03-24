@@ -368,7 +368,12 @@ class IDValidator {
             return { valid: false, error: "Invalid CNPJ format", status: 400 };
         }
 
-        
+        // Reject if all digits are the same (common invalid cases)
+        if (/^(\d)\1{13}$/.test(cnpj)) {
+            return { valid: false, error: "Invalid CNPJ number", status: 400 };
+        }
+
+            
         //Helper function to calculate a CNPJ check digit.
         const calculateCheckDigit = (cnpj: string, weights: number[]): number => {
             let sum: number = 0;

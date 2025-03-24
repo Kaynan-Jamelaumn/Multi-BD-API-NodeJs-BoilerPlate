@@ -674,8 +674,115 @@ describe('BrazilianID Validation', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid PIS/PASEP format' });
     });
-  
-
   });
   
+
+
+  describe('validateCNPJ', () => {
+    // Basic validation
+    it('should return 400 if CNPJ number is not provided', () => {
+      mockRequest.params = {};
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'CNPJ number is required.' });
+    });
+  
+    // Valid CNPJ numbers
+    it('should return 200 for valid CNPJ (common format)', () => {
+      mockRequest.params = { cnpj: '11222333000181' }; // Valid CNPJ
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid CNPJ with first check digit 0)', () => {
+      mockRequest.params = { cnpj: '04252011000110' }; // First digit 0
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid CNPJ with both check digits 0)', () => {
+      mockRequest.params = { cnpj: '00000000000191' }; // Special case
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Format violations
+    it('should return 400 for non-numeric characters', () => {
+      mockRequest.params = { cnpj: '11a22333000181' };
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CNPJ format' });
+    });
+  
+    it('should return 400 for incorrect length (13 digits)', () => {
+      mockRequest.params = { cnpj: '1122233300018' };
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CNPJ format' });
+    });
+  
+    it('should return 400 for incorrect length (15 digits)', () => {
+      mockRequest.params = { cnpj: '112223330001811' };
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CNPJ format' });
+    });
+  
+    // Checksum validation
+    it('should return 400 for invalid first check digit', () => {
+      mockRequest.params = { cnpj: '11222333000191' }; // Should be 11222333000181
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CNPJ number' });
+    });
+  
+    it('should return 400 for invalid second check digit', () => {
+      mockRequest.params = { cnpj: '11222333000182' }; // Should be 11222333000181
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CNPJ number' });
+    });
+  
+    // Special cases
+    it('should return 400 for all zeros except last two digits', () => {
+      mockRequest.params = { cnpj: '00000000000000' }; // Invalid even though checksum passes
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CNPJ number' });
+    });
+  
+    it('should return 400 for all ones', () => {
+      mockRequest.params = { cnpj: '11111111111111' }; // Invalid checksum
+      ValidationController.validateCNPJ(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+  
+    // Testing check digit calculation
+    it('should correctly calculate check digits', () => {
+      // Test first check digit calculation
+      const firstWeights = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+      const testCNPJ = '112223330001';
+      let sum = 0;
+      for (let i = 0; i < firstWeights.length; i++) {
+        sum += parseInt(testCNPJ[i]) * firstWeights[i];
+      }
+      const remainder = sum % 11;
+      const expectedFirstDigit = remainder < 2 ? 0 : 11 - remainder;
+      expect(expectedFirstDigit).toBe(8); // For '11222333000181'
+  
+      // Test second check digit calculation
+      const secondWeights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+      const testCNPJWithFirstDigit = '1122233300018';
+      sum = 0;
+      for (let i = 0; i < secondWeights.length; i++) {
+        sum += parseInt(testCNPJWithFirstDigit[i]) * secondWeights[i];
+      }
+      const remainder2 = sum % 11;
+      const expectedSecondDigit = remainder2 < 2 ? 0 : 11 - remainder2;
+      expect(expectedSecondDigit).toBe(1); // For '11222333000181'
+    });
+  });
+
+
 });
