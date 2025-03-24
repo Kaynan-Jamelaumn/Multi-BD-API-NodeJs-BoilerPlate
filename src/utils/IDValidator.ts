@@ -404,10 +404,12 @@ class IDValidator {
 
     // Validate US Driver's License (General Format - State-Specific Checks Recommended)
     static validateUSDriversLicense(licenseNumber: string): DocumentValidationResult  {
+
+        licenseNumber = licenseNumber.toUpperCase();
         const licenseRegex: RegExp = /^[A-Z0-9]{4,16}$/; // Extended to cover some state variations
         const isValid: boolean = licenseRegex.test(licenseNumber);
 
-
+        licenseNumber = licenseNumber.toUpperCase();
         return { valid: isValid, error:isValid ? null : "Invalid US Driver's License format", status: isValid ? 200 : 400 };
     }
 
