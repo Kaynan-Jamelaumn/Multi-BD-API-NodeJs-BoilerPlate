@@ -593,5 +593,89 @@ describe('BrazilianID Validation', () => {
   });
 
 
+
+
+
+  describe('validatePIS', () => {
+    // Basic validation
+    it('should return 400 if PIS number is not provided', () => {
+      mockRequest.params = {};
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'PIS number is required.' });
+    });
+  
+    // Valid PIS numbers
+    it('should return 200 for valid PIS number (check digit 0)', () => {
+      mockRequest.params = { pis: '12056412502' }; // Valid (sum=141, remainder=9, check digit=2)
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid PIS number (check digit 1)', () => {
+      mockRequest.params = { pis: '12056412502' }; // Valid (sum=141 → remainder=9 → check digit=2)
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid PIS number with check digit calculation', () => {
+      mockRequest.params = { pis: '12345678919' }; // Valid (sum=233, remainder=2, check digit=9)
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Format violations
+    it('should return 400 for non-numeric characters', () => {
+      mockRequest.params = { pis: '12056a12500' };
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid PIS/PASEP format' });
+    });
+  
+    it('should return 400 for incorrect length (10 digits)', () => {
+      mockRequest.params = { pis: '1205641250' };
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid PIS/PASEP format' });
+    });
+  
+    it('should return 400 for incorrect length (12 digits)', () => {
+      mockRequest.params = { pis: '120564125001' };
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid PIS/PASEP format' });
+    });
+  
+    // Checksum validation
+    it('should return 400 for invalid checksum', () => {
+      mockRequest.params = { pis: '12056412501' }; // Should be 12056412500
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid PIS/PASEP number' });
+    });
+  
+    // Special cases
+    it('should return 200 for all zeros (valid checksum)', () => {
+      mockRequest.params = { pis: '00000000000' }; // Valid (sum = 0, remainder = 0, check digit = 0)
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 400 for all ones (invalid checksum)', () => {
+      mockRequest.params = { pis: '11111111111' }; // Invalid (sum = 50, remainder = 6, check digit should be 5)
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Formatted numbers (should fail as we expect raw numbers)
+    it('should return 400 for formatted PIS number', () => {
+      mockRequest.params = { pis: '120.56412.50-0' };
+      ValidationController.validatePIS(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid PIS/PASEP format' });
+    });
+  
+
+  });
   
 });
