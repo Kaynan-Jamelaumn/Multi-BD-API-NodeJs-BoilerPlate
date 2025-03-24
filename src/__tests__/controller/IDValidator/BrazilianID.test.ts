@@ -391,4 +391,103 @@ describe('BrazilianID Validation', () => {
 
 
 
+
+
+  describe('validateOAB', () => {
+    it('should return 400 if OAB number is not provided', () => {
+      mockRequest.params = {};
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'OAB number is required.' });
+    });
+  
+    it('should return 200 for valid OAB with 4 digits', () => {
+      mockRequest.params = { oabNumber: '1234/SP' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid OAB with 6 digits', () => {
+      mockRequest.params = { oabNumber: '123456/RJ' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid OAB with trailing spaces', () => {
+      mockRequest.params = { oabNumber: ' 12345/MG ' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 400 for missing slash', () => {
+      mockRequest.params = { oabNumber: '1234SP' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid OAB format' });
+    });
+  
+    it('should return 400 for lowercase UF', () => {
+      mockRequest.params = { oabNumber: '12345/rs' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid OAB format' });
+    });
+  
+    it('should return 400 for special characters', () => {
+      mockRequest.params = { oabNumber: '1234/@B' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid OAB format' });
+    });
+  
+    it('should return 400 for too many digits', () => {
+      mockRequest.params = { oabNumber: '1234567/SP' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid OAB format' });
+    });
+  
+    it('should return 400 for too few digits', () => {
+      mockRequest.params = { oabNumber: '123/SP' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid OAB format' });
+    });
+  
+    it('should return 400 for invalid UF length', () => {
+      mockRequest.params = { oabNumber: '12345/ABC' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid OAB format' });
+    });
+  
+    it('should return 400 for numeric UF', () => {
+      mockRequest.params = { oabNumber: '12345/12' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid OAB format' });
+    });
+  
+    it('should return 200 for valid zero-padded number', () => {
+      mockRequest.params = { oabNumber: '0000/DF' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 400 for space in number part', () => {
+      mockRequest.params = { oabNumber: '12 3456/SP' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid OAB format' });
+    });
+  
+    it('should return 400 for space after slash', () => {
+      mockRequest.params = { oabNumber: '1234/ SP' };
+      ValidationController.validateOAB(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid OAB format' });
+    });
+  });
+
+
 });
