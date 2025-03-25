@@ -367,6 +367,30 @@ router.get('/validate-us-ssn/:ssn?', ValidationController.validateUSSSN);
 router.get('/validate-us-military-id/:militaryID?', ValidationController.validateUSMilitaryID);
 
 
+
+// Route to validate US Military ID
+/**
+ * @swagger
+ * /validate/validate-us-greencard-number/{greenCardNumber}:
+ *   get:
+ *     summary: Validate US GreenCard
+ *     tags: [Validation]
+ *     parameters:
+ *       - in: path
+ *         name: greenCardNumber
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The US GreenCard
+ *     responses:
+ *       200:
+ *         description: US GreenCard ID is valid
+ *       400:
+ *         description: Invalid US GreenCard ID or missing parameter
+ */
+router.get('/validate-us-greencard-number/:greenCardNumber?', ValidationController.validateUSGreencard);
+
+
 // Route to validate UK National Insurance Number
 /**
  * @swagger

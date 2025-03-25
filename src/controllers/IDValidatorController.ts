@@ -234,6 +234,21 @@ export default class ValidationController {
         this.handleValidationResult(validationResult, res);
     }
 
+    static validateUSGreenCard(req: Request, res: Response): void {
+        const greenCardNumber = this.getData(req, 'greenCardNumber');
+
+        if (!greenCardNumber) {
+            res.status(400).json({
+                error: 'US Greencard Number is required.'
+            });
+            return;
+        }
+
+        const validationResult = IDValidator.validateUSGreenCard(greenCardNumber);
+        this.handleValidationResult(validationResult, res);
+    }
+
+
     static validateUKNINumber(req: Request, res: Response): void {
         const niNumber = this.getData(req, 'niNumber');
 

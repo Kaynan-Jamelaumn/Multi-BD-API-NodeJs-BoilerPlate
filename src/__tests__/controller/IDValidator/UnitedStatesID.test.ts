@@ -238,4 +238,85 @@ describe('UnitedStatesID Validation', () => {
     });
 
 
+
+    describe('validateUSGreenCard', () => {
+      it('should return 400 if Green Card number is missing', () => {
+        mockRequest.params = {};
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'US Greencard Number is required.' });
+      });
+  
+      // Valid Green Card formats (based on regex: /^([A-Z]{3}\d{10}|[A-Z]\d{8,9})$/)
+      it('should return 200 for valid Green Card (format: 3 letters + 10 digits)', () => {
+        mockRequest.params = { greenCardNumber: 'ABC1234567890' }; // 3 letters + 10 digits
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+      });
+  
+      it('should return 200 for valid Green Card (format: 1 letter + 8 digits)', () => {
+        mockRequest.params = { greenCardNumber: 'A12345678' }; // 1 letter + 8 digits
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+      });
+  
+      it('should return 200 for valid Green Card (format: 1 letter + 9 digits)', () => {
+        mockRequest.params = { greenCardNumber: 'B123456789' }; // 1 letter + 9 digits
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+      });
+  
+      // Invalid Green Card formats
+      it('should return 400 for Green Card with 2 letters + 8 digits (invalid format)', () => {
+        mockRequest.params = { greenCardNumber: 'AB12345678' }; // 2 letters + 8 digits (invalid)
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for Green Card with 3 letters + 9 digits (invalid length)', () => {
+        mockRequest.params = { greenCardNumber: 'ABC123456789' }; // 3 letters + 9 digits (invalid)
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for Green Card with 1 letter + 7 digits (too short)', () => {
+        mockRequest.params = { greenCardNumber: 'A1234567' }; // 1 letter + 7 digits (invalid)
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for Green Card with 1 letter + 10 digits (too long)', () => {
+        mockRequest.params = { greenCardNumber: 'A1234567890' }; // 1 letter + 10 digits (invalid)
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for Green Card with lowercase letters', () => {
+        mockRequest.params = { greenCardNumber: 'abc1234567890' }; // Lowercase letters (invalid)
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for Green Card with special characters', () => {
+        mockRequest.params = { greenCardNumber: 'ABC-123-4567' }; // Hyphens (invalid)
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for Green Card with spaces', () => {
+        mockRequest.params = { greenCardNumber: 'ABC 123 4567' }; // Spaces (invalid)
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for empty string', () => {
+        mockRequest.params = { greenCardNumber: '' };
+        ValidationController.validateUSGreenCard(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+    });
+
+    
+
+
 });
