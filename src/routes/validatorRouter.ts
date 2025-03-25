@@ -388,7 +388,176 @@ router.get('/validate-us-military-id/:militaryID?', ValidationController.validat
  *       400:
  *         description: Invalid US GreenCard ID or missing parameter
  */
-router.get('/validate-us-greencard-number/:greenCardNumber?', ValidationController.validateUSGreencard);
+router.get('/validate-us-greencard-number/:greenCardNumber?', ValidationController.validateUSGreenCard);
+
+
+/**
+ * @swagger
+ * /validate/validate-us-ead:
+ *   post:
+ *     summary: Validate US Employment Authorization Document (EAD)
+ *     tags: [Validation]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               eadNumber:
+ *                 type: string
+ *                 description: The EAD number to validate.
+ *     responses:
+ *       200:
+ *         description: EAD Number is valid
+ *       400:
+ *         description: Invalid EAD Number or missing parameter
+ */
+router.post('/validate-us-ead', ValidationController.validateUSEAD);
+
+/**
+ * @swagger
+ * /validate/validate-us-birth-certificate:
+ *   post:
+ *     summary: Validate US Birth Certificate
+ *     tags: [Validation]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               birthCertNumber:
+ *                 type: string
+ *                 description: The US Birth Certificate number to validate.
+ *     responses:
+ *       200:
+ *         description: Birth Certificate Number is valid
+ *       400:
+ *         description: Invalid Birth Certificate Number or missing parameter
+ */
+router.post('/validate-us-birth-certificate', ValidationController.validateUSBirthCertificate);
+
+/**
+ * @swagger
+ * /validate/validate-us-medicare-medicaid:
+ *   post:
+ *     summary: Validate US Medicare/Medicaid Card
+ *     tags: [Validation]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               medicareNumber:
+ *                 type: string
+ *                 description: The Medicare/Medicaid number to validate.
+ *     responses:
+ *       200:
+ *         description: Medicare/Medicaid Number is valid
+ *       400:
+ *         description: Invalid Medicare/Medicaid Number or missing parameter
+ */
+router.post('/validate-us-medicare-medicaid', ValidationController.validateUSMedicareMedicaid);
+
+/**
+ * @swagger
+ * /validate/validate-us-veteran-id:
+ *   post:
+ *     summary: Validate US Veteran ID Card
+ *     tags: [Validation]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               vicNumber:
+ *                 type: string
+ *                 description: The Veteran ID number to validate.
+ *     responses:
+ *       200:
+ *         description: Veteran ID Number is valid
+ *       400:
+ *         description: Invalid Veteran ID Number or missing parameter
+ */
+router.post('/validate-us-veteran-id', ValidationController.validateUSVeteranID);
+
+/**
+ * @swagger
+ * /validate/validate-uk-driving-licence:
+ *   post:
+ *     summary: Validate UK Driving Licence
+ *     tags: [Validation]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               licenceNumber:
+ *                 type: string
+ *                 description: The UK Driving Licence number to validate.
+ *     responses:
+ *       200:
+ *         description: Driving Licence Number is valid
+ *       400:
+ *         description: Invalid Driving Licence Number or missing parameter
+ */
+router.post('/validate-uk-driving-licence', ValidationController.validateUKDrivingLicence);
+
+/**
+ * @swagger
+ * /validate/validate-uk-birth-certificate:
+ *   post:
+ *     summary: Validate UK Birth Certificate
+ *     tags: [Validation]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               birthCertNumber:
+ *                 type: string
+ *                 description: The UK Birth Certificate number to validate.
+ *     responses:
+ *       200:
+ *         description: Birth Certificate Number is valid
+ *       400:
+ *         description: Invalid Birth Certificate Number or missing parameter
+ */
+router.post('/validate-uk-birth-certificate', ValidationController.validateUKBirthCertificate);
+
+/**
+ * @swagger
+ * /validate/validate-uk-armed-forces-id:
+ *   post:
+ *     summary: Validate UK Armed Forces ID
+ *     tags: [Validation]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               armedForcesID:
+ *                 type: string
+ *                 description: The Armed Forces ID number to validate.
+ *     responses:
+ *       200:
+ *         description: Armed Forces ID Number is valid
+ *       400:
+ *         description: Invalid Armed Forces ID Number or missing parameter
+ */
+router.post('/validate-uk-armed-forces-id', ValidationController.validateUKArmedForcesID);
 
 
 // Route to validate UK National Insurance Number
@@ -412,6 +581,31 @@ router.get('/validate-us-greencard-number/:greenCardNumber?', ValidationControll
  *         description: Invalid UK NI Number or missing parameter
  */
 router.get('/validate-uk-ni/:niNumber?', ValidationController.validateUKNINumber);
+
+/**
+ * @swagger
+ * /validate/validate-uk-residence-card:
+ *   post:
+ *     summary: Validate UK Biometric Residence Permit (BRP)
+ *     tags: [Validation]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               residenceCardNumber:
+ *                 type: string
+ *                 description: The Biometric Residence Permit number to validate.
+ *     responses:
+ *       200:
+ *         description: Residence Card Number is valid
+ *       400:
+ *         description: Invalid Residence Card Number or missing parameter
+ */
+router.post('/validate-uk-residence-card', ValidationController.validateUKResidenceCard);
+
 
 
 // Route to validate Canadian SIN (Social Insurance Number)

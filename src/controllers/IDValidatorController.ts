@@ -248,6 +248,103 @@ export default class ValidationController {
         this.handleValidationResult(validationResult, res);
     }
 
+    static validateUSEAD(req: Request, res: Response): void {
+        const eadNumber = req.body.eadNumber;
+
+        if (!eadNumber) {
+            res.status(400).json({
+                error: 'EAD Number is required.'
+            });
+            return;
+        }
+
+        const validationResult = IDValidator.validateUSEAD(eadNumber);
+        this.handleValidationResult(validationResult, res);
+    }
+
+    static validateUSBirthCertificate(req: Request, res: Response): void {
+        const birthCertNumber = req.body.birthCertNumber;
+
+        if (!birthCertNumber) {
+            res.status(400).json({
+                error: 'Birth Certificate Number is required.'
+            });
+            return;
+        }
+
+        const validationResult = IDValidator.validateUSBirthCertificate(birthCertNumber);
+        this.handleValidationResult(validationResult, res);
+    }
+
+    static validateUSMedicareMedicaid(req: Request, res: Response): void {
+        const medicareNumber = req.body.medicareNumber;
+
+        if (!medicareNumber) {
+            res.status(400).json({
+                error: 'Medicare/Medicaid Number is required.'
+            });
+            return;
+        }
+
+        const validationResult = IDValidator.validateUSMedicareMedicaid(medicareNumber);
+        this.handleValidationResult(validationResult, res);
+    }
+
+    static validateUSVeteranID(req: Request, res: Response): void {
+        const vicNumber = req.body.vicNumber;
+
+        if (!vicNumber) {
+            res.status(400).json({
+                error: 'Veteran ID Number is required.'
+            });
+            return;
+        }
+
+        const validationResult = IDValidator.validateUSVeteranID(vicNumber);
+        this.handleValidationResult(validationResult, res);
+    }
+
+    static validateUKDrivingLicence(req: Request, res: Response): void {
+        const licenceNumber = req.body.licenceNumber;
+
+        if (!licenceNumber) {
+            res.status(400).json({
+                error: 'Driving Licence Number is required.'
+            });
+            return;
+        }
+
+        const validationResult = IDValidator.validateUKDrivingLicence(licenceNumber);
+        this.handleValidationResult(validationResult, res);
+    }
+
+    static validateUKBirthCertificate(req: Request, res: Response): void {
+        const birthCertNumber = req.body.birthCertNumber;
+
+        if (!birthCertNumber) {
+            res.status(400).json({
+                error: 'Birth Certificate Number is required.'
+            });
+            return;
+        }
+
+        const validationResult = IDValidator.validateUKBirthCertificate(birthCertNumber);
+        this.handleValidationResult(validationResult, res);
+    }
+
+    static validateUKArmedForcesID(req: Request, res: Response): void {
+        const armedForcesID = req.body.armedForcesID;
+
+        if (!armedForcesID) {
+            res.status(400).json({
+                error: 'Armed Forces ID Number is required.'
+            });
+            return;
+        }
+
+        const validationResult = IDValidator.validateUKArmedForcesID(armedForcesID);
+        this.handleValidationResult(validationResult, res);
+    }
 
     static validateUKNINumber(req: Request, res: Response): void {
         const niNumber = this.getData(req, 'niNumber');
@@ -260,6 +357,20 @@ export default class ValidationController {
         }
 
         const validationResult = IDValidator.validateUKNINumber(niNumber);
+        this.handleValidationResult(validationResult, res);
+    }
+
+    static validateUKResidenceCard(req: Request, res: Response): void {
+        const residenceCardNumber = req.body.residenceCardNumber;
+
+        if (!residenceCardNumber) {
+            res.status(400).json({
+                error: 'Residence Card Number is required.'
+            });
+            return;
+        }
+
+        const validationResult = IDValidator.validateUKResidenceCard(residenceCardNumber);
         this.handleValidationResult(validationResult, res);
     }
 
