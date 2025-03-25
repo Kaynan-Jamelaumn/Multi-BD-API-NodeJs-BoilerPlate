@@ -423,6 +423,7 @@ class IDValidator {
 
     // Validate US Military ID (CAC)
     static validateUSMilitaryID(militaryID: string): DocumentValidationResult  {
+        militaryID = militaryID.toUpperCase();
         const militaryIDRegex: RegExp = /^[A-Z0-9]{10,12}$/;
         const isValid: boolean = militaryIDRegex.test(militaryID);
 

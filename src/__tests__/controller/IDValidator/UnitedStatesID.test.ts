@@ -161,6 +161,81 @@ describe('UnitedStatesID Validation', () => {
         expect(mockResponse.status).toHaveBeenCalledWith(400);
       });
     });
+    
+
+
+
+
+    describe('validateUSMilitaryID', () => {
+      it('should return 400 if Military ID is missing', () => {
+        mockRequest.params = {};
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'US Military ID is required.' });
+      });
+  
+      // Valid Military ID formats
+      it('should return 200 for valid Military ID (minimum length - 10 chars)', () => {
+        mockRequest.params = { militaryID: 'ABCD123456' };
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+      });
+  
+      it('should return 200 for valid Military ID (maximum length - 12 chars)', () => {
+        mockRequest.params = { militaryID: 'ABCD12345678' };
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+      });
+  
+      it('should return 200 for valid Military ID (mixed case converted to uppercase)', () => {
+        mockRequest.params = { militaryID: 'abCD123456' };
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+      });
+  
+      it('should return 200 for valid Military ID (all numbers)', () => {
+        mockRequest.params = { militaryID: '1234567890' };
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+      });
+  
+      it('should return 200 for valid Military ID (all letters)', () => {
+        mockRequest.params = { militaryID: 'ABCDEFGHIJ' };
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+      });
+  
+      // Invalid Military ID formats
+      it('should return 400 for Military ID that is too short (9 chars)', () => {
+        mockRequest.params = { militaryID: 'ABCD12345' };
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for Military ID that is too long (13 chars)', () => {
+        mockRequest.params = { militaryID: 'ABCD123456789' };
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for Military ID with special characters', () => {
+        mockRequest.params = { militaryID: 'ABCD-123456' };
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for Military ID with spaces', () => {
+        mockRequest.params = { militaryID: 'ABCD 123456' };
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for empty string', () => {
+        mockRequest.params = { militaryID: '' };
+        ValidationController.validateUSMilitaryID(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+    });
 
 
 });
