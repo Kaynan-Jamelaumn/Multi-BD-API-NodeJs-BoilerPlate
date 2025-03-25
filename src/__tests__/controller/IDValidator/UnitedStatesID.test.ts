@@ -319,4 +319,71 @@ describe('UnitedStatesID Validation', () => {
     
 
 
+
+
+    describe('validateUSEAD', () => {
+      it('should return 400 if EAD number is missing', () => {
+        mockRequest.params = {};
+        ValidationController.validateUSEAD(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'EAD Number is required.' });
+      });
+  
+      // Valid EAD formats (based on regex: /^[A-Z]{3}\d{10}$/)
+      it('should return 200 for valid EAD (format: 3 letters + 10 digits)', () => {
+        mockRequest.params = { eadNumber: 'ABC1234567890' }; // 3 letters + 10 digits
+        ValidationController.validateUSEAD(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+      });
+  
+      // Invalid EAD formats
+      it('should return 400 for EAD with 2 letters + 10 digits', () => {
+        mockRequest.params = { eadNumber: 'AB1234567890' }; // 2 letters + 10 digits
+        ValidationController.validateUSEAD(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for EAD with 3 letters + 9 digits', () => {
+        mockRequest.params = { eadNumber: 'ABC123456789' }; // 3 letters + 9 digits
+        ValidationController.validateUSEAD(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for EAD with 3 letters + 11 digits', () => {
+        mockRequest.params = { eadNumber: 'ABC12345678901' }; // 3 letters + 11 digits
+        ValidationController.validateUSEAD(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for EAD with lowercase letters', () => {
+        mockRequest.params = { eadNumber: 'abc1234567890' }; // lowercase letters
+        ValidationController.validateUSEAD(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for EAD with special characters', () => {
+        mockRequest.params = { eadNumber: 'ABC-123-4567' }; // hyphens
+        ValidationController.validateUSEAD(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for EAD with spaces', () => {
+        mockRequest.params = { eadNumber: 'ABC 123 4567' }; // spaces
+        ValidationController.validateUSEAD(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for empty string', () => {
+        mockRequest.params = { eadNumber: '' };
+        ValidationController.validateUSEAD(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for EAD with letters in wrong positions', () => {
+        mockRequest.params = { eadNumber: '1A23B456C789' }; // letters mixed with digits
+        ValidationController.validateUSEAD(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+    });
+
 });
