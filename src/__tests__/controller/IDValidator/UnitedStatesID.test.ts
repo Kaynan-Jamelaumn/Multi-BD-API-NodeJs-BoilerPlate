@@ -78,4 +78,89 @@ describe('UnitedStatesID Validation', () => {
     });
 
   
+
+    describe('validateUSSSN', () => {
+      it('should return 400 if SSN is missing', () => {
+        mockRequest.params = {};
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'US SSN is required.' });
+      });
+  
+      // Valid SSN formats
+      it('should return 200 for valid SSN (standard format)', () => {
+        mockRequest.params = { ssn: '123-45-6789' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+      });
+  
+      // Invalid SSN formats
+      it('should return 400 for SSN starting with 000', () => {
+        mockRequest.params = { ssn: '000-45-6789' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for SSN starting with 666', () => {
+        mockRequest.params = { ssn: '666-45-6789' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for SSN starting with 900-999', () => {
+        mockRequest.params = { ssn: '900-45-6789' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for SSN with middle digits 00', () => {
+        mockRequest.params = { ssn: '123-00-6789' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for SSN with last digits 0000', () => {
+        mockRequest.params = { ssn: '123-45-0000' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for SSN without hyphens', () => {
+        mockRequest.params = { ssn: '123456789' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for SSN with incorrect hyphen placement', () => {
+        mockRequest.params = { ssn: '12-345-6789' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for SSN with letters', () => {
+        mockRequest.params = { ssn: 'ABC-DE-FGHI' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for SSN that is too short', () => {
+        mockRequest.params = { ssn: '123-45-678' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for SSN that is too long', () => {
+        mockRequest.params = { ssn: '123-45-67890' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+  
+      it('should return 400 for empty string', () => {
+        mockRequest.params = { ssn: '' };
+        ValidationController.validateUSSSN(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+      });
+    });
+
+
 });
