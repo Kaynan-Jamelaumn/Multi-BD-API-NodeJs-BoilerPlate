@@ -455,11 +455,27 @@ class IDValidator {
     }
 
     // Validate US Medicare/Medicaid Card (MBI Format)
-    static validateUSMedicareMedicaid(medicareNumber: string): DocumentValidationResult  {
-        const medicareRegex: RegExp = /^[1-9][A-Z]\d{2}-[A-Z]\d{4}-[A-Z]\d{2}$/;
-        const isValid: boolean = medicareRegex.test(medicareNumber);
-
-        return { valid: isValid, error: isValid ? null : "Invalid Medicare/Medicaid format", status: isValid ? 200 : 400 };
+    static validateUSMedicareMedicaid(medicareNumber: string): DocumentValidationResult {
+        // Medicare MBI format rules:
+        // 1st character: 1-9 (no 0)
+        // 2nd character: A-Z (excluding S, L, O, I, B, Z)
+        // 3rd-4th characters: 0-9
+        // 5th: hyphen
+        // 6th character: A-Z (excluding S, L, O, I, B, Z)
+        // 7th-9th characters: 0-9
+        // 10th: hyphen
+        // 11th character: A-Z (excluding S, L, O, I, B, Z)
+        // 12th-13th characters: 0-9
+    
+        // Format validation regex
+        const mbiRegex = /^[1-9]([A-HJ-KM-NP-RT-Z])\d{2}-([A-HJ-KM-NP-RT-Z])\d{3}-([A-HJ-KM-NP-RT-Z])\d{2}$/;
+    
+        // Check basic format
+        if (!mbiRegex.test(medicareNumber)) {
+            return { valid: false, error: "Invalid Medicare/Medicaid format", status: 400 };
+        }
+    
+        return { valid: true, error: null, status: 200 };
     }
 
     // Validate US Veteran ID Card (VIC)
