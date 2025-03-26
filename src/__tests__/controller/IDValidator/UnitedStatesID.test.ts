@@ -394,7 +394,7 @@ describe('UnitedStatesID Validation', () => {
 
 
 
-
+    describe('validateUS Birth Certificate', () => {
     it('should return 400 if Birth Certificate number is missing', () => {
       mockRequest.params = {};
       ValidationController.validateUSBirthCertificate(mockRequest as Request, mockResponse as Response);
@@ -506,13 +506,13 @@ describe('UnitedStatesID Validation', () => {
       ValidationController.validateUSBirthCertificate(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
     });
+  });
 
 
 
 
 
-
-
+  describe('validateUS Medicare/MedicID', () => {
     it('should return 400 if Medicare/Medicaid number is missing', () => {
       mockRequest.params = {};
       ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
@@ -631,7 +631,7 @@ describe('UnitedStatesID Validation', () => {
       ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
     });
-
+  });
 
 
 
@@ -641,7 +641,7 @@ describe('UnitedStatesID Validation', () => {
 
 
     
-    
+  describe('validateUS Veteran ID', () => {
     it('should return 400 if Veteran ID number is missing', () => {
       mockRequest.params = {};
       ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
@@ -764,7 +764,7 @@ describe('UnitedStatesID Validation', () => {
       ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
     });
-
+  });
 
 
 

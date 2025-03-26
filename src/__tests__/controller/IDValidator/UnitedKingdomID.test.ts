@@ -1,0 +1,160 @@
+// tests/controllers/UnitedKingdomID.test.ts
+import { Request, Response } from 'express';
+import ValidationController from '../../../controllers/IDValidatorController';
+import { ValidationResult } from '../../../types/validation';
+
+describe('UnitedKingdomID Validation', () => {
+  let mockRequest: Partial<Request>;
+  let mockResponse: Partial<Response>;
+  const responseResult = {
+    json: jest.fn(),
+    status: jest.fn().mockReturnThis(),
+  };
+
+  beforeEach(() => {
+    mockRequest = {};
+    mockResponse = responseResult;
+    jest.clearAllMocks();
+  });
+
+
+  describe('validateUK Driving License', () => {
+    it('should return 400 if Driving Licence number is missing', () => {
+      mockRequest.params = {};
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Driving Licence Number is required.' });
+    });
+
+    // Valid UK Driving Licence formats (based on regex: /^[A-Z]{5}\d{6}[A-Z]{2}\d{2}$/)
+    it('should return 200 for valid licence (5 letters + 6 digits + 2 letters + 2 digits)', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE123456FG12' }; // valid format
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+
+    it('should return 200 for valid licence with different character combinations', () => {
+      mockRequest.params = { licenceNumber: 'ZYXWV987654LK98' }; // different valid combination
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+
+    // Invalid UK Driving Licence formats
+    it('should return 400 for licence with 4 letters at start', () => {
+      mockRequest.params = { licenceNumber: 'ABCD123456FG12' }; // 4 letters at start
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with 6 letters at start', () => {
+      mockRequest.params = { licenceNumber: 'ABCDEF123456FG12' }; // 6 letters at start
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with 5 digits in middle', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE12345FG12' }; // 5 digits
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with 7 digits in middle', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE1234567FG12' }; // 7 digits
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with 1 letter at end', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE123456F12' }; // 1 letter before final digits
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with 3 letters at end', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE123456FGH12' }; // 3 letters before final digits
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with 1 digit at very end', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE123456FG1' }; // 1 final digit
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with 3 digits at very end', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE123456FG123' }; // 3 final digits
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with lowercase letters', () => {
+      mockRequest.params = { licenceNumber: 'abcde123456fg12' }; // lowercase letters
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with special characters', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE-123456-FG12' }; // hyphens
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with spaces', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE 123456 FG12' }; // spaces
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for empty string', () => {
+      mockRequest.params = { licenceNumber: '' };
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with letters in digit sections', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE12A456FG12' }; // letter in digit section
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with digits in letter sections', () => {
+      mockRequest.params = { licenceNumber: 'ABCD5123456F612' }; // digits in letter sections
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    // Edge cases
+    it('should return 400 for licence with leading/trailing whitespace', () => {
+      mockRequest.params = { licenceNumber: ' ABCDE123456FG12 ' }; // whitespace around
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with exactly 15 characters but wrong format', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE123456FG123' }; // 15 chars but wrong format
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    // Security test cases
+    it('should return 400 for licence with SQL injection attempt', () => {
+      mockRequest.params = { licenceNumber: "ABCDE' OR '1'='1" };
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    it('should return 400 for licence with XSS attempt', () => {
+      mockRequest.params = { licenceNumber: 'ABCDE<script>alert(1)</script>' };
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+    // Testing excluded characters
+    it('should return 400 for licence containing special unicode characters', () => {
+      mockRequest.params = { licenceNumber: 'ABCD€123456FG12' }; // euro symbol
+      ValidationController.validateUKDrivingLicence(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  });
+});
