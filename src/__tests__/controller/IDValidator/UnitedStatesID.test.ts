@@ -509,6 +509,10 @@ describe('UnitedStatesID Validation', () => {
 
 
 
+
+
+
+
     it('should return 400 if Medicare/Medicaid number is missing', () => {
       mockRequest.params = {};
       ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
@@ -627,5 +631,141 @@ describe('UnitedStatesID Validation', () => {
       ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
     });
+
+
+
+
+
+
+
+
+
     
+    
+    it('should return 400 if Veteran ID number is missing', () => {
+      mockRequest.params = {};
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Veteran ID Number is required.' });
+    });
+  
+    // Valid VIC formats (based on regex: /^[A-Z0-9]{8,12}$/)
+    it('should return 200 for valid VIC with 8 alphanumeric characters', () => {
+      mockRequest.params = { vicNumber: 'A1B2C3D4' }; // 8 chars
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid VIC with 12 alphanumeric characters', () => {
+      mockRequest.params = { vicNumber: 'A1B2C3D4E5F6' }; // 12 chars
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid VIC with all numbers', () => {
+      mockRequest.params = { vicNumber: '12345678' }; // all digits
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid VIC with all letters', () => {
+      mockRequest.params = { vicNumber: 'ABCDEFGH' }; // all letters
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Invalid VIC formats
+    it('should return 400 for VIC with 7 characters', () => {
+      mockRequest.params = { vicNumber: 'A1B2C3D' }; // 7 chars (below minimum)
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for VIC with 13 characters', () => {
+      mockRequest.params = { vicNumber: 'A1B2C3D4E5F6G' }; // 13 chars (above maximum)
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for VIC with lowercase letters', () => {
+      mockRequest.params = { vicNumber: 'a1b2c3d4' }; // lowercase
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for VIC with special characters', () => {
+      mockRequest.params = { vicNumber: 'A1B2-C3D4' }; // hyphen
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for VIC with spaces', () => {
+      mockRequest.params = { vicNumber: 'A1B2 C3D4' }; // space
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for empty string', () => {
+      mockRequest.params = { vicNumber: '' };
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Edge cases
+    it('should return 400 for VIC with leading/trailing whitespace', () => {
+      mockRequest.params = { vicNumber: ' A1B2C3D4 ' }; // whitespace
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for VIC with unicode characters', () => {
+      mockRequest.params = { vicNumber: 'A1B2©3D4' }; // copyright symbol
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Mixed valid length but invalid characters
+    it('should return 400 for VIC with 10 chars but including special chars', () => {
+      mockRequest.params = { vicNumber: 'A1B2@C3D4!' }; // 10 chars but invalid
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing minimum and maximum boundaries
+    it('should return 200 for exactly 8 character VIC', () => {
+      mockRequest.params = { vicNumber: '12345678' }; // exact minimum
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for exactly 12 character VIC', () => {
+      mockRequest.params = { vicNumber: 'ABCDEFGH1234' }; // exact maximum
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Testing mixed valid cases
+    it('should return 200 for valid VIC with mixed letters and numbers', () => {
+      mockRequest.params = { vicNumber: 'A1B2C3D4E5' }; // 10 chars mixed
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Testing potential false positives
+    it('should return 400 for VIC that looks valid but has newline', () => {
+      mockRequest.params = { vicNumber: 'A1B2C3D4\n' }; // with newline
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing potential SQL injection attempts
+    it('should return 400 for VIC with SQL injection attempt', () => {
+      mockRequest.params = { vicNumber: "A1B2' OR '1'='1" };
+      ValidationController.validateUSVeteranID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+
+
+
+
 });
