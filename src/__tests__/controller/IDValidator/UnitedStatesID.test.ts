@@ -508,5 +508,124 @@ describe('UnitedStatesID Validation', () => {
     });
 
 
+
+    it('should return 400 if Medicare/Medicaid number is missing', () => {
+      mockRequest.params = {};
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Medicare/Medicaid Number is required.' });
+    });
+  
+    // Valid MBI formats (based on regex: /^[1-9][A-Z]\d{2}-[A-Z]\d{4}-[A-Z]\d{2}$/)
+    it('should return 200 for valid MBI format (1A23-B456-C78)', () => {
+      mockRequest.params = { medicareNumber: '1A23-B456-C78' };
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid MBI with different character combinations', () => {
+      mockRequest.params = { medicareNumber: '9Z99-Z999-Z99' };
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Invalid MBI formats
+    it('should return 400 for MBI starting with 0', () => {
+      mockRequest.params = { medicareNumber: '0A23-B456-C78' }; // starts with 0
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI starting with letter', () => {
+      mockRequest.params = { medicareNumber: 'AA23-B456-C78' }; // starts with letter
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI with lowercase letters', () => {
+      mockRequest.params = { medicareNumber: '1a23-b456-c78' }; // lowercase letters
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI missing hyphens', () => {
+      mockRequest.params = { medicareNumber: '1A23B456C78' }; // no hyphens
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI with wrong hyphen positions', () => {
+      mockRequest.params = { medicareNumber: '1-A23-B456-C78' }; // too many hyphens
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI with spaces', () => {
+      mockRequest.params = { medicareNumber: '1A23 B456 C78' }; // spaces instead of hyphens
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI with special characters', () => {
+      mockRequest.params = { medicareNumber: '1A23@B456#C78' }; // special characters
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for empty string', () => {
+      mockRequest.params = { medicareNumber: '' };
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI with incorrect segment lengths', () => {
+      mockRequest.params = { medicareNumber: '1A2-B456-C78' }; // first segment too short
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI with letters in digit positions', () => {
+      mockRequest.params = { medicareNumber: '1A2B-B45C-C7D' }; // letters where digits should be
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI with digits in letter positions', () => {
+      mockRequest.params = { medicareNumber: '1123-2456-378' }; // digits where letters should be
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Edge cases
+    it('should return 400 for MBI with leading/trailing whitespace', () => {
+      mockRequest.params = { medicareNumber: ' 1A23-B456-C78 ' };
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI with too many characters', () => {
+      mockRequest.params = { medicareNumber: '1A23-B456-C789' }; // last segment too long
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI with too few characters', () => {
+      mockRequest.params = { medicareNumber: '1A23-B456-C7' }; // last segment too short
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing excluded characters (S, L, O, I, B, Z)
+    it('should return 400 for MBI containing excluded letter S', () => {
+      mockRequest.params = { medicareNumber: '1S23-B456-C78' }; // contains S
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for MBI containing excluded letter L', () => {
+      mockRequest.params = { medicareNumber: '1A23-L456-C78' }; // contains L
+      ValidationController.validateUSMedicareMedicaid(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
     
 });
