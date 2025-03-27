@@ -447,6 +447,9 @@ describe('UnitedKingdomID Validation', () => {
 
 
 
+
+
+
   describe('validateUKNINumber', () => {
     it('should return 400 if NI Number is missing', () => {
       mockRequest.params = {};
@@ -634,6 +637,145 @@ describe('UnitedKingdomID Validation', () => {
     it('should return 400 for NI Number with 10 characters', () => {
       mockRequest.params = { niNumber: 'AB1234567C' }; // 1 digit extra
       ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  });
+
+
+
+
+
+
+
+
+  describe('validateUKResidenceCard', () => {
+    it('should return 400 if Residence Card number is missing', () => {
+      mockRequest.params = {};
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Residence Card Number is required.' });
+    });
+  
+    // Valid UK Residence Card formats (based on regex: /^[A-Z0-9]{12}$/)
+    it('should return 200 for valid Residence Card with all letters', () => {
+      mockRequest.params = { residenceCardNumber: 'ABCDEFGHIJKL' }; // 12 letters
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid Residence Card with all numbers', () => {
+      mockRequest.params = { residenceCardNumber: '123456789012' }; // 12 digits
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid Residence Card with mixed alphanumeric', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12CD34EF56' }; // mixed
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Invalid UK Residence Card formats
+    it('should return 400 for Residence Card with 11 characters', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12CD34EF5' }; // 11 chars
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for Residence Card with 13 characters', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12CD34EF567' }; // 13 chars
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for Residence Card with lowercase letters', () => {
+      mockRequest.params = { residenceCardNumber: 'ab12cd34ef56' }; // lowercase
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for Residence Card with special characters', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12-CD34-EF56' }; // hyphens
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for Residence Card with spaces', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12 CD34 EF56' }; // spaces
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for empty string', () => {
+      mockRequest.params = { residenceCardNumber: '' };
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Edge cases
+    it('should return 400 for Residence Card with leading/trailing whitespace', () => {
+      mockRequest.params = { residenceCardNumber: ' AB12CD34EF56 ' }; // whitespace
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for Residence Card with unicode characters', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12©D34EF56' }; // copyright symbol
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Security test cases
+    it('should return 400 for Residence Card with SQL injection attempt', () => {
+      mockRequest.params = { residenceCardNumber: "AB12' OR '1'='1" };
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for Residence Card with XSS attempt', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12<script>alert(1)</script>' };
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing exact length requirements
+    it('should return 200 for exactly 12 character Residence Card', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12CD34EF56' }; // exact length
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Testing position-specific patterns
+    it('should return 200 for Residence Card matching common BRP patterns', () => {
+      mockRequest.params = { residenceCardNumber: 'RU1234567890' }; // common pattern
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Testing excluded characters
+    it('should return 400 for Residence Card with ambiguous characters (I, O, etc.)', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12IO34EF56' }; // contains I and O
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing real-world examples
+    it('should return 200 for realistic Residence Card number', () => {
+      mockRequest.params = { residenceCardNumber: 'ZX9876543210' }; // realistic example
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Testing minimum and maximum boundaries
+    it('should return 400 for 11 character Residence Card', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12CD34EF5' }; // 1 char short
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for 13 character Residence Card', () => {
+      mockRequest.params = { residenceCardNumber: 'AB12CD34EF567' }; // 1 char extra
+      ValidationController.validateUKResidenceCard(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
     });
   });
