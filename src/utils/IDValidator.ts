@@ -522,12 +522,37 @@ class IDValidator {
     }
 
     // Validate UK Biometric Residence Permit (BRP)
-    static validateUKResidenceCard(residenceCardNumber: string): DocumentValidationResult  {
+    static validateUKResidenceCard(residenceCardNumber: string): DocumentValidationResult {
+        // 1. Check basic format (12 uppercase alphanumeric chars)
         const residenceCardRegex: RegExp = /^[A-Z0-9]{12}$/;
-        const isValid: boolean = residenceCardRegex.test(residenceCardNumber);
-
-
-        return { valid: isValid, error: isValid ? null : "Invalid UK Residence Card format", status: isValid ? 200 : 400 };
+        if (!residenceCardRegex.test(residenceCardNumber)) {
+            return { 
+                valid: false, 
+                error: "Invalid UK Residence Card format (must be 12 uppercase alphanumeric characters)", 
+                status: 400 
+            };
+        }
+    
+        // 2. Check if the string contains BOTH letters and numbers (mixed)
+        const hasLetters: boolean = /[A-Z]/.test(residenceCardNumber);
+        const hasNumbers: boolean = /[0-9]/.test(residenceCardNumber);
+        const isMixed: boolean = hasLetters && hasNumbers;
+    
+        // 3. If mixed, reject 'I' and 'O' (ambiguous with 1 and 0)
+        if (isMixed && /[IO]/.test(residenceCardNumber)) {
+            return { 
+                valid: false, 
+                error: "UK Residence Card cannot contain 'I' or 'O' when mixed with numbers (ambiguous with 1 and 0)", 
+                status: 400 
+            };
+        }
+        
+        // 4. Otherwise, valid
+        return { 
+            valid: true, 
+            error: null, 
+            status: 200 
+        };
     }
 
     //Canadian SIN (Social Insurance Number)
