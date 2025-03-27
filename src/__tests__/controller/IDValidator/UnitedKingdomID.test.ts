@@ -443,7 +443,199 @@ describe('UnitedKingdomID Validation', () => {
       ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
     });
-  });
+  }); 
 
+
+
+  describe('validateUKNINumber', () => {
+    it('should return 400 if NI Number is missing', () => {
+      mockRequest.params = {};
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'UK NI Number is required.' });
+    });
+  
+    // Valid NI Number formats (based on regex: /^(?!BG|GB|NK|KN|TN|NT|ZZ)[A-Z]{2}\d{6}[ABCD]$/)
+    it('should return 200 for valid NI Number (AB123456C)', () => {
+      mockRequest.params = { niNumber: 'AB123456C' }; // valid format
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid NI Number with different suffix', () => {
+      mockRequest.params = { niNumber: 'CD654321D' }; // different valid suffix
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Invalid prefix combinations
+    it('should return 400 for NI Number with BG prefix', () => {
+      mockRequest.params = { niNumber: 'BG123456A' }; // excluded BG
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with GB prefix', () => {
+      mockRequest.params = { niNumber: 'GB123456B' }; // excluded GB
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with NK prefix', () => {
+      mockRequest.params = { niNumber: 'NK123456C' }; // excluded NK
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with KN prefix', () => {
+      mockRequest.params = { niNumber: 'KN123456D' }; // excluded KN
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with TN prefix', () => {
+      mockRequest.params = { niNumber: 'TN123456A' }; // excluded TN
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with NT prefix', () => {
+      mockRequest.params = { niNumber: 'NT123456B' }; // excluded NT
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with ZZ prefix', () => {
+      mockRequest.params = { niNumber: 'ZZ123456C' }; // excluded ZZ
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Invalid format variations
+    it('should return 400 for NI Number with 1 letter prefix', () => {
+      mockRequest.params = { niNumber: 'A1234567D' }; // 1 letter prefix
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with 3 letter prefix', () => {
+      mockRequest.params = { niNumber: 'ABC12345D' }; // 3 letter prefix
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with 5 digits', () => {
+      mockRequest.params = { niNumber: 'AB12345D' }; // 5 digits
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with 7 digits', () => {
+      mockRequest.params = { niNumber: 'AB1234567D' }; // 7 digits
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with invalid suffix', () => {
+      mockRequest.params = { niNumber: 'AB123456E' }; // invalid suffix
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with lowercase letters', () => {
+      mockRequest.params = { niNumber: 'ab123456c' }; // lowercase
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with special characters', () => {
+      mockRequest.params = { niNumber: 'AB-12-34-56-C' }; // hyphens
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with spaces', () => {
+      mockRequest.params = { niNumber: 'AB 12 34 56 C' }; // spaces
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for empty string', () => {
+      mockRequest.params = { niNumber: '' };
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Edge cases
+    it('should return 400 for NI Number with leading/trailing whitespace', () => {
+      mockRequest.params = { niNumber: ' AB123456C ' }; // whitespace
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with unicode characters', () => {
+      mockRequest.params = { niNumber: 'AB©23456D' }; // copyright symbol
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Security test cases
+    it('should return 400 for NI Number with SQL injection attempt', () => {
+      mockRequest.params = { niNumber: "AB' OR '1'='1" };
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with XSS attempt', () => {
+      mockRequest.params = { niNumber: 'AB<script>alert(1)</script>' };
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing all valid suffix options
+    it('should return 200 for NI Number with suffix A', () => {
+      mockRequest.params = { niNumber: 'AB123456A' };
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for NI Number with suffix B', () => {
+      mockRequest.params = { niNumber: 'CD123456B' };
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for NI Number with suffix C', () => {
+      mockRequest.params = { niNumber: 'EF123456C' };
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for NI Number with suffix D', () => {
+      mockRequest.params = { niNumber: 'GH123456D' };
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Testing excluded letters in suffix
+    it('should return 400 for NI Number with suffix E', () => {
+      mockRequest.params = { niNumber: 'AB123456E' };
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing exact length requirements
+    it('should return 400 for NI Number with 8 characters', () => {
+      mockRequest.params = { niNumber: 'AB12345C' }; // 1 digit short
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for NI Number with 10 characters', () => {
+      mockRequest.params = { niNumber: 'AB1234567C' }; // 1 digit extra
+      ValidationController.validateUKNINumber(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  });
 
 });
