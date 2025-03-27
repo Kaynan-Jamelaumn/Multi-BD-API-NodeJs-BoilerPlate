@@ -157,4 +157,150 @@ describe('UnitedKingdomID Validation', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(400);
     });
   });
+
+
+
+
+
+
+
+
+
+  describe('validateUKBirthCertificate', () => {
+    it('should return 400 if Birth Certificate number is missing', () => {
+      mockRequest.params = {};
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Birth Certificate Number is required.' });
+    });
+  
+    // Valid UK Birth Certificate formats (based on regex: /^[A-Z]{2}\d{6,8}$/)
+    it('should return 200 for valid certificate with 2 letters + 6 digits', () => {
+      mockRequest.params = { birthCertNumber: 'AB123456' }; // 2 letters + 6 digits
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid certificate with 2 letters + 7 digits', () => {
+      mockRequest.params = { birthCertNumber: 'AB1234567' }; // 2 letters + 7 digits
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid certificate with 2 letters + 8 digits', () => {
+      mockRequest.params = { birthCertNumber: 'AB12345678' }; // 2 letters + 8 digits
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid certificate with different letter combinations', () => {
+      mockRequest.params = { birthCertNumber: 'ZX987654' }; // different letters
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Invalid UK Birth Certificate formats
+    it('should return 400 for certificate with 1 letter + 6 digits', () => {
+      mockRequest.params = { birthCertNumber: 'A123456' }; // 1 letter
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for certificate with 3 letters + 6 digits', () => {
+      mockRequest.params = { birthCertNumber: 'ABC123456' }; // 3 letters
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for certificate with 2 letters + 5 digits', () => {
+      mockRequest.params = { birthCertNumber: 'AB12345' }; // 5 digits
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for certificate with 2 letters + 9 digits', () => {
+      mockRequest.params = { birthCertNumber: 'AB123456789' }; // 9 digits
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for certificate with lowercase letters', () => {
+      mockRequest.params = { birthCertNumber: 'ab123456' }; // lowercase
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for certificate with special characters', () => {
+      mockRequest.params = { birthCertNumber: 'AB-123-456' }; // hyphens
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for certificate with spaces', () => {
+      mockRequest.params = { birthCertNumber: 'AB 123 456' }; // spaces
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for empty string', () => {
+      mockRequest.params = { birthCertNumber: '' };
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for certificate with letters in digit positions', () => {
+      mockRequest.params = { birthCertNumber: 'AB12C456' }; // letter in digit section
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Edge cases
+    it('should return 400 for certificate with leading/trailing whitespace', () => {
+      mockRequest.params = { birthCertNumber: ' AB123456 ' }; // whitespace
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for certificate with unicode characters', () => {
+      mockRequest.params = { birthCertNumber: 'AB©123456' }; // copyright symbol
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Security test cases
+    it('should return 400 for certificate with SQL injection attempt', () => {
+      mockRequest.params = { birthCertNumber: "AB' OR '1'='1" };
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for certificate with XSS attempt', () => {
+      mockRequest.params = { birthCertNumber: 'AB<script>alert(1)</script>' };
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing minimum and maximum boundaries
+    it('should return 200 for exactly 2 letters + 6 digits', () => {
+      mockRequest.params = { birthCertNumber: 'AB123456' }; // exact minimum
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for exactly 2 letters + 8 digits', () => {
+      mockRequest.params = { birthCertNumber: 'AB12345678' }; // exact maximum
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Testing excluded characters
+    it('should return 400 for certificate containing excluded letters if any', () => {
+      mockRequest.params = { birthCertNumber: 'IÖ123456' }; // potentially excluded chars
+      ValidationController.validateUKBirthCertificate(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  });
+
+
+
 });
