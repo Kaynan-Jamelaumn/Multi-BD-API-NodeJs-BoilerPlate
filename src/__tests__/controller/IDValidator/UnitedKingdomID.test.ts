@@ -303,4 +303,147 @@ describe('UnitedKingdomID Validation', () => {
 
 
 
+
+
+
+
+
+
+  describe('validateUKArmedForcesID', () => {
+    it('should return 400 if Armed Forces ID number is missing', () => {
+      mockRequest.params = {};
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Armed Forces ID Number is required.' });
+    });
+  
+    // Valid UK Armed Forces ID formats (based on regex: /^[A-Z]{2}\d{6}$/)
+    it('should return 200 for valid ID (2 letters + 6 digits)', () => {
+      mockRequest.params = { armedForcesID: 'AB123456' }; // valid format
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for valid ID with different letter combinations', () => {
+      mockRequest.params = { armedForcesID: 'ZX987654' }; // different letters
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Invalid UK Armed Forces ID formats
+    it('should return 400 for ID with 1 letter + 6 digits', () => {
+      mockRequest.params = { armedForcesID: 'A123456' }; // 1 letter
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for ID with 3 letters + 6 digits', () => {
+      mockRequest.params = { armedForcesID: 'ABC123456' }; // 3 letters
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for ID with 2 letters + 5 digits', () => {
+      mockRequest.params = { armedForcesID: 'AB12345' }; // 5 digits
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for ID with 2 letters + 7 digits', () => {
+      mockRequest.params = { armedForcesID: 'AB1234567' }; // 7 digits
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for ID with lowercase letters', () => {
+      mockRequest.params = { armedForcesID: 'ab123456' }; // lowercase
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for ID with special characters', () => {
+      mockRequest.params = { armedForcesID: 'AB-123-456' }; // hyphens
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for ID with spaces', () => {
+      mockRequest.params = { armedForcesID: 'AB 123 456' }; // spaces
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for empty string', () => {
+      mockRequest.params = { armedForcesID: '' };
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for ID with letters in digit positions', () => {
+      mockRequest.params = { armedForcesID: 'AB12C456' }; // letter in digit section
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Edge cases
+    it('should return 400 for ID with leading/trailing whitespace', () => {
+      mockRequest.params = { armedForcesID: ' AB123456 ' }; // whitespace
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for ID with unicode characters', () => {
+      mockRequest.params = { armedForcesID: 'AB©123456' }; // copyright symbol
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Security test cases
+    it('should return 400 for ID with SQL injection attempt', () => {
+      mockRequest.params = { armedForcesID: "AB' OR '1'='1" };
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for ID with XSS attempt', () => {
+      mockRequest.params = { armedForcesID: 'AB<script>alert(1)</script>' };
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing exact length requirements
+    it('should return 400 for ID with exactly 7 characters (2 letters + 5 digits)', () => {
+      mockRequest.params = { armedForcesID: 'AB12345' }; // 1 digit short
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for ID with exactly 9 characters (2 letters + 7 digits)', () => {
+      mockRequest.params = { armedForcesID: 'AB1234567' }; // 1 digit extra
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing all-digit and all-letter cases
+    it('should return 400 for all-digit ID', () => {
+      mockRequest.params = { armedForcesID: '12345678' };
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    it('should return 400 for all-letter ID', () => {
+      mockRequest.params = { armedForcesID: 'ABCDEFGH' };
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing excluded characters
+    it('should return 400 for ID containing potentially excluded letters', () => {
+      mockRequest.params = { armedForcesID: 'IÖ123456' }; // non-standard letters
+      ValidationController.validateUKArmedForcesID(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  });
+
+
 });
