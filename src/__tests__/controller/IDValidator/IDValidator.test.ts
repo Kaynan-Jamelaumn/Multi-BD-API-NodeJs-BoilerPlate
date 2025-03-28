@@ -328,4 +328,146 @@ describe('ValidationController', () => {
     });
   });
 
+
+
+
+  describe('validateMexicanCURP', () => {
+    it('should return 400 if CURP number is missing', () => {
+      mockRequest.params = {};
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Mexican CURP Number is required.' });
+    });
+  
+    // Valid CURP formats (passing both format and checksum validation)
+    it('should return 200 for valid CURP with correct checksum', () => {
+      mockRequest.params = { curpNumber: 'XEXX010101MNEXXA08' }; // Valid format and checksum
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for another valid CURP with correct checksum', () => {
+      mockRequest.params = { curpNumber: 'BADD110313HDFJLL02' }; // Valid format and checksum
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Invalid format tests
+    it('should return 400 for CURP with 17 characters', () => {
+      mockRequest.params = { curpNumber: 'GODE561231HMNLNN0' }; // Too short
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP format' });
+    });
+  
+    it('should return 400 for CURP with 19 characters', () => {
+      mockRequest.params = { curpNumber: 'GODE561231HMNLNN099' }; // Too long
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP format' });
+    });
+  
+    it('should return 400 for CURP with lowercase letters', () => {
+      mockRequest.params = { curpNumber: 'gode561231hmnlnn09' }; // Lowercase
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP format' });
+    });
+  
+    it('should return 400 for CURP with invalid gender indicator', () => {
+      mockRequest.params = { curpNumber: 'GODE561231XNJLLL09' }; // X instead of H/M
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP format' });
+    });
+  
+    it('should return 400 for CURP with special characters', () => {
+      mockRequest.params = { curpNumber: 'GODE-561231-HMNLNN09' }; // Hyphens
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP format' });
+    });
+  
+    it('should return 400 for empty string', () => {
+      mockRequest.params = { curpNumber: '' };
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Mexican CURP Number is required.' });
+    });
+  
+    // Valid format but invalid checksum
+    it('should return 400 for CURP with correct format but invalid checksum', () => {
+      mockRequest.params = { curpNumber: 'GODE561231HMNLNN08' }; // Checksum should be 9
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP checksum' });
+    });
+  
+    // Edge cases
+    it('should return 400 for CURP with leading/trailing whitespace', () => {
+      mockRequest.params = { curpNumber: ' GODE561231HMNLNN09 ' }; // Whitespace
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP format' });
+    });
+  
+    // Security test cases
+    it('should return 400 for CURP with SQL injection attempt', () => {
+      mockRequest.params = { curpNumber: "GODE' OR '1'='1" };
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP format' });
+    });
+  
+    it('should return 400 for CURP with XSS attempt', () => {
+      mockRequest.params = { curpNumber: '<script>alert(1)</script>' };
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP format' });
+    });
+  
+    // Testing checksum edge cases
+    it('should return 200 for CURP with checksum digit 0', () => {
+      mockRequest.params = { curpNumber: 'BAAJ820115HDFLRL00' }; // Checksum 0
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 400 for CURP with incorrect checksum digit 0', () => {
+      mockRequest.params = { curpNumber: 'XEXX010101MNEXXA07' }; // Should be 0
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP checksum' });
+    });
+  
+    // Testing all segments of the CURP
+    it('should return 400 for CURP with invalid birth date', () => {
+      mockRequest.params = { curpNumber: 'XEXX013201MNEXXA08' }; // Invalid day 31
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP format' });
+    });
+  
+    it('should return 400 for CURP with invalid state code', () => {
+      mockRequest.params = { curpNumber: 'GODE561231XXNLNN09' }; // XX state code
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid CURP format' });
+    });
+  
+    // Testing checksum calculation with different weights
+    it('should properly calculate checksum with varying character values', () => {
+      mockRequest.params = { curpNumber: 'AAAA000000HAAAAA00' }; // Edge case for checksum
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Testing Ñ character (special case in Mexican alphabet)
+    it('should return 200 for CURP containing Ñ character', () => {
+      mockRequest.params = { curpNumber: 'ÑOLE820115HDFLRL05' }; // Contains Ñ
+      ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  });
+
 });
