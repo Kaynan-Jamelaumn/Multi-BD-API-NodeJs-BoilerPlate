@@ -7,7 +7,7 @@ import { UserDataToBeValidated, Role, User } from '../types/user';
 
 export default class ValidationController {
     private static getData(req: Request, field: string): string | undefined {
-        return req.body?.[field] ?? req.params?.[field];
+        return (req.body?.[field] ?? req.params?.[field]);
     }
 
     private static handleValidationResult(validationResult: any, res: Response): void {

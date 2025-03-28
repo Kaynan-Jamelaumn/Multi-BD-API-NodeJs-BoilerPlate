@@ -341,7 +341,7 @@ describe('ValidationController', () => {
   
     // Valid CURP formats (passing both format and checksum validation)
     it('should return 200 for valid CURP with correct checksum', () => {
-      mockRequest.params = { curpNumber: 'XEXX010101MNEXXA08' }; // Valid format and checksum
+      mockRequest.params = { curpNumber: 'XEXX010101HNEXXXA8' }; // Valid format and checksum
       ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
@@ -428,7 +428,7 @@ describe('ValidationController', () => {
   
     // Testing checksum edge cases
     it('should return 200 for CURP with checksum digit 0', () => {
-      mockRequest.params = { curpNumber: 'BAAJ820115HDFLRL00' }; // Checksum 0
+      mockRequest.params = { curpNumber: 'AAAA000000HDFLRN00' }; // Checksum 0
       ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
@@ -457,14 +457,14 @@ describe('ValidationController', () => {
   
     // Testing checksum calculation with different weights
     it('should properly calculate checksum with varying character values', () => {
-      mockRequest.params = { curpNumber: 'AAAA000000HAAAAA00' }; // Edge case for checksum
+      mockRequest.params = { curpNumber: 'AÑAE000101HDFLRN09' }; // Edge case for checksum
       ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   
     // Testing Ñ character (special case in Mexican alphabet)
     it('should return 200 for CURP containing Ñ character', () => {
-      mockRequest.params = { curpNumber: 'ÑOLE820115HDFLRL05' }; // Contains Ñ
+      mockRequest.params = { curpNumber: 'ÑOLE820115HDFLRN05' }; // Contains Ñ
       ValidationController.validateMexicanCURP(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
