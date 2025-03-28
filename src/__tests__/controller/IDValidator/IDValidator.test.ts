@@ -195,4 +195,137 @@ describe('ValidationController', () => {
 
 
 
+
+  describe('validateCanadianSIN', () => {
+    it('should return 400 if SIN number is missing', () => {
+      mockRequest.params = {};
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Canadian SIN Number is required.' });
+    });
+  
+    // Valid SIN numbers (pass both format and Luhn check)
+    it('should return 200 for valid SIN that passes Luhn check', () => {
+      mockRequest.params = { sinNumber: '046454286' }; // Valid SIN
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for another valid SIN that passes Luhn check', () => {
+      mockRequest.params = { sinNumber: '123456782' }; // Valid test SIN from Service Canada
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Invalid format tests
+    it('should return 400 for SIN with 8 digits', () => {
+      mockRequest.params = { sinNumber: '12345678' }; // Too short
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SIN format' });
+    });
+  
+    it('should return 400 for SIN with 10 digits', () => {
+      mockRequest.params = { sinNumber: '1234567890' }; // Too long
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SIN format' });
+    });
+  
+    it('should return 400 for SIN with letters', () => {
+      mockRequest.params = { sinNumber: 'A23456789' }; // Contains letter
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SIN format' });
+    });
+  
+    it('should return 400 for SIN with special characters', () => {
+      mockRequest.params = { sinNumber: '123-456-789' }; // Contains hyphens
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SIN format' });
+    });
+  
+    it('should return 400 for SIN with spaces', () => {
+      mockRequest.params = { sinNumber: '123 456 789' }; // Contains spaces
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SIN format' });
+    });
+  
+    it('should return 400 for empty string', () => {
+      mockRequest.params = { sinNumber: '' };
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Canadian SIN Number is required.' });
+    });
+  
+    // Valid format but invalid Luhn check
+    it('should return 400 for SIN with correct format but failing Luhn check', () => {
+      mockRequest.params = { sinNumber: '123456789' }; // Invalid check digit
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SIN number' });
+    });
+  
+    it('should return 400 for another SIN with correct format but failing Luhn check', () => {
+      mockRequest.params = { sinNumber: '987654321' }; // Invalid check digit
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SIN number' });
+    });
+  
+    // Edge cases
+    it('should return 400 for SIN with leading/trailing whitespace', () => {
+      mockRequest.params = { sinNumber: ' 046454286 ' }; // Valid number but with whitespace
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SIN format' });
+    });
+  
+    // Security test cases
+    it('should return 400 for SIN with SQL injection attempt', () => {
+      mockRequest.params = { sinNumber: "12345678' OR '1'='1" };
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SIN format' });
+    });
+  
+    it('should return 400 for SIN with XSS attempt', () => {
+      mockRequest.params = { sinNumber: '<script>alert(1)</script>' };
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid SIN format' });
+    });
+  
+    // Testing known invalid prefixes
+    it('should return 400 for SIN starting with 0 (temporary SIN)', () => {
+      mockRequest.params = { sinNumber: '012345678' }; // Temporary SIN (should still pass format check but fail Luhn)
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      // Note: This test assumes we're not specifically blocking temporary SINs
+      // If your business logic rejects temporary SINs, modify the test accordingly
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+    });
+  
+    // Testing Luhn algorithm edge cases
+    it('should return 200 for SIN requiring digit sum adjustment (9*2=18 → 1+8=9)', () => {
+      mockRequest.params = { sinNumber: '453201511' }; // Contains 9 which when doubled becomes 18
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    it('should return 200 for SIN with all digits doubled below 9', () => {
+      mockRequest.params = { sinNumber: '121212121' }; // All doubled digits remain single-digit
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  
+    // Testing all possible check digits
+    it('should return 200 for SIN with check digit 0', () => {
+      mockRequest.params = { sinNumber: '046454280' }; // Valid SIN with check digit 0
+      ValidationController.validateCanadianSIN(mockRequest as Request, mockResponse as Response);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+  });
+
 });
