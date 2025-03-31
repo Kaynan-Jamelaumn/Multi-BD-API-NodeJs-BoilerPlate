@@ -617,6 +617,92 @@ describe('ValidationController', () => {
 
 
 
+  describe('validateGermanPersonalausweis', () => {
+    // Valid ID tests
+    it('should return 200 for valid 10-digit ID with correct checksum', () => {
+        mockRequest.params = { idNumber: '1234567891' }; // Valid checksum (7*2 + 3*3 + 1*4 + 7*5 + 3*6 + 1*7 + 7*8 + 3*9 + 1*1 = 140, 140%10=0)
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
 
+    it('should return 200 for another valid 10-digit ID with correct checksum', () => {
+        mockRequest.params = { idNumber: '9876543210' }; // Valid checksum (7*8 + 3*7 + 1*6 + 7*5 + 3*4 + 1*3 + 7*2 + 3*1 + 1*0 = 105, 105%10=5)
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+
+    // Invalid format tests
+    it('should return 400 for ID with less than 10 digits', () => {
+        mockRequest.params = { idNumber: '123456789' }; // Too short
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid format: Must be exactly 10 digits' });
+    });
+
+    it('should return 400 for ID with more than 10 digits', () => {
+        mockRequest.params = { idNumber: '12345678901' }; // Too long
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid format: Must be exactly 10 digits' });
+    });
+
+    it('should return 400 for ID with non-digit characters', () => {
+        mockRequest.params = { idNumber: 'A234567890' }; // Contains letter
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid format: Must be exactly 10 digits' });
+    });
+
+    it('should return 400 for empty string', () => {
+        mockRequest.params = { idNumber: '' };
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'German Personalausweis Number is required.' });
+    });
+
+    // Invalid checksum tests
+    it('should return 400 for ID with incorrect checksum', () => {
+        mockRequest.params = { idNumber: '1234567890' }; // Checksum should be 1
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid checksum' });
+    });
+
+    it('should return 400 for ID with all 1s (invalid checksum)', () => {
+        mockRequest.params = { idNumber: '1111111111' }; // Would fail checksum
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid checksum' });
+    });
+
+    // Edge cases
+    it('should return 200 for ID with all zeros (valid checksum)', () => {
+        mockRequest.params = { idNumber: '0000000000' }; // Valid as checksum would be 0
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(200);
+    });
+
+    it('should return 400 for ID with leading/trailing whitespace', () => {
+        mockRequest.params = { idNumber: ' 1234567891 ' }; // Whitespace
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid format: Must be exactly 10 digits' });
+    });
+
+    // Security test cases
+    it('should return 400 for ID with SQL injection attempt', () => {
+        mockRequest.params = { idNumber: "123456789' OR '1'='1" }; // SQL injection
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid format: Must be exactly 10 digits' });
+    });
+
+    it('should return 400 for ID with XSS attempt', () => {
+        mockRequest.params = { idNumber: '<script>alert(1)</script>' }; // XSS attempt
+        ValidationController.validateGermanPersonalausweis(mockRequest as Request, mockResponse as Response);
+        expect(mockResponse.status).toHaveBeenCalledWith(400);
+        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid format: Must be exactly 10 digits' });
+    });
+  });
 
 });
