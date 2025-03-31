@@ -479,62 +479,61 @@ describe('ValidationController', () => {
 
 
 
-
   describe('validateSouthKoreanRRN', () => {
     // Valid RRN tests
-    it('should return 200 for valid male RRN born in 1900s', () => {
-      mockRequest.params = { rrnNumber: '6801011000015' }; // Corrected check digit (was 8)
+    it('should validate a 13-digit male RRN born in 1968 (1900s)', () => {
+      mockRequest.params = { rrnNumber: '6801011000015' }; // Male born Jan 1, 1968 with valid check digit
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   
-    it('should return 200 for valid female RRN born in 1900s', () => {
-      mockRequest.params = { rrnNumber: '6801012000018' }; // Corrected check digit (was 5)
+    it('should validate a 13-digit female RRN born in 1968 (1900s)', () => {
+      mockRequest.params = { rrnNumber: '6801012000018' }; // Female born Jan 1, 1968 with valid check digit
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   
-    it('should return 200 for valid male RRN born in 2000s', () => {
-      mockRequest.params = { rrnNumber: '0501013000010' }; // Corrected check digit (was 3)
+    it('should validate a male RRN born in 2005 (2000s)', () => {
+      mockRequest.params = { rrnNumber: '0501013000010' }; // Male born Jan 1, 2005 with valid check digit
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   
-    it('should return 200 for valid female RRN born in 2000s', () => {
-      mockRequest.params = { rrnNumber: '0501014000012' }; // Corrected check digit (was 0)
+    it('should validate a female RRN born in 2005 (2000s)', () => {
+      mockRequest.params = { rrnNumber: '0501014000012' }; // Female born Jan 1, 2005 with valid check digit
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   
-    it('should return 200 for valid RRN with February 29th on leap year', () => {
-      mockRequest.params = { rrnNumber: '0002291000011' }; // Corrected check digit (was 4)
+    it('should validate a RRN with February 29th date for leap year 2000', () => {
+      mockRequest.params = { rrnNumber: '0002293000017' }; // Valid leap date Feb 29, 2000
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
     });
   
     // Invalid format tests
-    it('should return 400 for RRN with 12 digits', () => {
-      mockRequest.params = { rrnNumber: '680101100001' }; // Too short
+    it('should reject RRN with incorrect length (12 digits)', () => {
+      mockRequest.params = { rrnNumber: '680101100001' }; // Missing last digit
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RRN format' });
     });
   
-    it('should return 400 for RRN with 14 digits', () => {
-      mockRequest.params = { rrnNumber: '68010110000181' }; // Too long
+    it('should reject RRN with incorrect length (14 digits)', () => {
+      mockRequest.params = { rrnNumber: '68010110000181' }; // Extra digits
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RRN format' });
     });
   
-    it('should return 400 for RRN with letters', () => {
-      mockRequest.params = { rrnNumber: '680101A000018' }; // Contains letter
+    it('should reject RRN containing non-numeric characters', () => {
+      mockRequest.params = { rrnNumber: '680101A000018' }; // Alphabetic character
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RRN format' });
     });
   
-    it('should return 400 for empty string', () => {
+    it('should reject empty RRN input', () => {
       mockRequest.params = { rrnNumber: '' };
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
@@ -542,74 +541,73 @@ describe('ValidationController', () => {
     });
   
     // Invalid gender digit tests
-    it('should return 400 for RRN with gender digit 0', () => {
-      mockRequest.params = { rrnNumber: '6801010000018' }; // Invalid gender digit
+    it('should reject RRN with invalid gender digit (0)', () => {
+      mockRequest.params = { rrnNumber: '6801010000018' }; // Gender digit must be 1-4
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid gender digit in RRN' });
     });
   
-    it('should return 400 for RRN with gender digit 5', () => {
-      mockRequest.params = { rrnNumber: '6801015000015' }; // Invalid gender digit
+    it('should reject RRN with invalid gender digit (5)', () => {
+      mockRequest.params = { rrnNumber: '6801015000015' }; // Gender digit must be 1-4
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid gender digit in RRN' });
     });
   
     // Invalid birthdate tests
-    it('should return 400 for RRN with invalid month', () => {
-      mockRequest.params = { rrnNumber: '6813011000018' }; // Month 13
+    it('should reject RRN with invalid month (13)', () => {
+      mockRequest.params = { rrnNumber: '6813011000018' }; // Month must be 1-12
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid birthdate in RRN' });
     });
   
-    it('should return 400 for RRN with invalid day', () => {
-      mockRequest.params = { rrnNumber: '6801321000018' }; // Day 32
+    it('should reject RRN with invalid day (32)', () => {
+      mockRequest.params = { rrnNumber: '6801321000018' }; // Day exceeds maximum
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid birthdate in RRN' });
     });
   
-    it('should return 400 for RRN with February 29th on non-leap year', () => {
-      mockRequest.params = { rrnNumber: '0102291000018' }; // 2001-02-29 (not a leap year)
+    it('should reject RRN with February 29th for non-leap year (2001)', () => {
+      mockRequest.params = { rrnNumber: '0102291000018' }; // 2001 was not a leap year
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid birthdate in RRN' });
     });
   
     // Invalid check digit tests
-    it('should return 400 for RRN with incorrect check digit', () => {
-      mockRequest.params = { rrnNumber: '6801011000015' }; // Changed last digit to make invalid
+    it('should reject RRN with incorrect check digit', () => {
+      mockRequest.params = { rrnNumber: '6801011000016' }; // Last digit should be 5
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RRN number' });
     });
   
     // Edge cases
-    it('should return 400 for RRN with leading/trailing whitespace', () => {
-      mockRequest.params = { rrnNumber: ' 6801011000015 ' }; // Whitespace
+    it('should reject RRN with surrounding whitespace', () => {
+      mockRequest.params = { rrnNumber: ' 6801011000015 ' };
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RRN format' });
     });
   
     // Security test cases
-    it('should return 400 for RRN with SQL injection attempt', () => {
+    it('should reject RRN with SQL injection attempt', () => {
       mockRequest.params = { rrnNumber: "680101100001' OR '1'='1" };
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RRN format' });
     });
   
-    it('should return 400 for RRN with XSS attempt', () => {
+    it('should reject RRN with XSS attempt', () => {
       mockRequest.params = { rrnNumber: '<script>alert(1)</script>' };
       ValidationController.validateSouthKoreanRRN(mockRequest as Request, mockResponse as Response);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid RRN format' });
     });
 });
-
 
 
 

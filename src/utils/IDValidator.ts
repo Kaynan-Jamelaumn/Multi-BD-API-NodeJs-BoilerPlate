@@ -690,70 +690,82 @@ class IDValidator {
         };
     }
 
-    static validateSouthKoreanRRN(rrn: string): DocumentValidationResult  {
+    static validateSouthKoreanRRN(rrn: string): DocumentValidationResult {
         // Ensure the input is a 13-digit string
-        // The RRN must be exactly 13 digits long and consist only of numbers.
+        // The RRN must be exactly 13 digits long and consist only of numbers
         if (!/^\d{13}$/.test(rrn)) {
             return { valid: false, error: "Invalid RRN format", status: 400 };
         }
     
         // Validate gender digit (7th digit: 1-4)
-        // The 7th digit of the RRN indicates the gender and the century of birth:
-        // 1 or 2: Male or female born in the 1900s
-        // 3 or 4: Male or female born in the 2000s
+        // The 7th digit indicates gender and century of birth:
+        // 1: Male born in 1900s
+        // 2: Female born in 1900s
+        // 3: Male born in 2000s
+        // 4: Female born in 2000s
         const genderDigit: number = parseInt(rrn[6]);
         if (genderDigit < 1 || genderDigit > 4) {
             return { valid: false, error: "Invalid gender digit in RRN", status: 400 };
         }
     
         // Validate birthdate (first 6 digits: YYMMDD)
-        // The first 6 digits represent the birthdate in the format YYMMDD.
-        const year: number = parseInt(rrn.substring(0, 2));  // Extract the year (YY)
-        const month: number = parseInt(rrn.substring(2, 4)); // Extract the month (MM)
-        const day: number = parseInt(rrn.substring(4, 6));  // Extract the day (DD)
+        // The first 6 digits represent birthdate in YYMMDD format
+        const year: number = parseInt(rrn.substring(0, 2));  // YY (last two digits of year)
+        const month: number = parseInt(rrn.substring(2, 4));  // MM (month 01-12)
+        const day: number = parseInt(rrn.substring(4, 6));    // DD (day 01-31)
     
-        // Determine the century based on the gender digit
-        // If the gender digit is 1 or 2, the birth year is in the 1900s.
-        // If the gender digit is 3 or 4, the birth year is in the 2000s.
+        // Determine the full year based on gender digit
+        // Gender digits 1-2 indicate 1900s, 3-4 indicate 2000s
         let fullYear: number;
         if (genderDigit === 1 || genderDigit === 2) {
             fullYear = 1900 + year; // Birth year is in the 1900s
-        } else if (genderDigit === 3 || genderDigit === 4) {
+        } else {
             fullYear = 2000 + year; // Birth year is in the 2000s
-        }else {
-            // This block is technically unreachable due to the earlier genderDigit validation,
-            // but it ensures TypeScript that `fullYear` is always assigned.
-            return { valid: false, error: 'Invalid gender digit in RRN', status: 400 }
-        }
-
-    
-        // Validate the date
-        // Create a Date object using the extracted year, month, and day.
-        // Subtract 1 from the month because JavaScript months are 0-indexed (0 = January).
-        const date: Date = new Date(fullYear, month - 1, day);
-        // Check if the date is valid by verifying if the Date object's time is NaN.
-        if (isNaN(date.getTime())) {
-            return { valid: false, error: "Invalid birthdate in RRN", 
-                status: 400 };
         }
     
-        // Check digit validation
-        // The 13th digit is a check digit used to validate the RRN.
-        // The check digit is calculated using a weighted sum of the first 12 digits.
-        const weights: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5]; // Weights for each digit
-        // Calculate the weighted sum of the first 12 digits.
-        const sum: number = weights.reduce((acc, weight, i) => acc + parseInt(rrn[i]) * weight, 0);
-        // Calculate the remainder: (11 - (sum % 11)) % 10
-        const remainder: number = (11 - (sum % 11)) % 10;
-        // Compare the calculated remainder with the 13th digit (check digit).
-        const isValid: boolean = remainder === parseInt(rrn[12]);
+        // Special validation for February 29th
+        // This handles leap years correctly by checking:
+        // - If year is divisible by 400 (leap year)
+        // - Or divisible by 4 but not by 100 (leap year)
+        if (month === 2 && day === 29) {
+            const isLeapYear = (fullYear % 400 === 0) || (fullYear % 100 !== 0 && fullYear % 4 === 0);
+            if (!isLeapYear) {
+                return { valid: false, error: "Invalid birthdate in RRN", status: 400 };
+            }
+        }
+        // General date validation for all other dates
+        else {
+            // Create Date object (months are 0-indexed in JavaScript)
+            const date = new Date(fullYear, month - 1, day);
+            // Verify date components match exactly (catches invalid dates like April 31st)
+            if (
+                date.getFullYear() !== fullYear ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day
+            ) {
+                return { valid: false, error: "Invalid birthdate in RRN", status: 400 };
+            }
+        }
     
+        // Check digit validation (13th digit)
+        // The check digit is calculated using a weighted sum of the first 12 digits
+        const weights: number[] = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5]; // Weight factors
+        let sum = 0;
+        for (let i = 0; i < 12; i++) {
+            sum += parseInt(rrn[i]) * weights[i]; // Sum of (digit * weight) for first 12 digits
+        }
+        const remainder = (11 - (sum % 11)) % 10; // Calculate check digit value
         
-
-        // Return the validation result
+        // Compare calculated check digit with actual 13th digit
+        if (remainder !== parseInt(rrn[12])) {
+            return { valid: false, error: "Invalid RRN number", status: 400 };
+        }
+    
+        // If all validations pass
         return {
-            valid: isValid,
-            error: isValid ? null : "Invalid RRN number", status: isValid ? 200 : 400
+            valid: true,
+            error: null,
+            status: 200
         };
     }
 
